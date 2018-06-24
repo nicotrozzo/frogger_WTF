@@ -297,7 +297,6 @@ void* output_thread(void* pointer)
                                         
     frog_t frogCoords;
     uint8_t frogCounter = FROG_REFRESH;
-    int i,j;
     gameData_t *pGameData = pointer;
     int maxPosition = INIT_Y;
 
