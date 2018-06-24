@@ -72,7 +72,7 @@
  * ES MUY IMPORTANTE QUE SE DESTRUYAN LAS COLAS CREADAS
  *****************************************************************************************************************/
 
-event_queue_t *create_queue ( void )     
+event_queue_t create_queue ( void )     
 {
   event_queue_t newQueue,*p2NQueue = &newQueue;
   event_t *temp = (event_t*) malloc (QUEUE_SIZE * sizeof(event_t));
@@ -93,7 +93,7 @@ event_queue_t *create_queue ( void )
   p2NQueue->p2get = temp;//los punteros para leer y escribir estan en el mismo lugar (cola vacia)
   p2NQueue->p2write = temp;
 
-  return &newQueue;
+  return newQueue;
 }
 
 

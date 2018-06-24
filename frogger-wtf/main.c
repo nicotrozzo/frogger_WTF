@@ -96,7 +96,7 @@ int main(void)
     gameData.quitGame = false;
     gameData.cabeza = saveScoreChar;
     
-    gameData.pEventQueue = create_queue();   //creacion de la cola de eventos
+    *(gameData.pEventQueue) = create_queue();   //creacion de la cola de eventos
 
     pthread_t input_id,output_id;   
     pthread_create(&input_id,NULL,input_thread,gameData.pEventQueue);  //creacion de threads de input y output

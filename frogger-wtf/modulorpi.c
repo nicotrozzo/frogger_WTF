@@ -245,7 +245,7 @@ void* output_thread(void* pointer)
     {
         uint16_t estadoActual = pGameData->currentState->stateID;
 
-        while(estadoActual >= START_PLAY_ID && estadoActual <= START_QUIT_ID) //mientras esta en los estados del startmenu
+        while(estadoActual >= START_PLAY_ID || estadoActual <= START_QUIT_ID) //mientras esta en los estados del startmenu
         {
             switch(estadoActual)
             {
