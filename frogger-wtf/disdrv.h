@@ -38,9 +38,3 @@ void set_display_axis(uint8_t orientation);
 
 
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* DISDRV_H */
-

@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/f2a5ccf7/action_routines.o \
 	${OBJECTDIR}/eventQueue.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/modulorpi.o \
@@ -55,35 +56,46 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-lpthread /home/nico/Desktop/Progra/TPFINAL/pruebas/disdrv.o /home/nico/Desktop/Progra/TPFINAL/pruebas/joydrv.o /home/nico/Desktop/Progra/TPFINAL/pruebas/termlib.o
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf
 
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf: /home/nico/Desktop/Progra/TPFINAL/pruebas/disdrv.o
+
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf: /home/nico/Desktop/Progra/TPFINAL/pruebas/joydrv.o
+
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf: /home/nico/Desktop/Progra/TPFINAL/pruebas/termlib.o
+
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf ${OBJECTFILES} ${LDLIBSOPTIONS}
 
+${OBJECTDIR}/_ext/f2a5ccf7/action_routines.o: /home/nico/Desktop/NetBeansProjects/frogger-wtf/action_routines.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/f2a5ccf7
+	${RM} "$@.d"
+	$(COMPILE.c) -g -Wall -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/f2a5ccf7/action_routines.o /home/nico/Desktop/NetBeansProjects/frogger-wtf/action_routines.c
+
 ${OBJECTDIR}/eventQueue.o: eventQueue.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/eventQueue.o eventQueue.c
+	$(COMPILE.c) -g -Wall -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/eventQueue.o eventQueue.c
 
 ${OBJECTDIR}/main.o: main.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+	$(COMPILE.c) -g -Wall -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
 
 ${OBJECTDIR}/modulorpi.o: modulorpi.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/modulorpi.o modulorpi.c
+	$(COMPILE.c) -g -Wall -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/modulorpi.o modulorpi.c
 
 ${OBJECTDIR}/timer_threads.o: timer_threads.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/timer_threads.o timer_threads.c
+	$(COMPILE.c) -g -Wall -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/timer_threads.o timer_threads.c
 
 # Subprojects
 .build-subprojects:

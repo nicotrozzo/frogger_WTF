@@ -17,6 +17,7 @@
 #include "gameStructs.h"
 #include "eventQueue.h"
 #include "modulorpi.h"
+#include "actionRoutines.h"
 
 state_t* fsm_handler(state_t *currentState, uint16_t newEvent, void *pActRoutineData);
 
@@ -35,7 +36,7 @@ int main(void)
     /*INICIALIZACION DE TABLAS DE ESTADOS*/
     state_t startMenuPlayGame[3+1] = 
     {
-        {DOWN_EVENT,startMenuViewScoreboard,non_act_routine,START_PLAY_ID},
+        {DOWN_EVENT,startMenuViewScoreBoard,non_act_routine,START_PLAY_ID},
         {UP_EVENT,startMenuQuit,non_act_routine,START_PLAY_ID},
         {ENTER_EVENT,game,start_game,START_PLAY_ID},
         {END_TABLE,startMenuPlayGame,non_act_routine,START_PLAY_ID}
@@ -50,8 +51,8 @@ int main(void)
     state_t startMenuQuit[3+1] = 
     {
         {DOWN_EVENT,startMenuPlayGame,non_act_routine,START_QUIT_ID},
-        {UP_EVENT,startMenuViewScoreBoard,non_act_rotuine,START_QUIT_ID},
-        {ENTER_EVENT,NULL,endGame,START_QUIT_ID},
+        {UP_EVENT,startMenuViewScoreBoard,non_act_routine,START_QUIT_ID},
+        {ENTER_EVENT,NULL,end_game,START_QUIT_ID},
         {END_TABLE,startMenuQuit,non_act_routine,START_QUIT_ID}
     };
     state_t scoreBoard[3+1] = 
@@ -89,8 +90,8 @@ int main(void)
     };
     state_t saveScoreChar[5+1] =
     {
-        {DOWN_EVENT,saveScoreChar,fst_letter_down,SAVE_SCORE_ID},
-        {UP_EVENT,saveScoreChar,fst_letter_up,SAVE_SCORE_ID},
+        {DOWN_EVENT,saveScoreChar,f_letter_down,SAVE_SCORE_ID},
+        {UP_EVENT,saveScoreChar,f_letter_up,SAVE_SCORE_ID},
         {LEFT_EVENT,saveScoreChar,previousChar,SAVE_SCORE_ID},
         {RIGHT_EVENT,saveScoreChar,nextChar,SAVE_SCORE_ID},
         {ENTER_EVENT,startMenuPlayGame,saveScore,SAVE_SCORE_ID},

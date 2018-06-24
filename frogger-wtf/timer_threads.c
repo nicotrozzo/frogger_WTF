@@ -30,6 +30,6 @@ void* dispTimeThread(void* pArg)
     infinite_loop
     {
         usleep(ONE_SEC/FPS);
-        *ptimerFlag = true;   
+        *pTimerFlag = true;   
     }
 }       

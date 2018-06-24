@@ -12,7 +12,7 @@
 #include "termlib.h"
 #include "joydrv.h"
 #include "disdrv.h"
-#include "fsm.h"
+#include "gameStructs.h"
 
 #define infinite_loop while(1)
 #define JOY_THRESHOLD 70     // 10-100 Joystick threshold (sensitivity)

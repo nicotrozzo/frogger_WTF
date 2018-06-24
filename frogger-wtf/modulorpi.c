@@ -8,6 +8,7 @@
 #include "modulorpi.h"
 #include "eventQueue.h"
 #include "gameStructs.h"
+#include "timer_threads.h"
 
 static void printBoard(bool p2board[][DISSIZE]);
 static bool checkWin(frog_t *frogCoords, bool board[][DISSIZE]);
@@ -104,8 +105,8 @@ void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
     joystick_update();
     my_switch=joystick_get_switch_value();//recibe valores actuales del joystick y el boton
     my_coordinates = joystick_get_coord();
-
-    if(my_event->flag != true ) //generador de eventos
+#define TELEFONOSAMPA 1
+    if(TELEFONOSAMPA) //generador de eventos
     {
        if(!trigger_lock_x)
        {
@@ -174,14 +175,15 @@ Nota: no se encarga de mover la rana en el funcionamiento interno del juego, sol
 
 void* output_thread(void* pointer)
 {
-    bool carsBoard[DISSIZE][DISSIZE],disBoard[DISSIZE][DISSIZE];
+    bool carsBoard[DISSIZE][DISSIZE],disBoard[DISSIZE][DISSIZE],startMenu[DISSIZE][DISSIZE],quit[DISSIZE][DISSIZE],trophie[DISSIZE][DISSIZE],play[DISSIZE][DISSIZE];
     frog_t frogCoords;
+    uint8_t frogCounter = FROG_REFRESH;
     int i,j;
     for( i = 0 ; i < DISSIZE ; i++ )
     {
       for( j = 0 ; j < DISSIZE ; j++ )
       {
-        board[i][j] = false; //inicializo tablero apagado
+        carsBoard[i][j] = false; //inicializo tablero apagado
       }
     }
     gameData_t *pGameData = pointer;
@@ -276,7 +278,7 @@ void* output_thread(void* pointer)
                 {
                     frogCounter = FROG_REFRESH;
                     toggle = !toggle;
-                    display_write(pGameData->frog.x,pGameData->frog.y,toggle);  //prende/apaga la posicion de la rana
+                    display_write(frogCoords.x,frogCoords.y,toggle);  //prende/apaga la posicion de la rana
                 }
                 display_update();
             }
@@ -361,11 +363,12 @@ void printBoard(bool p2board[][DISSIZE])
 void moveFrog(uint16_t where,frog_t *frogCoords)
 {
   switch(where)
+  {
       case FROG_UP:
               frogCoords->y--;
           break;
       case FROG_DOWN:
-              frogCoords->y--;
+              frogCoords->y++;
           break;
       case FROG_RIGHT:
               frogCoords->x++;
@@ -373,6 +376,7 @@ void moveFrog(uint16_t where,frog_t *frogCoords)
       case FROG_LEFT:
               frogCoords->x--;
           break;
+  }       
 }
 
 
