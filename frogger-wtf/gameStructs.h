@@ -79,4 +79,6 @@ enum events {
     END_TABLE = -1
 };    
 
+#define LIVES 5
+
 #endif /* GAMESTRUCTS_H */
