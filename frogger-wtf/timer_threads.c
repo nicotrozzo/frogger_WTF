@@ -14,7 +14,7 @@ void* carsTimeThread (void* p2timer)
   {
    if(*(bool*) p2timer == false)  //solo arranca nuevamente cuando hayan leido el evento
    {
-     usleep(FROGTIME);
+     usleep(CARS_REFRESH_TIME);
      *(bool*)p2timer = true;
    }
   }

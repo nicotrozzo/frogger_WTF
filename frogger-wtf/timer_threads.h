@@ -17,7 +17,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 
-#define FROGTIME 1000
+#define CARS_REFRESH_TIME 100000
 #define infinite_loop while(1)
 #define ONE_SEC 1000000
 #define FPS 45

@@ -19,74 +19,6 @@ static void shift_handler(bool board[DISSIZE][DISSIZE], bool way, int row_num);
 static void shift_right_row(bool row[DISSIZE][DISSIZE], int row_num);
 static void shift_left_row(bool row[DISSIZE][DISSIZE], int row_num);
 
-/*int main(void)
-{
-  event_t evento;
-  evento.flag = false;
-  gameData_t gameData;
-  gameData.frog.x = 0;
-  gameData.frog.y = 0;
-  pthread_t tinp,tout;
-  bool board[DISSIZE][DISSIZE];
-  gameData.pBoard = &board;  //POSIBLE QUILOMBO
-  int i,j;
-  for( i = 0 ; i < DISSIZE ; i++ )
-  {
-    for( j = 0 ; j < DISSIZE ; j++ )
-    {
-      gameData.pBoard[0][i][j] = false; //inicializo tablero apagado
-    }
-  }
-  pthread_create(&tinp,NULL,input_thread,&evento);
-  pthread_create(&tout,NULL,output_thread,&gameData);
-  changemode(BUFFERED_OFF);
-  while(!kbhit())
-  {
-    if(evento.flag)
-    {
-      evento.flag = false;
-      if(evento.type == RIGHT_EVENT)
-      {
-        gameData.frog.x++;
-      }
-      else if(evento.type == LEFT_EVENT)
-      {
-        gameData.frog.x--;
-      }
-      else if(evento.type == UP_EVENT)
-      {
-        gameData.frog.y++;
-      }
-      else if(evento.type == DOWN_EVENT)
-      {
-        gameData.frog.y--;
-      }
-      else if(evento.type == ENTER_EVENT)
-      {
-      }
-      if(gameData.frog.x > MAX_X)
-      {
-        gameData.frog.x = MAX_X;
-      }
-      else if(gameData.frog.x < MIN_X)
-      {
-        gameData.frog.x = MIN_X;
-      }
-      if(gameData.frog.y > MAX_Y)
-      {
-        gameData.frog.y = MAX_Y;
-      }
-      if(gameData.frog.y < MIN_Y)
-      {
-        gameData.frog.y = MIN_Y;
-      }
-    }
-  }
-  changemode(BUFFERED_ON);
-  display_clear();
-  return 0;
-}*/
-
 void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
 {
   event_queue_t *my_event_queue = eventQueue; //asigno puntero para no tener que castear pcada vez que quiero usarlo
@@ -220,7 +152,6 @@ void* output_thread(void* pointer)
         {0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
         };
-    //bool disBoard[DISSIZE][DISSIZE];
     
     bool startMenu[DISSIZE][DISSIZE] = {
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -462,7 +393,7 @@ bool checkWin(frog_t *frogCoords, bool board[][DISSIZE])
 {
   if(!frogCoords->y)   //si la rana esta en la ultima fila(fila 0)
   {
-    board[frogCoords->x][frogCoords->y] = 1;    //deja prendido el lugar adonde llego la rana
+    board[frogCoords->x][frogCoords->y] = 1;    //OJO X E Y//deja prendido el lugar adonde llego la rana
     frogCoords->y = INIT_Y;    //OJO!!
     frogCoords->x = INIT_X;     //devuelve la rana a su posicion inicial
     return true;
@@ -535,9 +466,9 @@ void moveFrog(uint16_t where,frog_t *frogCoords)
 /****************************MOVIMIENTO DE AUTOS*********************************/
 
 /*cars_routine
- * Recibe un puntero a un arreglo con la posicion de los autos y un puntero a la posicion de la rana en X
+ * Recibe un puntero a un arreglo con la posicion de los autos y un puntero a la posicion de la rana 
  * Si se subio de nivel (enviar NULL como primer parametro), aumenta la velocidad del movimiento de los autos
- * Sino,
+ * Sino, mueve los autos (se fija si en este llamado los tiene que mover o no)
  * Recibe NULL si se subio de nivel*/
 
 void cars_routine(bool carsBoard[][DISSIZE],frog_t *frogCoords)
