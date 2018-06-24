@@ -80,5 +80,6 @@ enum events {
 };    
 
 #define LIVES 5
+#define EMPTY_SPACES 5
 
 #endif /* GAMESTRUCTS_H */

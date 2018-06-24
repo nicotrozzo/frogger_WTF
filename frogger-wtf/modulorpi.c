@@ -202,7 +202,24 @@ Se encarga de:
 
 void* output_thread(void* pointer)
 {
-    bool carsBoard[DISSIZE][DISSIZE];
+    bool carsBoard[DISSIZE][DISSIZE] = {
+        {1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+        {0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0},
+        {0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+        };
     //bool disBoard[DISSIZE][DISSIZE];
     
     bool startMenu[DISSIZE][DISSIZE] = {
@@ -281,13 +298,6 @@ void* output_thread(void* pointer)
     frog_t frogCoords;
     uint8_t frogCounter = FROG_REFRESH;
     int i,j;
-    for( i = 0 ; i < DISSIZE ; i++ )
-    {
-      for( j = 0 ; j < DISSIZE ; j++ )
-      {
-        carsBoard[i][j] = false; //inicializo tablero apagado
-      }
-    }
     gameData_t *pGameData = pointer;
     int maxPosition = INIT_Y;
 
@@ -392,8 +402,12 @@ void* output_thread(void* pointer)
                     toggle = !toggle;
                     display_write(frogCoords.x,frogCoords.y,toggle);  //prende/apaga la posicion de la rana
                 }
-                display_update();
+                display_update();                
             }
+            if(pGameData->quitGame)
+            {
+                
+            }    
             estadoActual = pGameData->currentState->stateID;
         }
         while( estadoActual == PAUSE_RESUME_ID && estadoActual == PAUSE_RESTART_ID )
@@ -415,7 +429,7 @@ void* output_thread(void* pointer)
         while( estadoActual == SAVE_SCORE_ID )
         {
             printf("Ahora estarias guardando tu puntaje si pudieras, puto\n");
-        
+            estadoActual = pGameData->currentState->stateID;
         }    
         
     }

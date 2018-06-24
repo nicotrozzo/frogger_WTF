@@ -20,15 +20,17 @@ void f_letter_down(void *pArg);
 void previousChar(void *pArg);
 void nextChar(void *pArg);
 void end_game(void *pArg);
-void game_over(void *pArg);
-void letter_up(void *pArg, int letter);
-void letter_down(void *pArg, int letter);
 void saveScore(void *pArg);
 void update_score(void *pArg);
 void checkLives(void *pArg);
 void checkLevelUp(void *pArg);
 void showPreviousScore(void *pArg);
 void showNextScore(void *pArg);
+
+#define LEVEL_UP_SCORE 100
+#define FORWARD_SCORE 10
+
+enum charManage {CURR = -1, NEXT = 0, PREV, START}; // esto se usa para las funciones que mueven la letras para guardar puntaje
 
 #endif /* ACTION_ROUTINES_H */
 
