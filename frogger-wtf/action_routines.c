@@ -6,12 +6,15 @@
 
 #include "gameStructs.h"
 #include "modulorpi.h"
+
 /*ESTO TIENE QUE IR EN EL .H PERO NETBEANS NO QUIERE*/
 #define LEVEL_UP_SCORE 100
 #define FORWARD_SCORE 10
 #define EMPTY_SPACES 5
 
 enum charManage {CURR = -1, NEXT = 0, PREV, START}; // esto se usa para las funciones que mueven la letras para guardar puntaje
+
+extern struct STATE saveScoreChar[];
 
 void non_act_routine(void *pArg);
 void frog_up(void *pArg);
