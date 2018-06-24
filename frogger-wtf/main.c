@@ -94,17 +94,17 @@ int main(void)
     gameData_t gameData;
     gameData.currentState = startMenuPlayGame;  //estado inicial
     gameData.quitGame = false;
-    gameData.cabeza = saveScoreChar;
+    //gameData.cabeza = saveScoreChar;
     
-    *(gameData.pEventQueue) = create_queue();   //creacion de la cola de eventos
+    gameData.eventQueue = create_queue();   //creacion de la cola de eventos
 
     pthread_t input_id,output_id;   
-    pthread_create(&input_id,NULL,input_thread,gameData.pEventQueue);  //creacion de threads de input y output
+    pthread_create(&input_id,NULL,input_thread,&gameData.eventQueue);  //creacion de threads de input y output
     pthread_create(&output_id,NULL,output_thread,&gameData);
     
     while( !gameData.quitGame )
     {
-        if( (event = get_event(gameData.pEventQueue)) )
+        if( (event = get_event(&gameData.eventQueue)) )
         {
             gameData.currentState = fsm_handler(gameData.currentState,event,&gameData);
         }    

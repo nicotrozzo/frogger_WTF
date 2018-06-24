@@ -136,7 +136,7 @@ void checkLives(void *pArg)
   gameData_t *pGameData = pArg;  
   if(!(--(pGameData-> lives)))
   {
-    pGameData->currentState = pGameData->cabeza;  //DESPUES VER QUE HACER
+    pGameData->currentState = saveScoreChar;  //DESPUES VER QUE HACER
   }
 }
 
