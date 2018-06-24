@@ -167,11 +167,10 @@ void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
 Recibe un puntero a la estructura gameData que contiene la informacion del juego
 Se encarga de:
 -manejar los menús juego
--Mover los autos y los troncos
+-Mover la rana, los autos y los troncos
 -Imprimir todo en el display de 16x16
 -Informar al kernel cuando hubo un choque
--Hacer parpadear la rana para diferenciarla de los autos (para eso usa el thread frogTimeThread)
-Nota: no se encarga de mover la rana en el funcionamiento interno del juego, solo imprime su movimiento */
+-Hacer parpadear la rana para diferenciarla de los autos (para eso usa el thread frogTimeThread) */
 
 void* output_thread(void* pointer)
 {
