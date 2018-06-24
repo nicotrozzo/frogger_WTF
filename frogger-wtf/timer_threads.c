@@ -7,7 +7,7 @@
 #include "timer_threads.h"
 
 /*frogTimeThread
-Timer para el parpadeo de la rana */
+Timer para el refresh de pantalla */
 void* carsTimeThread (void* p2timer)
 {
   infinite_loop
