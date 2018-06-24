@@ -76,7 +76,7 @@ enum events {
     ARRIVE_EVENT,
     COLLISION_EVENT,
     FORWARD_EVENT,
-    END_TABLE = -1
+    END_TABLE
 };    
 
 #define LIVES 5
