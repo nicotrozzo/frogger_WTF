@@ -33,7 +33,7 @@ typedef struct
  * el puntero de la cola. IMPORTANTE VERIFICAR ESO
  * ES MUY IMPORTANTE QUE SE DESTRUYAN LAS COLAS CREADAS
  *****************************************************************************************************************/
-event_queue_t create_queue ( void );
+event_queue_t *create_queue ( void );
 
 
 
