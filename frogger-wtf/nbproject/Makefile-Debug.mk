@@ -56,17 +56,17 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-lpthread /home/nico/Desktop/Progra/TPFINAL/pruebas/disdrv.o /home/nico/Desktop/Progra/TPFINAL/pruebas/joydrv.o /home/nico/Desktop/Progra/TPFINAL/pruebas/termlib.o
+LDLIBSOPTIONS=-lpthread /home/charlie/NetBeansProjects/frogger_WTF/frogger-wtf/disdrv.o /home/charlie/NetBeansProjects/frogger_WTF/frogger-wtf/joydrv.o /home/charlie/NetBeansProjects/frogger_WTF/frogger-wtf/termlib.o
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf: /home/nico/Desktop/Progra/TPFINAL/pruebas/disdrv.o
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf: /home/charlie/NetBeansProjects/frogger_WTF/frogger-wtf/disdrv.o
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf: /home/nico/Desktop/Progra/TPFINAL/pruebas/joydrv.o
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf: /home/charlie/NetBeansProjects/frogger_WTF/frogger-wtf/joydrv.o
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf: /home/nico/Desktop/Progra/TPFINAL/pruebas/termlib.o
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf: /home/charlie/NetBeansProjects/frogger_WTF/frogger-wtf/termlib.o
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}

@@ -112,38 +112,66 @@ void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
        {
          if(my_coordinates.x > JOY_THRESHOLD )
          {
-          emit_event(my_event_queue , RIGHT_EVENT);
-          trigger_lock_x = true;
-          printf("RIGHT EVENT\n");
+          if(emit_event(my_event_queue , RIGHT_EVENT))
+          {
+            trigger_lock_x = true;
+            printf("RIGHT EVENT\n");
+          }
+          else
+          {
+              printf("EVENT QUEUE IS FULL");
+          }
+           
          }
          else if(my_coordinates.x < -JOY_THRESHOLD )
          {
-          emit_event(my_event_queue , LEFT_EVENT);
-          trigger_lock_x = true;
-          printf("LEFT EVENT\n");
+          if(emit_event(my_event_queue , LEFT_EVENT))
+          {
+            trigger_lock_x = true;
+            printf("LEFT EVENT\n");
+          }
+          else
+          {
+              printf("EVENT QUEUE IS FULL");
+          }
          }
        }
        if(!trigger_lock_y)
        {
          if(my_coordinates.y > JOY_THRESHOLD )
          {
-           emit_event(my_event_queue , UP_EVENT);
-           trigger_lock_y = true;
-           printf("UP EVENT\n");
+           if(emit_event(my_event_queue , UP_EVENT))
+           {
+            trigger_lock_y = true;
+            printf("UP EVENT\n");
+           }
+           else
+          {
+              printf("EVENT QUEUE IS FULL");
+          }
          }
          else if(my_coordinates.y < -JOY_THRESHOLD )
          {
-           emit_event(my_event_queue , DOWN_EVENT);
-           trigger_lock_y = true;
-           printf("DOWN EVENT\n");
-         }
+           if(emit_event(my_event_queue , DOWN_EVENT))
+           {
+            trigger_lock_y = true;
+            printf("DOWN EVENT\n");
+           }
+          }
        }
        if(my_switch == J_PRESS && !switch_lock)
     	{
-        emit_event(my_event_queue , ENTER_EVENT);
-        switch_lock = true;
-        printf("ENTER EVENT\n");
-    	}
+            if(emit_event(my_event_queue , ENTER_EVENT))
+             {
+                switch_lock = true;
+                printf("ENTER EVENT\n");
+             }
+             else
+             {
+                printf("EVENT QUEUE IS FULL");
+             }
+         }
+    
     }
     if (trigger_lock_x && my_coordinates.x < JOY_THRESHOLD && my_coordinates.x > -JOY_THRESHOLD)  //bloqueo de lectura para evitar que se envie el evento si se mantiene presionado
     {
@@ -175,7 +203,81 @@ Nota: no se encarga de mover la rana en el funcionamiento interno del juego, sol
 
 void* output_thread(void* pointer)
 {
-    bool carsBoard[DISSIZE][DISSIZE],disBoard[DISSIZE][DISSIZE],startMenu[DISSIZE][DISSIZE],quit[DISSIZE][DISSIZE],trophie[DISSIZE][DISSIZE],play[DISSIZE][DISSIZE];
+    bool carsBoard[DISSIZE][DISSIZE],disBoard[DISSIZE][DISSIZE];
+    
+    bool startMenu[DISSIZE][DISSIZE] = {\
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+        {0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},\
+        {0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0},\
+        {0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0},\
+        {0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0},\
+        {0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0},\
+        {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},\
+        {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},\
+        {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},\
+        {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},\
+        {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},\
+        {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},\
+        {0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0},\
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+        };
+   bool quit[DISSIZE][DISSIZE] = {
+       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+       {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},\
+       {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},\
+       {0,0,0,0,0,1,0,1,1,0,1,0,0,0,0,0},\
+       {0,0,0,0,1,0,0,1,1,0,0,1,0,0,0,0},\
+       {0,0,0,1,0,0,0,1,1,0,0,0,1,0,0,0},\
+       {0,0,0,1,0,0,0,1,1,0,0,0,1,0,0,0},\
+       {0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0},\
+       {0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0},\
+       {0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0},\
+       {0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},\
+       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+   };
+   bool trophie[DISSIZE][DISSIZE] = {
+       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+       {0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0},\
+       {0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0},\
+       {0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0},\
+       {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},\
+       {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},\
+       {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},\
+       {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},\
+       {0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0},\
+       {0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},\
+       {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},\
+       {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},\
+       {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},\
+       {0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0},\
+       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+   };
+   bool play[DISSIZE][DISSIZE] = {
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+        {0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0},\
+        {0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0},\
+        {0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0},\
+        {0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0},\
+        {0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0},\
+        {0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0},\
+        {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},\
+        {0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0},\
+        {0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0},\
+        {0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0},\
+        {0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0},\
+        {0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0},\
+        {0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0},\
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},\
+    };
+                                        
     frog_t frogCoords;
     uint8_t frogCounter = FROG_REFRESH;
     int i,j;
@@ -363,20 +465,30 @@ void printBoard(bool p2board[][DISSIZE])
 void moveFrog(uint16_t where,frog_t *frogCoords)
 {
   switch(where)
-  {
       case FROG_UP:
+          if(frogCoords->y != FROG_Y_MIN)//Hace falta?
+          {
               frogCoords->y--;
+          }
           break;
       case FROG_DOWN:
+          if(frogCoords->y != FROG_Y_MAX)
+          {
               frogCoords->y++;
+          }
           break;
       case FROG_RIGHT:
+          if(frogCoords->x != FROG_X_MAX)
+          {
               frogCoords->x++;
+          }
           break;
       case FROG_LEFT:
+          if(frogCoords->x != FROG_X_MIN)
+          {
               frogCoords->x--;
+          }
           break;
-  }       
 }
 
 
@@ -428,11 +540,17 @@ void cars_routine(bool carsBoard[][DISSIZE],frog_t *frogCoords)
                     {
                         if(ways[row])
                         {
+                          if(frogCoords->x != FROG_X_MAX)
+                          {
                             frogCoords->x++;     //si ademas esta moviendo troncos, mueve la rana junto con los troncos
+                          }
                         }
                         else
                         {
+                          if(frogCoords->x != FROG_X_MIN)
+                          {
                             frogCoords->x--;
+                          }
                         }
                     }
                 }
@@ -440,6 +558,7 @@ void cars_routine(bool carsBoard[][DISSIZE],frog_t *frogCoords)
         }
     }
 }
+
 
 void shift_handler(bool board[DISSIZE][DISSIZE], bool way, int row_num)
 {

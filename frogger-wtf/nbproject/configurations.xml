@@ -53,9 +53,9 @@
         <linkerTool>
           <linkerLibItems>
             <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
-            <linkerLibFileItem>/home/nico/Desktop/Progra/TPFINAL/pruebas/disdrv.o</linkerLibFileItem>
-            <linkerLibFileItem>/home/nico/Desktop/Progra/TPFINAL/pruebas/joydrv.o</linkerLibFileItem>
-            <linkerLibFileItem>/home/nico/Desktop/Progra/TPFINAL/pruebas/termlib.o</linkerLibFileItem>
+            <linkerLibFileItem>/home/charlie/NetBeansProjects/frogger_WTF/frogger-wtf/disdrv.o</linkerLibFileItem>
+            <linkerLibFileItem>/home/charlie/NetBeansProjects/frogger_WTF/frogger-wtf/joydrv.o</linkerLibFileItem>
+            <linkerLibFileItem>/home/charlie/NetBeansProjects/frogger_WTF/frogger-wtf/termlib.o</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

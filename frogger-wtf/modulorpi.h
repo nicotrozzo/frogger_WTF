@@ -20,6 +20,10 @@
 #define INIT_X 7
 #define INIT_Y 15
 #define FROG_REFRESH 5
+#define FROG_X_MAX 16
+#define FROG_Y_MAX 16
+#define FROG_X_MIN 0
+#define FROG_Y_MIN 0
 
 enum movefrog { FROG_UP, FROG_DOWN, FROG_RIGHT, FROG_LEFT };
 
