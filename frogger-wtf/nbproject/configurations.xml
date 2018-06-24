@@ -4,7 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>/home/nico/Desktop/NetBeansProjects/frogger_WTFGIT/frogger-wtf/actionRoutines.h</itemPath>
+      <itemPath>/home/nico/Desktop/NetBeansProjects/frogger_WTFGIT/frogger-wtf/action_routines.h</itemPath>
       <itemPath>disdrv.h</itemPath>
       <itemPath>eventQueue.h</itemPath>
       <itemPath>gameStructs.h</itemPath>
@@ -20,7 +20,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>/home/nico/Desktop/NetBeansProjects/frogger-wtf/action_routines.c</itemPath>
+      <itemPath>/home/nico/Desktop/NetBeansProjects/frogger_WTFGIT/frogger-wtf/action_routines.c</itemPath>
       <itemPath>eventQueue.c</itemPath>
       <itemPath>main.c</itemPath>
       <itemPath>modulorpi.c</itemPath>
@@ -59,12 +59,12 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="/home/nico/Desktop/NetBeansProjects/frogger-wtf/action_routines.c"
+      <item path="/home/nico/Desktop/NetBeansProjects/frogger_WTFGIT/frogger-wtf/action_routines.c"
             ex="false"
             tool="0"
             flavor2="0">
       </item>
-      <item path="/home/nico/Desktop/NetBeansProjects/frogger_WTFGIT/frogger-wtf/actionRoutines.h"
+      <item path="/home/nico/Desktop/NetBeansProjects/frogger_WTFGIT/frogger-wtf/action_routines.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -112,12 +112,12 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="/home/nico/Desktop/NetBeansProjects/frogger-wtf/action_routines.c"
+      <item path="/home/nico/Desktop/NetBeansProjects/frogger_WTFGIT/frogger-wtf/action_routines.c"
             ex="false"
             tool="0"
             flavor2="0">
       </item>
-      <item path="/home/nico/Desktop/NetBeansProjects/frogger_WTFGIT/frogger-wtf/actionRoutines.h"
+      <item path="/home/nico/Desktop/NetBeansProjects/frogger_WTFGIT/frogger-wtf/action_routines.h"
             ex="false"
             tool="3"
             flavor2="0">

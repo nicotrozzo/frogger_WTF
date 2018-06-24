@@ -35,7 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/f2a5ccf7/action_routines.o \
+	${OBJECTDIR}/_ext/2dfe622a/action_routines.o \
 	${OBJECTDIR}/eventQueue.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/modulorpi.o \
@@ -72,10 +72,10 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/frogger-wtf ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/_ext/f2a5ccf7/action_routines.o: /home/nico/Desktop/NetBeansProjects/frogger-wtf/action_routines.c
-	${MKDIR} -p ${OBJECTDIR}/_ext/f2a5ccf7
+${OBJECTDIR}/_ext/2dfe622a/action_routines.o: /home/nico/Desktop/NetBeansProjects/frogger_WTFGIT/frogger-wtf/action_routines.c
+	${MKDIR} -p ${OBJECTDIR}/_ext/2dfe622a
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/f2a5ccf7/action_routines.o /home/nico/Desktop/NetBeansProjects/frogger-wtf/action_routines.c
+	$(COMPILE.c) -g -Wall -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/2dfe622a/action_routines.o /home/nico/Desktop/NetBeansProjects/frogger_WTFGIT/frogger-wtf/action_routines.c
 
 ${OBJECTDIR}/eventQueue.o: eventQueue.c
 	${MKDIR} -p ${OBJECTDIR}

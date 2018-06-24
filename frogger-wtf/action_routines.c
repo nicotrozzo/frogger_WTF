@@ -6,8 +6,31 @@
 
 #include "gameStructs.h"
 #include "modulorpi.h"
-#include "actionRoutines.h"
+/*ESTO TIENE QUE IR EN EL .H PERO NETBEANS NO QUIERE*/
+#define LEVEL_UP_SCORE 100
+#define FORWARD_SCORE 10
+#define EMPTY_SPACES 5
 
+enum charManage {CURR = -1, NEXT = 0, PREV, START}; // esto se usa para las funciones que mueven la letras para guardar puntaje
+
+void non_act_routine(void *pArg);
+void frog_up(void *pArg);
+void frog_down(void *pArg);
+void frog_left(void *pArg);
+void frog_right(void *pArg);
+void start_game(void *pArg);
+void f_letter_up(void *pArg);
+void f_letter_down(void *pArg);
+void previousChar(void *pArg);
+void nextChar(void *pArg);
+void end_game(void *pArg);
+void saveScore(void *pArg);
+void update_score(void *pArg);
+void checkLives(void *pArg);
+void checkLevelUp(void *pArg);
+void showPreviousScore(void *pArg);
+void showNextScore(void *pArg);
+/*ESTO TIENE QUE IR EN EL .H PERO NETBEANS NO QUIERE*/
 
 static void letter_up(void *pArg, int letter);
 static void letter_down(void *pArg, int letter);
@@ -15,7 +38,7 @@ static int getScoreChar(int whatToDo);
 
 void non_act_routine(void *pArg)
 {
-
+  
 }
 
 void frog_up(void *pArg)
@@ -110,10 +133,11 @@ void checkLevelUp(void *pArg)
 
 void checkLives(void *pArg)
 {
-  if(!--((gameData_t*)pArg -> lives))
-  (
-    ((gameData_t*)pArg)->currentState = saveScoreChar;
-  )
+  gameData_t *pGameData = pArg;  
+  if(!(--(pGameData-> lives)))
+  {
+    pGameData->currentState = pGameData->cabeza;  //DESPUES VER QUE HACER
+  }
 }
 
 void update_score(void *pArg)
@@ -189,7 +213,7 @@ static int getScoreChar(int whatToDo)
         break;
     default:
         scoreChar = 0;
-        return scoreChar;
-  }
-
-}
+        return scoreChar;    
+  }  
+  return scoreChar; //esto no se usa, solo para evitar warning
+} 
