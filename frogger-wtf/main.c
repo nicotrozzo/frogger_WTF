@@ -22,13 +22,13 @@
 state_t* fsm_handler(state_t *currentState, uint16_t newEvent, void *pActRoutineData);
 
 /*Forward declarations*/
-extern state_t startMenuViewScoreBoard[];
-extern state_t startMenuQuit[];
-extern state_t scoreBoard[];
-extern state_t game[];
-extern state_t pauseMenuResume[];
-extern state_t pauseMenuBackToStart[];
-extern state_t saveScoreChar[];
+extern struct STATE startMenuViewScoreBoard[];
+extern struct STATE startMenuQuit[];
+extern struct STATE scoreBoard[];
+extern struct STATE game[];
+extern struct STATE pauseMenuResume[];
+extern struct STATE pauseMenuBackToStart[];
+extern struct STATE saveScoreChar[];
 
 
 int main(void) 
