@@ -101,6 +101,7 @@ int main(void)
     gameData_t gameData;
     gameData.currentState = startMenuPlayGame;  //estado inicial
     gameData.quitGame = false;
+    gameData.cabeza = saveScoreChar;
     
     *(gameData.pEventQueue) = create_queue();   //creacion de la cola de eventos
 
