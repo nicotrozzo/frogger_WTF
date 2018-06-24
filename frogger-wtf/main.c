@@ -103,7 +103,7 @@ int main(void)
     
     while( !gameData.quitGame )
     {
-        if( event = get_event(gameData.pEventQueue) )
+        if( (event = get_event(gameData.pEventQueue)) )
         {
             gameData.currentState = fsm_handler(gameData.currentState,event,&gameData);
         }    
