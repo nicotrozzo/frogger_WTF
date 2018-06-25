@@ -22,8 +22,7 @@
 #include "fsm.h"
 
 state_t* fsm_handler(state_t *currentState, uint16_t newEvent, void *pActRoutineData);
-void output_init(void);
-void output_clear(void);
+
 
 int main(void) 
 {
@@ -66,15 +65,3 @@ state_t* fsm_handler(state_t *currentState, uint16_t newEvent, void *pActRoutine
     
 }
 
-void output_init(void)
-{
-    display_init();
-    display_clear();
-    display_update();
-}
-
-void output_clear(void)
-{
-    display_clear();
-    display_update();
-}

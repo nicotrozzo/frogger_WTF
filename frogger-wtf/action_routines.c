@@ -242,3 +242,9 @@ void output_init(void)
     display_clear();
     display_update();
 }
+
+void output_clear(void)
+{
+    display_clear();
+    display_update();
+}
