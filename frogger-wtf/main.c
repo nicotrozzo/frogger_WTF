@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <unistd.h>
 #include "gameStructs.h"
 #include "eventQueue.h"
 #include "modulorpi.h"
@@ -21,7 +22,7 @@
 #include "fsm.h"
 
 state_t* fsm_handler(state_t *currentState, uint16_t newEvent, void *pActRoutineData);
-
+void output_init(void);
 
 int main(void) 
 {
@@ -32,7 +33,7 @@ int main(void)
     gameData.quitGame = false;
     event_queue_t queue = create_queue();
     gameData.pEventQueue = &queue;   //creacion de la cola de eventos
-    //output_init();
+    output_init();
     pthread_t input_id,output_id;   
     pthread_create(&input_id,NULL,input_thread,gameData.pEventQueue);  //creacion de threads de input y output
     pthread_create(&output_id,NULL,output_thread,&gameData);
@@ -44,7 +45,7 @@ int main(void)
             gameData.currentState = fsm_handler(gameData.currentState,event,&gameData);
         }    
     }       
-    sleep(3);   //CABEZASDLKAFLJKSDAFJSDAJFDLJSAGFDLJ;KSA
+    output_clear();
     return (EXIT_SUCCESS);
 }
 
@@ -62,4 +63,17 @@ state_t* fsm_handler(state_t *currentState, uint16_t newEvent, void *pActRoutine
     currentState = currentState->nextState;
     return currentState;
     
+}
+
+void output_init(void)
+{
+    display_init();
+    display_clear();
+    display_update();
+}
+
+void output_clear(void)
+{
+    display_clear();
+    display_update();
 }
