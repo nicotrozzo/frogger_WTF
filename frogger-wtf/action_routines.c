@@ -149,7 +149,7 @@ void checkLevelUp(void *pArg)
 void checkLives(void *pArg)
 {
   gameData_t *pGameData = pArg;  
-  if(!(--(pGameData-> lives)))
+  if(!pGameData-> lives)
   {
     pGameData->currentState = saveScoreChar;  //DESPUES VER QUE HACER
   }
