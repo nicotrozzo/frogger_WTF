@@ -20,7 +20,7 @@
 #define CARS_REFRESH_TIME 100000
 #define infinite_loop while(1)
 #define ONE_SEC 1000000
-#define FPS 45
+#define FPS 30
 
 void* carsTimeThread (void* event);
 void* dispTimeThread(void* pArg);
