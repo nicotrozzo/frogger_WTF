@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 
-#include "gameStructs.h"
-#include "modulorpi.h"
 #include "action_routines.h"
 
 /*ESTO TIENE QUE IR EN EL .H PERO NETBEANS NO QUIERE*/
@@ -150,12 +148,16 @@ void checkLevelUp(void *pArg)
   {
     ((gameData_t*)pArg)->score += LEVEL_UP_SCORE;
     ((gameData_t*)pArg)->levelUp = true;
+    sem_post(&levelUpSem);
+    printf("LEVEL UP!, score: %d\n",pGameData->score);
     times = 0;
   }
-  else      //si no subio de nivel significa que solo gano
+  else      //si no subio de nivel significa que solo llego arriba
   {
     ((gameData_t*)pArg)->score += ARRIVE_SCORE;  
     ((gameData_t*)pArg)->levelUp = false;
+    sem_post(&levelUpSem);
+    printf("ARRIVED!, score: %d\n",pGameData->score);
   }
 }
 

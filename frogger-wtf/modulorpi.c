@@ -463,7 +463,8 @@ void* output_thread(void* pointer)
                     {
                         printf("Coludn't emit event\n");
                     }
-                    //SEM WAIT LEVEL UP O PREGUNTAR EN OTRO LADO LEVEL UP, POR EJEMPLO ANTES DE MOVER LOS AUTOS
+                    //ALLEGRO TIENE QUE TENER ESTE MISMO SEMAFORO
+                    sem_wait(&levelUpSem);
                     if(pGameData->levelUp)
                     {
                         copyBoard(carsBoard,initCarsBoard);
@@ -487,26 +488,22 @@ void* output_thread(void* pointer)
             if(pGameData -> lives )
             {
                 printBoard(carsBoard);  //Escribe en el display el estado actual de autos y troncos
-            }
-            if(dispTimer)
-            {
-                if(!frogCounter--)
+                if(dispTimer)
                 {
-                    frogCounter = FROG_REFRESH;
-                    //toggle = !toggle;
-                    display_write(frogCoords.y,frogCoords.x,0);  //prende/apaga la posicion de la rana
-                }
-                else
-                {
-                    display_write(frogCoords.y,frogCoords.x,1);
-                }
-                display_update();     
-                dispTimer = false;
+                    if(!frogCounter--)
+                    {
+                        frogCounter = FROG_REFRESH;
+                        //toggle = !toggle;
+                        display_write(frogCoords.y,frogCoords.x,0);  //prende/apaga la posicion de la rana
+                    }
+                    else
+                    {
+                        display_write(frogCoords.y,frogCoords.x,1);
+                    }
+                    display_update();     
+                    dispTimer = false;
+                }              
             }
-            
-          
-
-            
             /*if(pGameData->quitGame)
             {
                 printBoard(off);

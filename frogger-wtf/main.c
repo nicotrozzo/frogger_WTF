@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <semaphore.h>
 #include "gameStructs.h"
 #include "eventQueue.h"
 #include "modulorpi.h"
@@ -23,6 +24,7 @@
 
 state_t* fsm_handler(state_t *currentState, uint16_t newEvent, void *pActRoutineData);
 
+sem_t levelUpSem;
 
 int main(void) 
 {
@@ -37,7 +39,7 @@ int main(void)
     pthread_t input_id,output_id;   
     pthread_create(&input_id,NULL,input_thread,gameData.pEventQueue);  //creacion de threads de input y output
     pthread_create(&output_id,NULL,output_thread,&gameData);
-    
+    sem_init(&levelUpSem,0,0);
     while( !gameData.quitGame )
     {
         if( (event = get_event(gameData.pEventQueue)) )
@@ -47,6 +49,7 @@ int main(void)
     }       
     //output_clear();
     pthread_join(output_id,NULL);
+    sem_destroy(&levelUpSem);
     return (EXIT_SUCCESS);
 }
 

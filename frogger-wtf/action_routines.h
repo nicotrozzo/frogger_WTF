@@ -9,6 +9,10 @@
 #ifndef ACTION_ROUTINES_H
 #define ACTION_ROUTINES_H
 
+#include <semaphore.h>
+#include "gameStructs.h"
+#include "modulorpi.h"
+
 void non_act_routine(void *pArg);
 void frog_up(void *pArg);
 void frog_down(void *pArg);

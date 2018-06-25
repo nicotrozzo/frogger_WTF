@@ -6,8 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-
-#include <time.h>
+#include <semaphore.h>
 
 #include "termlib.h"
 #include "joydrv.h"
