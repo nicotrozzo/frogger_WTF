@@ -45,7 +45,8 @@ int main(void)
             gameData.currentState = fsm_handler(gameData.currentState,event,&gameData);
         }    
     }       
-    output_clear();
+    //output_clear();
+    pthread_join(output_id,NULL);
     return (EXIT_SUCCESS);
 }
 
