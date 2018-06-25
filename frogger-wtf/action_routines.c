@@ -47,29 +47,41 @@ void non_act_routine(void *pArg)
 void frog_up(void *pArg)
 {
   gameData_t *pData = pArg;
-  pData->moveFrog.flag = true;
-  pData->moveFrog.where = FROG_UP;
+  if(pData->moveFrog.flag == false)
+  {    
+    pData->moveFrog.flag = true;
+    pData->moveFrog.where = FROG_UP;
+  }  
 }
 
 void frog_down(void *pArg)
 {
   gameData_t *pData = pArg;
-  pData->moveFrog.flag = true;
-  pData->moveFrog.where = FROG_DOWN;
+  if(pData->moveFrog.flag == false)
+  {    
+    pData->moveFrog.flag = true;
+    pData->moveFrog.where = FROG_DOWN;
+  }  
 }
 
 void frog_left(void *pArg)
 {
   gameData_t *pData = pArg;
-  pData->moveFrog.flag = true;
-  pData->moveFrog.where = FROG_LEFT;
+  if(pData->moveFrog.flag == false)
+  {    
+    pData->moveFrog.flag = true;
+    pData->moveFrog.where = FROG_LEFT;
+  }  
 }
 
 void frog_right(void *pArg)
 {
   gameData_t *pData = pArg;
-  pData->moveFrog.flag = true;
-  pData->moveFrog.where = FROG_RIGHT;
+  if(pData->moveFrog.flag == false)
+  {
+    pData->moveFrog.flag = true;
+    pData->moveFrog.where = FROG_RIGHT;
+  } 
 }
 
 void start_game(void *pArg)

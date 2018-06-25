@@ -294,6 +294,7 @@ void* output_thread(void* pointer)
                         printf("Coludn't emit event\n");
                     }
                 }
+                pGameData->moveFrog.flag = false;
             }
 
             printBoard(carsBoard);  //Escribe en el display el estado actual de autos y troncos
