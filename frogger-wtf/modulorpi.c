@@ -465,7 +465,7 @@ void* output_thread(void* pointer)
             else if( checkWin(&frogCoords,carsBoard) )
             {
                 maxPosition = INIT_Y;
-                if( !emit_event(pGameData->pEventQueue,FORWARD_EVENT) )
+                if( !emit_event(pGameData->pEventQueue,ARRIVE_EVENT) )
                 {
                     printf("Coludn't emit event\n");
                 }
@@ -654,7 +654,7 @@ static void showLives(int lives)
 
 void cars_routine(bool carsBoard[][DISSIZE],frog_t *frogCoords)
 {
-    static int dividersMax[DISSIZE] = {0, 15, 20, 8, 15, 20, 8, 15, 0, 12, 7, 12, 10, 7, 10, 0}; // Cuando se suba de nivel, alguno de estos máximos se decrementará para hacer que el ciclo de avance de el carril correspondiente sea más rápido.
+    static int dividersMax[DISSIZE] = {0, 15, 20, 8, 15, 20, 8, 15, 0, 12, 7, 12, 10, 7, 10, 0}; // Cuando se suba de nivel, estos máximos se decrementarán para hacer que el ciclo de avance de carril sea más rápido.
     static int dividers[DISSIZE] = {0, 15, 20, 8, 15, 20, 8, 15, 0, 12, 7, 12, 10, 7, 10, 0}; // Ante un evento de timer, se decrementa el divider de cada carril, logrando así que cada carril tenga su ciclo de timer, cuando el divider llega a 0.
     bool ways[DISSIZE] = {0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0};
     int row = 0;
