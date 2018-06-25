@@ -33,6 +33,7 @@ void checkLevelUp(void *pArg);
 void showPreviousScore(void *pArg);
 void showNextScore(void *pArg);*/
 /*ESTO TIENE QUE IR EN EL .H PERO NETBEANS NO QUIERE*/
+extern sem_t levelUpSem;
 
 static void letter_up(void *pArg, int letter);
 static void letter_down(void *pArg, int letter);

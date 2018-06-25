@@ -10,6 +10,8 @@
 #include "gameStructs.h"
 #include "timer_threads.h"
 
+extern sem_t levelUpSem;
+
 const bool initCarsBoard[DISSIZE][DISSIZE] = {
         {1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1},
         {0,0,1,1,1,1,1,0,0,1,1,1,1,1,1,1},
