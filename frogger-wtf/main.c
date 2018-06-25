@@ -45,7 +45,6 @@ int main(void)
         }    
     }    
     
-    pthread_join(output_id,NULL);
     return (EXIT_SUCCESS);
 }
 
