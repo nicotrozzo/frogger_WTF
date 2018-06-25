@@ -424,29 +424,25 @@ void moveFrog(uint16_t where,frog_t *frogCoords)
   switch(where)
   {        
       case FROG_UP:
-          frogCoords->y--;
-          if(frogCoords->y < FROG_Y_MIN)    //Hace falta?
+          if(--frogCoords->y < FROG_Y_MIN)    //Hace falta?
           {
               frogCoords->y = FROG_Y_MIN;
           }
           break;
       case FROG_DOWN:
-          frogCoords->y++;
-          if(frogCoords->y > FROG_Y_MAX)
+          if(++frogCoords->y > FROG_Y_MAX)
           {
               frogCoords->y = FROG_Y_MAX;
           }
           break;
       case FROG_RIGHT:
-          frogCoords->x++;
-          if(frogCoords->x > FROG_X_MAX)
+          if(++frogCoords->x > FROG_X_MAX)
           {
               frogCoords->x = FROG_X_MAX;
           }      
           break;
       case FROG_LEFT:
-          frogCoords->x--;
-          if(frogCoords->x < FROG_X_MIN)
+          if(--frogCoords->x < FROG_X_MIN)
           {
               frogCoords->x = FROG_X_MIN;
           }
