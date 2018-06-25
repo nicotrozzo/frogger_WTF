@@ -53,7 +53,7 @@ typedef struct
     uint score;
     scorer_t (*pTop10)[10];     //pensar si conviene
     state_t *currentState;
-    event_queue_t eventQueue;
+    event_queue_t *pEventQueue;
    // state_t *cabeza;    //DESPUER VER COMO HACER
 }gameData_t;
 

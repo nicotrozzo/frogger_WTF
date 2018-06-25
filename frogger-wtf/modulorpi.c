@@ -291,7 +291,7 @@ void* output_thread(void* pointer)
                 if(maxPosition > frogCoords.y)
                 {
                     maxPosition = frogCoords.y;     //se fija si avanzo mas que antes, en caso afirmativo le avisa al main para actualizar el puntaje
-                    if( !emit_event(&pGameData->eventQueue,FORWARD_EVENT) )
+                    if( !emit_event(pGameData->pEventQueue,FORWARD_EVENT) )
                     {
                         printf("Coludn't emit event\n");
                     }
@@ -303,7 +303,7 @@ void* output_thread(void* pointer)
             if( checkCollision(&frogCoords,carsBoard) )         //FIJARSE EL ORDEN! SI PERDIO CAPAZ HAYA QUE PONER UN BREAK
             {
                 maxPosition = INIT_Y;
-                if( !emit_event(&pGameData->eventQueue,COLLISION_EVENT) )   //si la rana choco, le avisa al main
+                if( !emit_event(pGameData->pEventQueue,COLLISION_EVENT) )   //si la rana choco, le avisa al main
                 {
                     printf("Coludn't emit event\n");
                 }
@@ -311,7 +311,7 @@ void* output_thread(void* pointer)
             else if( checkWin(&frogCoords,carsBoard) )
             {
                 maxPosition = INIT_Y;
-                if( !emit_event(&pGameData->eventQueue,FORWARD_EVENT) )
+                if( !emit_event(pGameData->pEventQueue,FORWARD_EVENT) )
                 {
                     printf("Coludn't emit event\n");
                 }
