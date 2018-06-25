@@ -377,7 +377,8 @@ void* output_thread(void* pointer)
     pthread_create(&dispTid,NULL,dispTimeThread,&dispTimer);
     bool toggle = false;    //variable para el parpadeo de la rana
 
-    infinite_loop
+//    infinite_loop
+    while(!pGameData->quitGame)
     {
         while(pGameData->currentState->stateID == START_PLAY_ID || pGameData->currentState->stateID == START_QUIT_ID || pGameData->currentState->stateID == START_SCOREBOARD_ID) //mientras esta en los estados del startmenu
         {
@@ -482,11 +483,11 @@ void* output_thread(void* pointer)
             }
 
             
-            if(pGameData->quitGame)
+            /*if(pGameData->quitGame)
             {
                 display_clear();
                 display_update();
-            }    
+            } */   
         }
         while( pGameData->currentState->stateID == PAUSE_RESUME_ID || pGameData->currentState->stateID == PAUSE_RESTART_ID )
         {
@@ -510,6 +511,8 @@ void* output_thread(void* pointer)
         }    
         
     }
+    display_clear();
+    display_update();
     return NULL;
 }
 
