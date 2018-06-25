@@ -50,7 +50,7 @@ state_t scoreBoard[3+1] = {
     {ENTER_EVENT,startMenuViewScoreBoard,non_act_routine,SCORE_BOARD_ID},
     {END_TABLE,scoreBoard,non_act_routine,SCORE_BOARD_ID}
 };
-state_t game[8+1] = {
+state_t game[9+1] = {
     {DOWN_EVENT,game,frog_down,GAME_ID},
     {UP_EVENT,game,frog_up,GAME_ID},
     {LEFT_EVENT,game,frog_left,GAME_ID},
@@ -58,6 +58,7 @@ state_t game[8+1] = {
     {ENTER_EVENT,pauseMenuResume,non_act_routine,GAME_ID},
     {ARRIVE_EVENT,game,checkLevelUp,GAME_ID},
     {COLLISION_EVENT,game,checkLives,GAME_ID},
+    {GAME_OVER_EVENT,saveScoreChar,non_act_routine,GAME_ID},
     {FORWARD_EVENT,game,update_score,GAME_ID},
     {END_TABLE,game,non_act_routine,GAME_ID}
 };

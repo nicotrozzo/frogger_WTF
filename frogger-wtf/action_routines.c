@@ -151,7 +151,7 @@ void checkLives(void *pArg)
   gameData_t *pGameData = pArg;  
   if(!pGameData-> lives)
   {
-    pGameData->currentState = saveScoreChar;  //DESPUES VER QUE HACER
+    emit_event(pGameData->pEventQueue,GAME_OVER_EVENT);  //DESPUES VER QUE HACER CAPAZ EMIT_EVENT CON OTRO EVENTO
   }
 }
 

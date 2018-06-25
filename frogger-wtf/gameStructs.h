@@ -75,6 +75,7 @@ enum events {
     ENTER_EVENT,
     ARRIVE_EVENT,
     COLLISION_EVENT,
+    GAME_OVER_EVENT,
     FORWARD_EVENT,
     END_TABLE
 };    
