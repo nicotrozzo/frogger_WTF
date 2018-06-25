@@ -10,6 +10,79 @@
 #include "gameStructs.h"
 #include "timer_threads.h"
 
+bool startMenu[DISSIZE][DISSIZE] = {
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0},
+    {0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0},
+    {0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
+    {0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+    };
+bool quit[DISSIZE][DISSIZE] = {
+   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
+   {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
+   {0,0,0,0,0,1,0,1,1,0,1,0,0,0,0,0},
+   {0,0,0,0,1,0,0,1,1,0,0,1,0,0,0,0},
+   {0,0,0,1,0,0,0,1,1,0,0,0,1,0,0,0},
+   {0,0,0,1,0,0,0,1,1,0,0,0,1,0,0,0},
+   {0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0},
+   {0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0},
+   {0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0},
+   {0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
+   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+};
+bool trophie[DISSIZE][DISSIZE] = {
+   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   {0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0},
+   {0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0},
+   {0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0},
+   {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},
+   {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},
+   {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},
+   {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},
+   {0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0},
+   {0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
+   {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
+   {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
+   {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
+   {0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0},
+   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+};
+bool play[DISSIZE][DISSIZE] = {
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0},
+    {0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0},
+    {0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0},
+    {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},
+    {0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0},
+    {0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0},
+    {0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0},
+    {0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+};
+
 static void printBoard(bool p2board[][DISSIZE]);
 static bool checkWin(frog_t *frogCoords, bool board[][DISSIZE]);
 static bool checkCollision(frog_t *frogCoords,bool board[][DISSIZE]);
@@ -152,81 +225,8 @@ void* output_thread(void* pointer)
         {0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
         };
-    
-    bool startMenu[DISSIZE][DISSIZE] = {
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0},
-        {0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0},
-        {0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-        {0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-        };
-   bool quit[DISSIZE][DISSIZE] = {
-       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-       {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
-       {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
-       {0,0,0,0,0,1,0,1,1,0,1,0,0,0,0,0},
-       {0,0,0,0,1,0,0,1,1,0,0,1,0,0,0,0},
-       {0,0,0,1,0,0,0,1,1,0,0,0,1,0,0,0},
-       {0,0,0,1,0,0,0,1,1,0,0,0,1,0,0,0},
-       {0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0},
-       {0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0},
-       {0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0},
-       {0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
-       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-   };
-   bool trophie[DISSIZE][DISSIZE] = {
-       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-       {0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0},
-       {0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0},
-       {0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0},
-       {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},
-       {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},
-       {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},
-       {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},
-       {0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0},
-       {0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
-       {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
-       {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
-       {0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0},
-       {0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0},
-       {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-   };
-   bool play[DISSIZE][DISSIZE] = {
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0},
-        {0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0},
-        {0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0},
-        {0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0},
-        {0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0},
-        {0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0},
-        {0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0},
-        {0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0},
-        {0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0},
-        {0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-    };
-                                        
-    frog_t frogCoords;
+                                            
+    frog_t frogCoords = {7,15};
     uint8_t frogCounter = FROG_REFRESH;
     gameData_t *pGameData = pointer;
     int maxPosition = INIT_Y;
@@ -243,11 +243,9 @@ void* output_thread(void* pointer)
 
     while(!pGameData->quitGame)
     {
-        uint16_t estadoActual = pGameData->currentState->stateID;
-
-        while(estadoActual >= START_PLAY_ID || estadoActual <= START_QUIT_ID) //mientras esta en los estados del startmenu
+        while(pGameData->currentState->stateID == START_PLAY_ID || pGameData->currentState->stateID == START_QUIT_ID || pGameData->currentState->stateID == START_SCOREBOARD_ID) //mientras esta en los estados del startmenu
         {
-            switch(estadoActual)
+            switch(pGameData->currentState->stateID)
             {
                 case START_PLAY_ID:
                     printBoard(play);
@@ -262,11 +260,11 @@ void* output_thread(void* pointer)
             if(dispTimer)
             {
               display_update();
+              dispTimer = false;
             }
-            estadoActual = pGameData->currentState->stateID;
         }
 
-        while( estadoActual == SCORE_BOARD_ID )
+        while( pGameData->currentState->stateID == SCORE_BOARD_ID )
         {
             printf("Aca estaria el scoreboard si tan solo lo tuviera\n");
             /*showName( *(pGameData->pTop10 + i) );
@@ -278,7 +276,7 @@ void* output_thread(void* pointer)
             estadoActual = pGameData->currentState->stateID;*/
         }
 
-        while( estadoActual == GAME_ID )//mover autos,VER CARS_ROUTINE
+        while( pGameData->currentState->stateID == GAME_ID )//mover autos,VER CARS_ROUTINE
         {
             if(carsTimer)
             {
@@ -332,34 +330,33 @@ void* output_thread(void* pointer)
                     toggle = !toggle;
                     display_write(frogCoords.x,frogCoords.y,toggle);  //prende/apaga la posicion de la rana
                 }
-                display_update();                
+                display_update();     
+                dispTimer = false;
             }
             if(pGameData->quitGame)
             {
                 
             }    
-            estadoActual = pGameData->currentState->stateID;
         }
-        while( estadoActual == PAUSE_RESUME_ID && estadoActual == PAUSE_RESTART_ID )
+        while( pGameData->currentState->stateID == PAUSE_RESUME_ID || pGameData->currentState->stateID == PAUSE_RESTART_ID )
         {
-            if(estadoActual == PAUSE_RESUME_ID)
+            if( pGameData->currentState->stateID == PAUSE_RESUME_ID)
             {
               printBoard(play);
             }
-            else if(estadoActual == PAUSE_RESTART_ID)
+            else if( pGameData->currentState->stateID == PAUSE_RESTART_ID)
             {
               printBoard(startMenu);
             }
             if(dispTimer)
             {
               display_update();
+              dispTimer = false;
             }
-            estadoActual = pGameData->currentState->stateID;
         }
-        while( estadoActual == SAVE_SCORE_ID )
+        while( pGameData->currentState->stateID == SAVE_SCORE_ID )
         {
             printf("Ahora estarias guardando tu puntaje si pudieras, puto\n");
-            estadoActual = pGameData->currentState->stateID;
         }    
         
     }
@@ -372,7 +369,7 @@ Devuelve 1 si la rana choco, 0 si no choco.
     Ademas, si choco la devuelve a su posicion inicial */
 bool checkCollision(frog_t *frogCoords,bool board[][DISSIZE])
 {
-  if(board[frogCoords->x][frogCoords->y]) //OJO X E Y!!!
+  if(board[frogCoords->y][frogCoords->x]) //OJO X E Y!!!
   {
       frogCoords->x = INIT_X;
       frogCoords->y = INIT_Y;
@@ -393,7 +390,7 @@ bool checkWin(frog_t *frogCoords, bool board[][DISSIZE])
 {
   if(!frogCoords->y)   //si la rana esta en la ultima fila(fila 0)
   {
-    board[frogCoords->x][frogCoords->y] = 1;    //OJO X E Y//deja prendido el lugar adonde llego la rana
+    board[frogCoords->y][frogCoords->x] = 1;    //OJO X E Y//deja prendido el lugar adonde llego la rana
     frogCoords->y = INIT_Y;    //OJO!!
     frogCoords->x = INIT_X;     //devuelve la rana a su posicion inicial
     return true;
@@ -539,24 +536,24 @@ void shift_handler(bool board[DISSIZE][DISSIZE], bool way, int row_num)
 
 void shift_right_row(bool row[DISSIZE][DISSIZE], int row_num)
 {
-    bool aux1 = row[DISSIZE-1][row_num], aux2;
+    bool aux1 = row[row_num][DISSIZE-1], aux2;
     int i;
     for(i = 0; i < DISSIZE; i++)
     {
-        aux2 = row[i][row_num];
-        row[i][row_num] = aux1;
+        aux2 = row[row_num][i];
+        row[row_num][i] = aux1;
         aux1 = aux2;
     }
 }
 
 void shift_left_row(bool row[DISSIZE][DISSIZE], int row_num)
 {
-    bool aux1 = row[0][row_num], aux2;
+    bool aux1 = row[row_num][0], aux2;
     int i;
     for(i = 0; i < DISSIZE; i++)
     {
-        aux2 = row[15-i][row_num];
-        row[15-i][row_num] = aux1;
+        aux2 = row[row_num][15-i];
+        row[row_num][15-i] = aux1;
         aux1 = aux2;
     }
 }
