@@ -6,9 +6,10 @@
 
 #include "gameStructs.h"
 #include "modulorpi.h"
+#include "action_routines.h"
 
 /*ESTO TIENE QUE IR EN EL .H PERO NETBEANS NO QUIERE*/
-#define LEVEL_UP_SCORE 100
+/*#define LEVEL_UP_SCORE 100
 #define FORWARD_SCORE 10
 #define EMPTY_SPACES 5
 
@@ -32,7 +33,7 @@ void update_score(void *pArg);
 void checkLives(void *pArg);
 void checkLevelUp(void *pArg);
 void showPreviousScore(void *pArg);
-void showNextScore(void *pArg);
+void showNextScore(void *pArg);*/
 /*ESTO TIENE QUE IR EN EL .H PERO NETBEANS NO QUIERE*/
 
 static void letter_up(void *pArg, int letter);

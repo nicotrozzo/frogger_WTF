@@ -484,7 +484,8 @@ void* output_thread(void* pointer)
             
             if(pGameData->quitGame)
             {
-                
+                display_clear();
+                display_update();
             }    
         }
         while( pGameData->currentState->stateID == PAUSE_RESUME_ID || pGameData->currentState->stateID == PAUSE_RESTART_ID )

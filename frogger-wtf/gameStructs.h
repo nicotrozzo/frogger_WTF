@@ -80,6 +80,5 @@ enum events {
     END_TABLE
 };    
 
-#define LIVES 5
 
 #endif /* GAMESTRUCTS_H */
