@@ -100,7 +100,7 @@ const bool levelUp[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-}
+};
 
 
 const bool oneLive[DISSIZE][DISSIZE] = {
@@ -120,7 +120,7 @@ const bool oneLive[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-}
+};
 
 const bool twoLives[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -139,7 +139,7 @@ const bool twoLives[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-}
+};
  
 const bool threeLives[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -158,7 +158,7 @@ const bool threeLives[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0},
     {0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-}
+};
 
 const bool fourLives[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -177,7 +177,7 @@ const bool fourLives[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-}
+};
 
 const bool fiveLives[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -196,7 +196,7 @@ const bool fiveLives[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0},
     {0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-}
+};
 
 const bool noLives[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -215,7 +215,7 @@ const bool noLives[DISSIZE][DISSIZE] = {
     {0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
     {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-}
+};
 
 static void printBoard(bool p2board[][DISSIZE]);
 static bool checkWin(frog_t *frogCoords, bool board[][DISSIZE]);
@@ -225,6 +225,7 @@ static void cars_routine(bool board[][DISSIZE],frog_t *frogCoords);
 static void shift_handler(bool board[DISSIZE][DISSIZE], bool way, int row_num);
 static void shift_right_row(bool row[DISSIZE][DISSIZE], int row_num);
 static void shift_left_row(bool row[DISSIZE][DISSIZE], int row_num);
+static void showLives(int lives);
 
 void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
 {
@@ -608,7 +609,7 @@ void moveFrog(uint16_t where,frog_t *frogCoords)
    }      
 }
 
-void showLives(int lives)
+static void showLives(int lives)
 {
     switch(lives)
     {
