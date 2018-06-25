@@ -123,7 +123,6 @@ bool destroy_queue ( event_queue_t* queue )
 bool emit_event( event_queue_t* queue , uint16_t type )
 {
   event_t *temp = queue -> p2write;
-  bool retval;
 
   if(queue == NULL)
   {
@@ -177,7 +176,7 @@ uint16_t get_event ( event_queue_t* queue  )
 /*****************************************************************************************************************
  * FUNCION queue_is_empty
  * Recibe un puntero a la cola de eventos en la que se quiera chequear 
- * Devuelve un bool que sera un 0 en caso de que no este vacia y un 0 en caso de que si lo este
+ * Devuelve un bool que sera un 0 en caso de que no este vacia y un 1 en caso de que si lo este
  *****************************************************************************************************************/
 bool queue_is_empty( event_queue_t* queue )
 {

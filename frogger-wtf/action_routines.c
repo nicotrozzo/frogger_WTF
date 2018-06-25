@@ -92,6 +92,7 @@ void start_game(void *pArg)
   pData->quitGame = false;
   pData->levelUp = false;
   pData->score = 0;
+  checkLevelUp(NULL);
   pData->moveFrog.flag = false;
   int letter;
   for(letter = 0; letter < 3; letter++)
@@ -132,16 +133,26 @@ void showPreviousScore(void *pArg)
   printf("NOT YET MY MAN\n");
 }
 
+/*checkLevelUp:
+ Recibe un puntero a gameData o NULL
+ Si recibe un puntero a gameData, se fija si subio de nivel. Si subio de nivel, suma el puntaje respectivo, y avisa en gameData
+ Si no subio de nivel, suma el puntaje correspondiente a llegar arriba de todo
+ Si recibe NULL, reinicia el contador de veces(se usa en end_game y start_game)*/
+
 void checkLevelUp(void *pArg)
 {
   static int8_t times = 0;
-  if(++times >= EMPTY_SPACES)
+  if(!pArg) //si la llaman con el NULL significa que tiene que reiniciar el contador
+  {
+      times = 0;
+  }    
+  else if(++times >= EMPTY_SPACES)  //sino se fija si subio de nivel
   {
     ((gameData_t*)pArg)->score += LEVEL_UP_SCORE;
     ((gameData_t*)pArg)->levelUp = true;
     times = 0;
   }
-  else
+  else      //si no subio de nivel significa que solo gano
   {
     ((gameData_t*)pArg)->score += ARRIVE_SCORE;  
     ((gameData_t*)pArg)->levelUp = false;
@@ -172,10 +183,13 @@ void saveScore(void *pArg)
 
 
 
-
+/* end_game:
+ * Recibe un puntero a gameData y avisa que termino el juego, ademas, reinicia el contador con la cantidad de veces que llego la rana 
+ arriba de todo*/
 void end_game(void *pArg)
 {
     gameData_t *pData = pArg;
+    checkLevelUp(NULL);
     pData->quitGame = 1;
 }
 

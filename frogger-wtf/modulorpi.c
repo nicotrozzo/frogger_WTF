@@ -10,6 +10,25 @@
 #include "gameStructs.h"
 #include "timer_threads.h"
 
+const bool initCarsBoard[DISSIZE][DISSIZE] = {
+        {1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1},
+        {0,0,1,1,1,1,1,0,0,1,1,1,1,1,1,1},
+        {0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1},
+        {1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0},
+        {0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,1},
+        {1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1},
+        {1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0},
+        {1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,0},
+        {0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,0},
+        {1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0},
+        {1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+        };
+
 const bool startMenu[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -245,6 +264,7 @@ static void shift_handler(bool board[DISSIZE][DISSIZE], bool way, int row_num);
 static void shift_right_row(bool row[DISSIZE][DISSIZE], int row_num);
 static void shift_left_row(bool row[DISSIZE][DISSIZE], int row_num);
 static void showLives(int lives);
+static void copyBoard(bool destination[][DISSIZE],bool source[][DISSIZE]);
 
 void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
 {
@@ -264,74 +284,71 @@ void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
     joystick_update();
     my_switch=joystick_get_switch_value();//recibe valores actuales del joystick y el boton
     my_coordinates = joystick_get_coord();
-#define TELEFONOSAMPA 1
-    if(TELEFONOSAMPA) //generador de eventos
+
+    if(!trigger_lock_x)
     {
-       if(!trigger_lock_x)
+      if(my_coordinates.x > JOY_THRESHOLD )
+      {
+       if(emit_event(my_event_queue , RIGHT_EVENT))
        {
-         if(my_coordinates.x > JOY_THRESHOLD )
-         {
-          if(emit_event(my_event_queue , RIGHT_EVENT))
-          {
-            trigger_lock_x = true;
-            printf("RIGHT EVENT\n");
-          }
-          else
-          {
-              printf("EVENT QUEUE IS FULL");
-          }
-           
-         }
-         else if(my_coordinates.x < -JOY_THRESHOLD )
-         {
-          if(emit_event(my_event_queue , LEFT_EVENT))
-          {
-            trigger_lock_x = true;
-            printf("LEFT EVENT\n");
-          }
-          else
-          {
-              printf("EVENT QUEUE IS FULL");
-          }
-         }
+         trigger_lock_x = true;
+         printf("RIGHT EVENT\n");
        }
-       if(!trigger_lock_y)
+       else
        {
-         if(my_coordinates.y > JOY_THRESHOLD )
-         {
-           if(emit_event(my_event_queue , UP_EVENT))
-           {
-            trigger_lock_y = true;
-            printf("UP EVENT\n");
-           }
-           else
-          {
-              printf("EVENT QUEUE IS FULL");
-          }
-         }
-         else if(my_coordinates.y < -JOY_THRESHOLD )
-         {
-           if(emit_event(my_event_queue , DOWN_EVENT))
-           {
-            trigger_lock_y = true;
-            printf("DOWN EVENT\n");
-           }
-          }
+           printf("EVENT QUEUE IS FULL");
        }
-       if(my_switch == J_PRESS && !switch_lock)
-    	{
-            if(emit_event(my_event_queue , ENTER_EVENT))
-             {
-                switch_lock = true;
-                printf("ENTER EVENT\n");
-             }
-             else
-             {
-                printf("EVENT QUEUE IS FULL");
-             }
-         }
-    
+
+      }
+      else if(my_coordinates.x < -JOY_THRESHOLD )
+      {
+       if(emit_event(my_event_queue , LEFT_EVENT))
+       {
+         trigger_lock_x = true;
+         printf("LEFT EVENT\n");
+       }
+       else
+       {
+           printf("EVENT QUEUE IS FULL");
+       }
+      }
     }
+    if(!trigger_lock_y)
+    {
+      if(my_coordinates.y > JOY_THRESHOLD )
+      {
+        if(emit_event(my_event_queue , UP_EVENT))
+        {
+         trigger_lock_y = true;
+         printf("UP EVENT\n");
+        }
+        else
+       {
+           printf("EVENT QUEUE IS FULL");
+       }
+      }
+      else if(my_coordinates.y < -JOY_THRESHOLD )
+      {
+        if(emit_event(my_event_queue , DOWN_EVENT))
+        {
+         trigger_lock_y = true;
+         printf("DOWN EVENT\n");
+        }
+       }
+    }
+    if(my_switch == J_PRESS && !switch_lock)
+     {
+         if(emit_event(my_event_queue , ENTER_EVENT))
+          {
+             switch_lock = true;
+             printf("ENTER EVENT\n");
+          }
+          else
+          {
+             printf("EVENT QUEUE IS FULL");
+          }
+      }
+        
     if (trigger_lock_x && my_coordinates.x < JOY_THRESHOLD && my_coordinates.x > -JOY_THRESHOLD)  //bloqueo de lectura para evitar que se envie el evento si se mantiene presionado
     {
       trigger_lock_x = false;
@@ -361,24 +378,7 @@ Se encarga de:
 
 void* output_thread(void* pointer)
 {
-    bool carsBoard[DISSIZE][DISSIZE] = {
-        {1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1},
-        {0,0,1,1,1,1,1,0,0,1,1,1,1,1,1,1},
-        {0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1},
-        {1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0},
-        {0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,1},
-        {1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1},
-        {1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0},
-        {1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,0},
-        {0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,0},
-        {1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0},
-        {1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-        };
+    bool carsBoard[DISSIZE][DISSIZE];
                                             
     frog_t frogCoords = {7,15};
     uint8_t frogCounter = FROG_REFRESH;
@@ -406,7 +406,8 @@ void* output_thread(void* pointer)
             switch(pGameData->currentState->stateID)
             {
                 case START_PLAY_ID:
-                    printBoard(play);
+                    printBoard(play); 
+                    copyBoard(carsBoard,initCarsBoard);
                     break;
                 case START_SCOREBOARD_ID:
                     printBoard(trophie);
@@ -433,7 +434,7 @@ void* output_thread(void* pointer)
             if()
             estadoActual = pGameData->currentState->stateID;*/
         }
-
+        
         while( pGameData->currentState->stateID == GAME_ID )//mover autos,VER CARS_ROUTINE
         {
             if(carsTimer)
@@ -465,6 +466,7 @@ void* output_thread(void* pointer)
                     //SEM WAIT LEVEL UP O PREGUNTAR EN OTRO LADO LEVEL UP, POR EJEMPLO ANTES DE MOVER LOS AUTOS
                     if(pGameData->levelUp)
                     {
+                        copyBoard(carsBoard,initCarsBoard);
                         cars_routine(NULL,&frogCoords);
                         printBoard(levelUp);    //avisa al jugador que subio de nivel
                         pGameData->levelUp = 0;
@@ -482,9 +484,10 @@ void* output_thread(void* pointer)
                 }
                 pGameData->moveFrog.flag = false;
             }
-
-            printBoard(carsBoard);  //Escribe en el display el estado actual de autos y troncos
-            
+            if(pGameData -> lives )
+            {
+                printBoard(carsBoard);  //Escribe en el display el estado actual de autos y troncos
+            }
             if(dispTimer)
             {
                 if(!frogCounter--)
@@ -640,7 +643,7 @@ void moveFrog(uint16_t where,frog_t *frogCoords)
    }      
 }
 
-static void showLives(int lives)
+void showLives(int lives)
 {
     switch(lives)
     {
@@ -666,6 +669,19 @@ static void showLives(int lives)
 
 
 
+/*copyBoard:
+ Copia todos los elementos de un arreglo a otro, de tamano DISSIZE*/
+void copyBoard(bool destination[][DISSIZE],bool source[][DISSIZE])
+{
+    int i,j;
+    for( i=0; i<DISSIZE ; i++ )
+    {
+        for(j=0 ; j<DISSIZE ; j++)
+        {
+            destination[i][j]=source[i][j];
+        }        
+    }    
+}
 
 
 
