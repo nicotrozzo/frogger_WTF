@@ -369,6 +369,7 @@ void* output_thread(void* pointer)
     display_init(); // inicializacion del display
     set_display_axis(NORMAL);
     display_clear();
+    display_update();
 
     bool carsTimer = false, dispTimer = false;
     pthread_t frogTid, dispTid;
