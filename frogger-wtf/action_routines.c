@@ -137,12 +137,13 @@ void checkLevelUp(void *pArg)
   static int8_t times = 0;
   if(++times >= EMPTY_SPACES)
   {
-    update_score(NULL);
+    ((gameData_t*)pArg)->score += LEVEL_UP_SCORE;
     ((gameData_t*)pArg)->levelUp = true;
     times = 0;
   }
   else
   {
+    ((gameData_t*)pArg)->score += ARRIVE_SCORE;  
     ((gameData_t*)pArg)->levelUp = false;
   }
 }
@@ -159,16 +160,8 @@ void checkLives(void *pArg)
 void update_score(void *pArg)
 {
   gameData_t* pGameData = pArg;
-  if(!pGameData)
-  {
-    pGameData->score += LEVEL_UP_SCORE;
-    printf("LEVEL UP!, score: %d\n",pGameData->score);
-  }
-  else
-  {
-    pGameData->score += FORWARD_SCORE;
-    printf("FORWARD!, score: %d\n",pGameData->score);
-  }
+  pGameData->score += FORWARD_SCORE;
+  printf("FORWARD!, score: %d\n",pGameData->score);
 }
 
 void saveScore(void *pArg)

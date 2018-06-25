@@ -444,7 +444,35 @@ void* output_thread(void* pointer)
             if(pGameData->moveFrog.flag)
             {
                 moveFrog(pGameData->moveFrog.where,&frogCoords); //HABRIA QUE CAMBIAR GAMEDATA
-                if(maxPosition > frogCoords.y)
+                if( checkCollision(&frogCoords,carsBoard) )         //FIJARSE EL ORDEN! SI PERDIO CAPAZ HAYA QUE PONER UN BREAK
+                {
+                    maxPosition = INIT_Y;
+                    if( !emit_event(pGameData->pEventQueue,COLLISION_EVENT) )   //si la rana choco, le avisa al main
+                    {
+                        printf("Coludn't emit event\n");
+                    }
+                    showLives(--pGameData->lives);  //muestra al jugador la cantidad de vidas restantes
+                    display_update();
+                    sleep(1);       
+                }
+                else if( checkWin(&frogCoords,carsBoard) )
+                {
+                    maxPosition = INIT_Y;
+                    if( !emit_event(pGameData->pEventQueue,ARRIVE_EVENT) )
+                    {
+                        printf("Coludn't emit event\n");
+                    }
+                    //SEM WAIT LEVEL UP O PREGUNTAR EN OTRO LADO LEVEL UP, POR EJEMPLO ANTES DE MOVER LOS AUTOS
+                    if(pGameData->levelUp)
+                    {
+                        cars_routine(NULL,&frogCoords);
+                        printBoard(levelUp);    //avisa al jugador que subio de nivel
+                        pGameData->levelUp = 0;
+                        display_update();
+                        sleep(1);
+                    }
+                }               
+                else if(maxPosition > frogCoords.y)
                 {
                     maxPosition = frogCoords.y;     //se fija si avanzo mas que antes, en caso afirmativo le avisa al main para actualizar el puntaje
                     if( !emit_event(pGameData->pEventQueue,FORWARD_EVENT) )
@@ -473,35 +501,7 @@ void* output_thread(void* pointer)
                 dispTimer = false;
             }
             
-            if( checkCollision(&frogCoords,carsBoard) )         //FIJARSE EL ORDEN! SI PERDIO CAPAZ HAYA QUE PONER UN BREAK
-            {
-                maxPosition = INIT_Y;
-                if( !emit_event(pGameData->pEventQueue,COLLISION_EVENT) )   //si la rana choco, le avisa al main
-                {
-                    printf("Coludn't emit event\n");
-                }
-                showLives(--pGameData->lives);  //muestra al jugador la cantidad de vidas restantes
-                display_update();
-                sleep(1);       
-            }
-            else if( checkWin(&frogCoords,carsBoard) )
-            {
-                maxPosition = INIT_Y;
-                if( !emit_event(pGameData->pEventQueue,ARRIVE_EVENT) )
-                {
-                    printf("Coludn't emit event\n");
-                }
-                //SEM WAIT LEVEL UP O PREGUNTAR EN OTRO LADO LEVEL UP, POR EJEMPLO ANTES DE MOVER LOS AUTOS
-                if(pGameData->levelUp)
-                {
-                    cars_routine(NULL,&frogCoords);
-                    printBoard(levelUp);    //avisa al jugador que subio de nivel
-                    pGameData->levelUp = 0;
-                    display_update();
-                    sleep(1);
-                }
-
-            }
+          
 
             
             /*if(pGameData->quitGame)

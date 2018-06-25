@@ -31,6 +31,7 @@ void output_init(void);
 void output_clear(void);
 
 #define LEVEL_UP_SCORE 100
+#define ARRIVE_SCORE 30
 #define FORWARD_SCORE 10
 #define EMPTY_SPACES 5
 #define LIVES 5
