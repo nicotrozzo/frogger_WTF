@@ -162,10 +162,12 @@ void update_score(void *pArg)
   if(!pGameData)
   {
     pGameData->score += LEVEL_UP_SCORE;
+    printf("LEVEL UP!, score: %d\n",pGameData->score);
   }
   else
   {
     pGameData->score += FORWARD_SCORE;
+    printf("FORWARD!, score: %d\n",pGameData->score);
   }
 }
 
