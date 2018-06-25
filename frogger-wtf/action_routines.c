@@ -150,7 +150,7 @@ void checkLevelUp(void *pArg)
     ((gameData_t*)pArg)->score += LEVEL_UP_SCORE;
     ((gameData_t*)pArg)->levelUp = true;
     sem_post(&levelUpSem);
-    printf("LEVEL UP!, score: %d\n",pGameData->score);
+    printf("LEVEL UP!, score: %d\n",((gameData_t*)pArg)->score);
     times = 0;
   }
   else      //si no subio de nivel significa que solo llego arriba
@@ -158,7 +158,7 @@ void checkLevelUp(void *pArg)
     ((gameData_t*)pArg)->score += ARRIVE_SCORE;  
     ((gameData_t*)pArg)->levelUp = false;
     sem_post(&levelUpSem);
-    printf("ARRIVED!, score: %d\n",pGameData->score);
+    printf("ARRIVED!, score: %d\n",((gameData_t*)pArg)->score);
   }
 }
 
