@@ -445,7 +445,7 @@ void* output_thread(void* pointer)
                 }
                 else
                 {
-                    display_write(rogCoords.y,frogCoords.x,1);
+                    display_write(frogCoords.y,frogCoords.x,1);
                 }
                 display_update();     
                 dispTimer = false;
