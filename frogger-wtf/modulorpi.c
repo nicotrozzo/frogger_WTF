@@ -385,9 +385,11 @@ void* output_thread(void* pointer)
     gameData_t *pGameData = pointer;
     int maxPosition = INIT_Y;
 
-    display_init(); // inicializacion del display
+    /*display_init(); // inicializacion del display
     set_display_axis(NORMAL);
     display_clear();
+    display_update();*/
+    printBoard(off);    //apaga el display   
     display_update();
 
     bool carsTimer = false, dispTimer = false;
@@ -502,11 +504,11 @@ void* output_thread(void* pointer)
             }
 
             
-            /*if(pGameData->quitGame)
+            if(pGameData->quitGame)
             {
-                display_clear();
+                printBoard(off);
                 display_update();
-            } */   
+            }    
         }
         while( pGameData->currentState->stateID == PAUSE_RESUME_ID || pGameData->currentState->stateID == PAUSE_RESTART_ID )
         {
@@ -530,6 +532,7 @@ void* output_thread(void* pointer)
         }    
         
     }
+    printf("SALI DEL WHILE!\n");
     printBoard(off);
     display_update();
     return NULL;

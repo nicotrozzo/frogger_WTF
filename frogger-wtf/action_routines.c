@@ -235,3 +235,10 @@ static int getScoreChar(int whatToDo)
   }  
   return scoreChar; //esto no se usa, solo para evitar warning
 } 
+
+void output_init(void)
+{
+    display_init();
+    display_clear();
+    display_update();
+}

@@ -27,6 +27,8 @@ void checkLevelUp(void *pArg);
 void showPreviousScore(void *pArg);
 void showNextScore(void *pArg);
 
+void output_init(void);
+
 #define LEVEL_UP_SCORE 100
 #define FORWARD_SCORE 10
 #define EMPTY_SPACES 5
