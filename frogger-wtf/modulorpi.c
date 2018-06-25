@@ -102,8 +102,8 @@ void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
   bool switch_lock = false;
 
   joy_init();
-  set_joy_axis(JOY_ROTATE);	// OJO considero que usamos joystick abajo y no a la izq
-  set_joy_direction(J_INV_TRUE,J_INV_TRUE);
+  set_joy_axis(JOY_NORMAL);	// OJO considero que usamos joystick abajo y no a la izq
+  set_joy_direction(J_INV_FALSE,J_INV_FALSE);
 
   infinite_loop
   {
@@ -328,7 +328,7 @@ void* output_thread(void* pointer)
                 {
                     frogCounter = FROG_REFRESH;
                     toggle = !toggle;
-                    display_write(frogCoords.x,frogCoords.y,toggle);  //prende/apaga la posicion de la rana
+                    display_write(frogCoords.y,frogCoords.x,toggle);  //prende/apaga la posicion de la rana
                 }
                 display_update();     
                 dispTimer = false;
