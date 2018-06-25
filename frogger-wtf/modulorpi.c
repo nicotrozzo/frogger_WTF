@@ -440,8 +440,12 @@ void* output_thread(void* pointer)
                 if(!frogCounter--)
                 {
                     frogCounter = FROG_REFRESH;
-                    toggle = !toggle;
-                    display_write(frogCoords.y,frogCoords.x,toggle);  //prende/apaga la posicion de la rana
+                    //toggle = !toggle;
+                    display_write(frogCoords.y,frogCoords.x,0);  //prende/apaga la posicion de la rana
+                }
+                else
+                {
+                    display_write(rogCoords.y,frogCoords.x,1);
                 }
                 display_update();     
                 dispTimer = false;
