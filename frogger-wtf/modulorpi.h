@@ -19,7 +19,7 @@
 #define DISSIZE 16
 #define INIT_X 7
 #define INIT_Y 15
-#define FROG_REFRESH 5
+#define FROG_REFRESH 3
 #define FROG_X_MAX 15
 #define FROG_Y_MAX 15
 #define FROG_X_MIN 0
