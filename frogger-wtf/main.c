@@ -23,6 +23,7 @@
 
 state_t* fsm_handler(state_t *currentState, uint16_t newEvent, void *pActRoutineData);
 void output_init(void);
+void output_clear(void);
 
 int main(void) 
 {
