@@ -22,7 +22,7 @@ typedef struct
 }event_queue_t;
 
 
-#define QUEUE_SIZE 3 //cambiar este define por la cantidad de posiciones deseadas en la cola, recomiendo entre 100 y 200 para este programa
+#define QUEUE_SIZE 100 //cambiar este define por la cantidad de posiciones deseadas en la cola, recomiendo entre 100 y 200 para este programa
 
 
 /*****************************************************************************************************************
