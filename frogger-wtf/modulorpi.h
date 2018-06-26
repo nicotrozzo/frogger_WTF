@@ -24,6 +24,20 @@
 #define FROG_X_MIN 0
 #define FROG_Y_MIN 0
 
+/*PARA ESTADO DE SHOW SCOREBOARD*/
+#define POSITION_X 1
+#define POSITION_Y 1
+#define NOFCHARS 3
+#define INIT_Y 8
+#define FIL1 3
+#define Y_SEPARATION 2
+#define FIL2 (FIL1+Y_SEPARATION)
+#define LENGHT_X 4
+#define LENGHT_Y 5
+#define MAXNUMBERS 6
+#define DISPLAY_MIDDLE 3
+#define CHANGE_SCORE_TIMES 5
+
 enum movefrog { FROG_UP, FROG_DOWN, FROG_RIGHT, FROG_LEFT };
 
 void* input_thread (void* event);

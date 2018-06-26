@@ -39,7 +39,7 @@ void output_clear(void);
 #define FORWARD_SCORE 10
 #define EMPTY_SPACES 5
 #define LIVES 5
-
+#define SCORE_FILE "scoreBoard.txt"
 enum charManage {CURR = -1, NEXT = 0, PREV, START}; // esto se usa para las funciones que mueven la letras para guardar puntaje
 
 

@@ -50,9 +50,9 @@ typedef struct
     bool quitGame;
     moveFrog_t moveFrog; 
     char player[3];
-    uint score;
+    unsigned int score;
+    FILE *scoreFile;
     scorer_t (*pTop10)[10];     //pensar si conviene
-    
     state_t *currentState;
     event_queue_t *pEventQueue;
 }gameData_t;

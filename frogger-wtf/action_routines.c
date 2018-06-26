@@ -39,9 +39,16 @@ static void letter_up(void *pArg, int letter);
 static void letter_down(void *pArg, int letter);
 static int getScoreChar(int whatToDo);
 
+
+
 void non_act_routine(void *pArg)
 {
   
+}
+
+void load_scoreboard(void *pArg)
+{
+    ((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r+");
 }
 
 void frog_up(void *pArg)
@@ -123,13 +130,21 @@ void nextChar(void *pArg)
 
 void showNextScore(void *pArg)
 {
-  printf("NOT YET MY MAN\n");
+  if(!((gameData_t*)pArg)->moveFrog.flag)   //OJO POSIBLE PERDIDA DE EVENTOS
+  {    
+    ((gameData_t*)pArg)->moveFrog.flag = true;  
+    ((gameData_t*)pArg)->moveFrog.where = FROG_DOWN;
+  }
 }
 
 
 void showPreviousScore(void *pArg)
 {
-  printf("NOT YET MY MAN\n");
+  if(!((gameData_t*)pArg)->moveFrog.flag)
+  {    
+    ((gameData_t*)pArg)->moveFrog.flag = true;  
+    ((gameData_t*)pArg)->moveFrog.where = FROG_UP;
+  }
 }
 
 /*checkLevelUp:

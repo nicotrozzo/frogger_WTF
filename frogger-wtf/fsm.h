@@ -35,7 +35,7 @@ state_t startMenuPlayGame[3+1] = {
 state_t startMenuViewScoreBoard[3+1] = {
     {DOWN_EVENT,startMenuQuit,non_act_routine,START_SCOREBOARD_ID},
     {UP_EVENT,startMenuPlayGame,non_act_routine,START_SCOREBOARD_ID},
-    {ENTER_EVENT,scoreBoard,non_act_routine,START_SCOREBOARD_ID},
+    {ENTER_EVENT,scoreBoard,load_scoreboard,START_SCOREBOARD_ID},
     {END_TABLE,startMenuViewScoreBoard,non_act_routine,START_SCOREBOARD_ID}
 };
 state_t startMenuQuit[3+1] = {
