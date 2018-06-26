@@ -12,7 +12,7 @@
 
 extern sem_t levelUpSem;
 
-/*const bool initCarsBoard[DISSIZE][DISSIZE] = {
+const bool initCarsBoard[DISSIZE][DISSIZE] = {
     {1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1},
     {0,0,1,1,1,1,1,0,0,1,1,1,1,1,1,1},
     {0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1},
@@ -29,8 +29,9 @@ extern sem_t levelUpSem;
     {0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0},
     {1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-    };*/
-const bool initCarsBoard[DISSIZE][DISSIZE] = {
+    };
+
+/*const bool initCarsBoard[DISSIZE][DISSIZE] = {
     {1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -47,7 +48,7 @@ const bool initCarsBoard[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0},
     {1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-    };
+    };*/
 
 const bool startMenu[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
