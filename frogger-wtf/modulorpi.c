@@ -12,24 +12,42 @@
 
 extern sem_t levelUpSem;
 
+/*const bool initCarsBoard[DISSIZE][DISSIZE] = {
+    {1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1},
+    {0,0,1,1,1,1,1,0,0,1,1,1,1,1,1,1},
+    {0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1},
+    {1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0},
+    {0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,1},
+    {1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1},
+    {1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0},
+    {1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,0},
+    {0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,0},
+    {1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0},
+    {1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+    };*/
 const bool initCarsBoard[DISSIZE][DISSIZE] = {
-        {1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1},
-        {0,0,1,1,1,1,1,0,0,1,1,1,1,1,1,1},
-        {0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,1},
-        {1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0},
-        {0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,1},
-        {1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1},
-        {1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0},
-        {1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,0},
-        {0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,0},
-        {1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0},
-        {1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-        };
+    {1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,0},
+    {0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,0},
+    {1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0},
+    {1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+    };
 
 const bool startMenu[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -87,7 +105,7 @@ const bool trophie[DISSIZE][DISSIZE] = {
 };
 const bool play[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0},
@@ -101,7 +119,7 @@ const bool play[DISSIZE][DISSIZE] = {
     {0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0},
     {0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+    {0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0}
 };
 
 const bool levelUp[DISSIZE][DISSIZE] = {
@@ -441,51 +459,51 @@ void* output_thread(void* pointer)
         {
             if(carsTimer)
             {
-              cars_routine(carsBoard,&frogCoords);  //mueve los autos y si hace falta la rana
+              cars_routine(carsBoard,&frogCoords);  //mueve los autos 
               carsTimer = false;
             }
             if(pGameData->moveFrog.flag)
             {
-                moveFrog(pGameData->moveFrog.where,&frogCoords); //HABRIA QUE CAMBIAR GAMEDATA
-                if( checkCollision(&frogCoords,carsBoard) )         //FIJARSE EL ORDEN! SI PERDIO CAPAZ HAYA QUE PONER UN BREAK
-                {
-                    maxPosition = INIT_Y;
-                    if( !emit_event(pGameData->pEventQueue,COLLISION_EVENT) )   //si la rana choco, le avisa al main
-                    {
-                        printf("Coludn't emit event\n");
-                    }
-                    showLives(--pGameData->lives);  //muestra al jugador la cantidad de vidas restantes
-                    display_update();
-                    sleep(1);       
-                }
-                else if( checkWin(&frogCoords,carsBoard) )
-                {
-                    maxPosition = INIT_Y;
-                    if( !emit_event(pGameData->pEventQueue,ARRIVE_EVENT) )
-                    {
-                        printf("Coludn't emit event\n");
-                    }
-                    //ALLEGRO TIENE QUE TENER ESTE MISMO SEMAFORO
-                    sem_wait(&levelUpSem);
-                    if(pGameData->levelUp)
-                    {
-                        copyBoard(carsBoard,initCarsBoard);
-                        cars_routine(NULL,&frogCoords);
-                        printBoard(levelUp);    //avisa al jugador que subio de nivel
-                        pGameData->levelUp = 0;
-                        display_update();
-                        sleep(1);
-                    }
-                }               
-                else if(maxPosition > frogCoords.y)
-                {
-                    maxPosition = frogCoords.y;     //se fija si avanzo mas que antes, en caso afirmativo le avisa al main para actualizar el puntaje
-                    if( !emit_event(pGameData->pEventQueue,FORWARD_EVENT) )
-                    {
-                        printf("Coludn't emit event\n");
-                    }
-                }
+                moveFrog(pGameData->moveFrog.where,&frogCoords);    //mueve la rana si hay que moverla
                 pGameData->moveFrog.flag = false;
+            }
+            if( checkCollision(&frogCoords,carsBoard) )         //FIJARSE EL ORDEN! SI PERDIO CAPAZ HAYA QUE PONER UN BREAK
+            {
+                maxPosition = INIT_Y;
+                if( !emit_event(pGameData->pEventQueue,COLLISION_EVENT) )   //si la rana choco, le avisa al kernel
+                {
+                    printf("Coludn't emit event\n");
+                }
+                showLives(--pGameData->lives);  //muestra al jugador la cantidad de vidas restantes
+                display_update();
+                sleep(1);       
+            }
+            else if( checkWin(&frogCoords,carsBoard) )
+            {
+                maxPosition = INIT_Y;
+                if( !emit_event(pGameData->pEventQueue,ARRIVE_EVENT) )
+                {
+                    printf("Coludn't emit event\n");
+                }
+                //ALLEGRO TIENE QUE TENER ESTE MISMO SEMAFORO
+                sem_wait(&levelUpSem);
+                if(pGameData->levelUp)
+                {
+                    copyBoard(carsBoard,initCarsBoard);
+                    cars_routine(NULL,&frogCoords);
+                    printBoard(levelUp);    //avisa al jugador que subio de nivel
+                    pGameData->levelUp = 0;
+                    display_update();
+                    sleep(1);
+                }
+            }               
+            else if(maxPosition > frogCoords.y)
+            {
+                maxPosition = frogCoords.y;     //se fija si avanzo mas que antes, en caso afirmativo le avisa al main para actualizar el puntaje
+                if( !emit_event(pGameData->pEventQueue,FORWARD_EVENT) )
+                {
+                    printf("Coludn't emit event\n");
+                }
             }
             if(pGameData -> lives )
             {
