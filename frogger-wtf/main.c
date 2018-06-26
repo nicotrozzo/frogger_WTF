@@ -47,7 +47,6 @@ int main(void)
             gameData.currentState = fsm_handler(gameData.currentState,event,&gameData);
         }    
     }       
-    //output_clear();
     pthread_join(output_id,NULL);
     sem_destroy(&levelUpSem);
     return (EXIT_SUCCESS);
