@@ -11,6 +11,7 @@
 #include "timer_threads.h"
 
 extern sem_t levelUpSem;
+static sem_t sleepSem;
 
 const bool initCarsBoard[DISSIZE][DISSIZE] = {
     {1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1},
@@ -279,7 +280,7 @@ const bool off[DISSIZE][DISSIZE] = {
 static void printBoard(bool p2board[][DISSIZE]);
 static bool checkWin(frog_t *frogCoords, bool board[][DISSIZE]);
 static bool checkCollision(frog_t *frogCoords,bool board[][DISSIZE]);
-static void moveFrog(uint16_t where,frog_t *frogCoords);
+static void moveFrog(uint8_t where,frog_t *frogCoords);
 static void cars_routine(bool board[][DISSIZE],frog_t *frogCoords);
 static void shift_handler(bool board[DISSIZE][DISSIZE], bool way, int row_num);
 static void shift_right_row(bool row[DISSIZE][DISSIZE], int row_num);
@@ -302,6 +303,8 @@ void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
 
   infinite_loop
   {
+
+    sem_wait(&sleepSem);  
     joystick_update();
     my_switch=joystick_get_switch_value();//recibe valores actuales del joystick y el boton
     my_coordinates = joystick_get_coord();
@@ -476,7 +479,7 @@ void* output_thread(void* pointer)
                 }
                 showLives(--pGameData->lives);  //muestra al jugador la cantidad de vidas restantes
                 display_update();
-                sleep(1);       
+                sleep(1); 
             }
             else if( checkWin(&frogCoords,carsBoard) )
             {
@@ -502,7 +505,7 @@ void* output_thread(void* pointer)
                 maxPosition = frogCoords.y;     //se fija si avanzo mas que antes, en caso afirmativo le avisa al main para actualizar el puntaje
                 if( !emit_event(pGameData->pEventQueue,FORWARD_EVENT) )
                 {
-                    printf("Coludn't emit event\n");
+                    printf("Couldn't emit event\n");
                 }
             }
             if(pGameData -> lives )
@@ -608,7 +611,19 @@ void printBoard(bool p2board[][DISSIZE])
   }
 }
 
-void moveFrog(uint16_t where,frog_t *frogCoords)
+void printBoard2(bool** p2board,int max_x,int max_y)
+{
+  int i,j;
+  for( i=0 ; i < max_y ; i++ )
+  {
+    for( j=0 ; j < max_x ; j++)
+    {
+      display_write(i,j,p2board[i][j]);
+    }
+  }
+}
+
+void moveFrog(uint8_t where,frog_t *frogCoords)
 {
   switch(where)
   {        
@@ -721,8 +736,6 @@ void cars_routine(bool carsBoard[][DISSIZE],frog_t *frogCoords)
                 dividersMax[row]--;
             }
         }
-        frogCoords->x = INIT_X;
-        frogCoords->y = INIT_Y; // Se reinicia la posición de la rana.
     }
     else // En cambio, si la rutina fue llamada por evento de timer, se realiza el decremento de los dividers.
     {

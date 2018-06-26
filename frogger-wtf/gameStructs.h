@@ -40,7 +40,7 @@ typedef struct
 typedef struct
 {
     bool flag;
-    uint16_t where;
+    uint8_t where;
 }moveFrog_t;
 
 typedef struct
@@ -52,6 +52,7 @@ typedef struct
     char player[3];
     uint score;
     scorer_t (*pTop10)[10];     //pensar si conviene
+    
     state_t *currentState;
     event_queue_t *pEventQueue;
 }gameData_t;
