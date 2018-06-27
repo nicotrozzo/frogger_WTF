@@ -11,7 +11,90 @@
 #include "timer_threads.h"
 
 extern sem_t levelUpSem;
-static sem_t sleepSem;
+
+const bool letters[N_OF_LETTERS][LENGHT_Y][LENGHT_X] = {
+  { {1,1,1,1},
+    {1,0,0,1},
+    {1,1,1,1},
+    {1,0,0,1},
+    {1,0,0,1},
+  },
+  { {1,1,1,0},
+    {1,0,1,0},
+    {1,1,1,1},
+    {1,0,0,1},
+    {1,1,1,1},
+  },
+  { {1,1,1,1},
+    {1,0,0,0},
+    {1,0,0,0},
+    {1,0,0,0},
+    {1,1,1,1}
+  }                     //HACER LETRASSSSSSSSSS
+};
+
+const bool numbers[N_OF_NUMBERS][LENGHT_Y][LENGHT_X] = {
+  { {1,1,1,1},
+    {1,0,0,1},
+    {1,0,0,1},
+    {1,0,0,1},
+    {1,1,1,1},
+  },
+  { {0,1,1,0},
+    {0,0,1,0},
+    {0,0,1,0},
+    {0,0,1,0},
+    {0,1,1,1},
+    },
+  { {1,1,1,1},
+    {0,0,0,1},
+    {1,1,1,1},
+    {1,0,0,0},
+    {1,1,1,1},
+  },
+  { {1,1,1,1},
+    {0,0,0,1},
+    {0,0,1,1},
+    {0,0,0,1},
+    {1,1,1,1},
+  },
+  { {1,0,0,1},
+    {1,0,0,1},
+    {1,1,1,1},
+    {0,0,0,1},
+    {0,0,0,1}
+  },
+  { {1,1,1,1},
+    {1,0,0,0},
+    {1,1,1,1},
+    {0,0,0,1},
+    {1,1,1,1},
+  },
+  { {1,1,1,1},
+    {1,0,0,0},
+    {1,1,1,1},
+    {1,0,0,1},
+    {1,1,1,1}
+  },
+  { {1,1,1,1},
+    {0,0,0,1},
+    {0,0,1,0},
+    {0,1,0,0},
+    {0,1,0,0}  
+  },
+  { {1,1,1,1},
+    {1,0,0,1},
+    {1,1,1,1},
+    {1,0,0,1},  
+    {1,1,1,1}
+  },
+  { {1,1,1,1},
+    {1,0,0,1},
+    {1,1,1,1},
+    {0,0,0,1},
+    {1,1,1,1}
+  }
+};
 
 const bool initCarsBoard[DISSIZE][DISSIZE] = {
     {1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1},
@@ -181,7 +264,7 @@ const bool twoLives[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 };
- 
+
 const bool threeLives[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -277,7 +360,8 @@ const bool off[DISSIZE][DISSIZE] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
     };
 
-static void printBoard(bool p2board[][DISSIZE]);
+static void printBoard(const bool p2board[][DISSIZE]);
+static void printCars(bool p2board[][DISSIZE]);
 static bool checkWin(frog_t *frogCoords, bool board[][DISSIZE]);
 static bool checkCollision(frog_t *frogCoords,bool board[][DISSIZE]);
 static void moveFrog(uint8_t where,frog_t *frogCoords);
@@ -286,8 +370,8 @@ static void shift_handler(bool board[DISSIZE][DISSIZE], bool way, int row_num);
 static void shift_right_row(bool row[DISSIZE][DISSIZE], int row_num);
 static void shift_left_row(bool row[DISSIZE][DISSIZE], int row_num);
 static void showLives(int lives);
-static void copyBoard(bool destination[][DISSIZE],bool source[][DISSIZE]);
-static void printChar(bool p2Letters[5][4], int init_x, int init_y);
+static void copyBoard(bool destination[][DISSIZE],const bool source[][DISSIZE]);
+static void printChar(const bool p2Letters[5][4], int init_x, int init_y);
 
 void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
 {
@@ -305,7 +389,6 @@ void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
   infinite_loop
   {
 
-    sem_wait(&sleepSem);  
     joystick_update();
     my_switch=joystick_get_switch_value();//recibe valores actuales del joystick y el boton
     my_coordinates = joystick_get_coord();
@@ -373,7 +456,7 @@ void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
              printf("EVENT QUEUE IS FULL");
           }
       }
-        
+
     if (trigger_lock_x && my_coordinates.x < JOY_THRESHOLD && my_coordinates.x > -JOY_THRESHOLD)  //bloqueo de lectura para evitar que se envie el evento si se mantiene presionado
     {
       trigger_lock_x = false;
@@ -404,31 +487,26 @@ Se encarga de:
 void* output_thread(void* pointer)
 {
     bool carsBoard[DISSIZE][DISSIZE];
-                                            
+
     frog_t frogCoords = {7,15};
     uint8_t frogCounter = FROG_REFRESH;
     gameData_t *pGameData = pointer;
     int maxPosition = INIT_Y;
-    
-    
-    /*display_init(); // inicializacion del display
-    set_display_axis(NORMAL);
-    display_clear();
-    display_update();*/
-    printBoard(off);    //apaga el display   
+    printBoard(off);    //apaga el display
     display_update();
-
+    
     bool carsTimer = false, dispTimer = false;
     pthread_t frogTid, dispTid;
     pthread_create(&frogTid,NULL,carsTimeThread,&carsTimer);    //creacion de timer para parpadeo de la rana
     pthread_create(&dispTid,NULL,dispTimeThread,&dispTimer);
     bool toggle = false;    //variable para el parpadeo de la rana
+    
     /*variables de estado escorbord*/
     char name[4];
     char charedScore[7];//hacer DEFINES DE TOTODODODODODODO
     char charedPosition;
-    int i,waitCounter;
-    bool done = false;
+    int i,position,waitCounter = CHANGE_SCORE_TIMES;
+    bool change = true;
 
     while(!pGameData->quitGame)
     {
@@ -438,11 +516,12 @@ void* output_thread(void* pointer)
             switch(pGameData->currentState->stateID)    //muestra el bitmap correspondiente a cada estado
             {
                 case START_PLAY_ID:
-                    printBoard(play); 
+                    printBoard(play);
                     copyBoard(carsBoard,initCarsBoard); //va a pasar al estado de juego, carga el estado inicial de los autos
                     break;
                 case START_SCOREBOARD_ID:
                     printBoard(trophie);
+                    position = 0;
                     break;
                 case START_QUIT_ID:
                     printBoard(quit);
@@ -453,110 +532,107 @@ void* output_thread(void* pointer)
               display_update();
               dispTimer = false;
             }
-        
+        }
          /*ESTADO DE MOSTRAR EL SCOREBOARD*/
         while( pGameData->currentState->stateID == SCORE_BOARD_ID )
         {
-            //int position = 0;       //VER QUE HACER!!!!!!!!!!!!!!!! ASI NO VA A FUNCIONAR XQ SIEMPRE VALE 0
             if(pGameData->scoreFile)  //si no se cargo el archivo no hace nada
             {
-              if(!pGameData.moveFrog.flag)  //si no pidieron ver otro puntaje
-              {
-                charedPosition = fgetc(pGameData->scoreFile); //obtiene la posicion en el scoreBoard (primer caracter de la linea)
-                while( (name[0] = fgetc(pGameData->scoreFile)) == ' ');  //avanza hasta que no haya espacios y queda guardada la primera letra en el arreglo
-                fgets(&name[1],2,pGameData->scoreFile); //CUIDADO PUEDE ESTAR SOBREESCRIBIENDO ALGO O NO ALCANZARLE EL LUGAR PARA EL TERMINADOR//carga el nombre de la posicion actual
-                while( (charedScore[0] = fgetc(pGameData->scoreFile)) == ' '); //avanza hasta que no haya espacios y queda guardado el primer numero en el arreglo
-                fgets(&charedScore[1],9,pGameData->scoreFile); //carga el string con el puntaje de la posicion actual
-                if(dispTimer)   //entra cada un determinado tiempo
+                if(!pGameData->moveFrog.flag)  //si no pidieron ver otro puntaje
                 {
-                  if(waitCounter)
+                  if(change)
                   {
-                    waitCounter--; //espera a tener que mostrar el puntaje
+                      charedPosition = fgetc(pGameData->scoreFile); //obtiene la posicion en el scoreBoard (primer caracter de la linea)
+                      while( (name[0] = fgetc(pGameData->scoreFile)) == ' ');  //avanza hasta que no haya espacios y queda guardada la primera letra en el arreglo
+                      fgets(&name[1],3,pGameData->scoreFile); //CUIDADO PUEDE ESTAR SOBREESCRIBIENDO ALGO O NO ALCANZARLE EL LUGAR PARA EL TERMINADOR//carga el nombre de la posicion actual
+                      while( (charedScore[0] = fgetc(pGameData->scoreFile)) == ' '); //avanza hasta que no haya espacios y queda guardado el primer numero en el arreglo
+                      fgets(&charedScore[1],MAXNUMBERS,pGameData->scoreFile); //carga el string con el puntaje de la posicion actual
+                      change = false;
                   }
-                  dispTimer = false;  //avisa que ya vio el evento de timer;
-                  display_update();
-                }
-                if(waitCounter)   //si todavia tiene que mostrar el nombre, lo hace
-                {
-                  display_clear();
-                  printChar(numbers[charedPosition - '0'],POSITION_X,POSITION_Y);
-                  for( i=0 ; i < NOFCHARS ; i++)
+                  if(waitCounter)   //si todavia tiene que mostrar el nombre, lo hace
                   {
-                    printChar(letters[name[i]-'A'], (LENGHT_X + 1)*i + 1 , INIT_Y); //imprime en el display cada letra del arreglo nombre, supone que estan todas en mayuscula
-                  }
-                }
-                else  //sino, debe mostrar el puntaje
-                {
-                  display_clear();
-                  for( i=0 ; i < MAXNUMBERS && i < strlen(charedScore) ; i++) //el largo de charedScore debe ser MENOR O IGUAL A MAXNUMBERS para que funcione
-                  {
-                    if(i < DISPLAY_MIDDLE)  //distingue si hay que imprimir en la primera o segunda fila
-                    {
-                      printChar(numbers[charedScore[i]-'0'], (LENGHT_X + 1)*i + 1 , FIL1); //imprime en el display cada numero del arreglo score
-                    }
-                    else
-                    {
-                      printChar(numbers[charedScore[i]-'0'], (LENGHT_X + 1)*(i-DISPLAY_MIDDLE) + 1 , FIL2);
-                    }
-                  }
-                }
-              }
-              else
-              {
-                if(pGameData->moveFrog.where == FROG_UP)
-                {
-                  if(position != 0) //es ciclico
-                  {
-                    position --; //posicion anterior en el top
-                    fseek(pGameData->scoreFile, 0, SEEK_SET);//voy al principio de archivo
-                    while(!done )  // busco en la primer posicion de cada renglon el numero deseado
-                    {
-                      while(charedPosition = fgetc(pGameData->scoreFile) != '\n' );
-                      if(charedPosition = fgetc(pGameData->scoreFile) == '1'+position )
+                      printBoard(off);
+                      printChar(numbers[charedPosition - '0'],POSITION_X,POSITION_Y);
+                      for( i=0 ; i < NOFCHARS ; i++)
                       {
-                        done = true;
+                          printChar(letters[name[i]-'A'], (LENGHT_X + 1)*i + 1 , LETTER_POS_Y); //imprime en el display cada letra del arreglo nombre, supone que estan todas en mayuscula
+                      }
+                  }
+                  else  //sino, debe mostrar el puntaje
+                  {
+                      printBoard(off);
+                      for( i=0 ; (i < MAXNUMBERS) && (i < strlen(charedScore)) ; i++) //el largo de charedScore debe ser MENOR O IGUAL A MAXNUMBERS para que funcione
+                      {
+                          if(i < DISPLAY_MIDDLE)  //distingue si hay que imprimir en la primera o segunda fila
+                          {
+                              printChar(numbers[charedScore[i]-'0'], (LENGHT_X + 1)*i + 1 , FIL1); //imprime en el display cada numero del arreglo score
+                          }
+                          else
+                          {
+                              printChar(numbers[charedScore[i]-'0'], (LENGHT_X + 1)*(i-DISPLAY_MIDDLE) + 1 , FIL2);
+                          }
+                      }
+                  }
+                  if(dispTimer)   //entra cada un determinado tiempo
+                  {
+                    if(waitCounter)
+                    {
+                      waitCounter--; //espera a tener que mostrar el puntaje
+                    }
+                    dispTimer = false;  //avisa que ya vio el evento de timer;
+                    display_update();
+                  }
+                }
+                else
+                {
+                    if(pGameData->moveFrog.where == FROG_UP)
+                    {
+                        if(position != 0) //es ciclico
+                        {
+                            position --; //posicion anterior en el top
+                            fseek(pGameData->scoreFile, 0, SEEK_SET);//voy al principio de archivo
+
+                            while((fgetc(pGameData->scoreFile)) != ('1' + position) )  // busco en la primer posicion de cada renglon el numero deseado
+                            {
+                                while( (charedPosition = fgetc(pGameData->scoreFile)) != '\n' );
+                            }
+                            fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion
+                        }
+                      else // si la posicion actual es 0
+                      {
+                          position = 4;//voy al ultimo lugar
+                          while((charedPosition = fgetc(pGameData->scoreFile)) != '5' )
+                          {
+                              while( (charedPosition = fgetc(pGameData->scoreFile)) != '\n' );// busco el numero 5
+                          }
+                          fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion
                       }
                     }
-                    fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion
-                  }
-                  else // si la posicion actual es 0
-                  {
-                    position = 4;//voy al ultimo lugar
-                    while(!done )
+                    else if ( pGameData->moveFrog.where == FROG_DOWN)
                     {
-                      while(charedPosition = fgetc(pGameData->scoreFile) != '\n' );// busco el numero 5
-                      if(charedPosition = fgetc(pGameData->scoreFile) == '5' )
-                      {
-                        done = true;
-                      }
+                        if(position != 4)
+                        {
+                            position ++;
+                            while( (charedPosition = fgetc(pGameData->scoreFile)) != '\n'); //voy a la siguiente posicion en el top
+                        }
+                        else
+                        {
+                            position = 0;
+                            fseek(pGameData->scoreFile, 0, SEEK_SET);//voy al principio del archivo
+                        }
                     }
-                    fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion
-                  }
+                    pGameData->moveFrog.flag = 0;//pongo el flag de move en 0 para avisar que ya termine
+                    waitCounter = CHANGE_SCORE_TIMES;
+                    change = true;
                 }
-                else if ( pGameData->moveFrog.where == FROG_DOWN)
-                {
-                  if(position != 4)
-                  {
-                    position ++;
-                    while((charedPosition = fgetc(pGameData->scoreFile) != '\n'); //voy a la siguiente posicion en el top
-                  }
-                  else
-                  {
-                    position = 0;
-                    fseek(pGameData->scoreFile, 0, SEEK_SET);//voy al principio del archivo
-                  }
-                }
-                pGameData->moveFrog.flag = 0;//pongo el flag de move en 0 para avisar que ya termine
-                waitCounter = CHANGE_SCORE_TIMES;
-              }
             }
-        }    
-        /*ESTADO DE JUEGO*/    
+        }
+        /*ESTADO DE JUEGO*/
         while( pGameData->currentState->stateID == GAME_ID )//mover autos,VER CARS_ROUTINE
         {
             if(carsTimer)
             {
-              cars_routine(carsBoard,&frogCoords);  //mueve los autos 
+              cars_routine(carsBoard,&frogCoords);  //mueve los autos
               carsTimer = false;
             }
             if(pGameData->moveFrog.flag)
@@ -569,11 +645,11 @@ void* output_thread(void* pointer)
                 maxPosition = INIT_Y;
                 if( !emit_event(pGameData->pEventQueue,COLLISION_EVENT) )   //si la rana choco, le avisa al kernel
                 {
-                    printf("Coludn't emit event\n");
+                    printf("Couldn't emit event\n");
                 }
                 showLives(--pGameData->lives);  //muestra al jugador la cantidad de vidas restantes
                 display_update();
-                sleep(1); 
+                sleep(1);
                 pGameData->moveFrog.flag = false; //no interesa si quisieron mover la rana mientras se mostraba el mensaje, se tira ese evento
             }
             else if( checkWin(&frogCoords,carsBoard) )
@@ -581,7 +657,7 @@ void* output_thread(void* pointer)
                 maxPosition = INIT_Y;
                 if( !emit_event(pGameData->pEventQueue,ARRIVE_EVENT) )
                 {
-                    printf("Coludn't emit event\n");
+                    printf("Couldn't emit event\n");
                 }
                 //ALLEGRO TIENE QUE TENER ESTE MISMO SEMAFORO
                 sem_wait(&levelUpSem);
@@ -595,7 +671,7 @@ void* output_thread(void* pointer)
                     sleep(1);
                     pGameData->moveFrog.flag = false; //no interesa si quisieron mover la rana mientras se mostraba el mensaje, se tira ese evento
                 }
-            }               
+            }
             else if(maxPosition > frogCoords.y)
             {
                 maxPosition = frogCoords.y;     //se fija si avanzo mas que antes, si lo hizo le avisa al main para actualizar el puntaje
@@ -604,9 +680,9 @@ void* output_thread(void* pointer)
                     printf("Couldn't emit event\n");
                 }
             }
-            if(pGameData -> lives ) //si el jugador no perdio, imprime si es que haya que imprimir 
+            if(pGameData -> lives ) //si el jugador no perdio, imprime si es que haya que imprimir
             {
-                printBoard(carsBoard);  //Escribe en el display el estado actual de autos y troncos
+                printCars(carsBoard);  //Escribe en el display el estado actual de autos y troncos
                 if(dispTimer)
                 {
                     if(!frogCounter--)
@@ -619,9 +695,9 @@ void* output_thread(void* pointer)
                     {
                         display_write(frogCoords.y,frogCoords.x,1);
                     }
-                    display_update();     
+                    display_update();
                     dispTimer = false;
-                }              
+                }
             }
         }
         /*ESTADOS DE PAUSA: SEGUIR JUGANDO O VOLVER AL MENU DE INICIO*/
@@ -645,8 +721,8 @@ void* output_thread(void* pointer)
         while( pGameData->currentState->stateID == SAVE_SCORE_ID )
         {
             printf("Ahora estarias guardando tu puntaje si pudieras, puto\n");
-        }    
-        
+        }
+
     }
     display_clear();
     //printBoard(off);
@@ -697,7 +773,19 @@ bool checkWin(frog_t *frogCoords, bool board[][DISSIZE])
 Recibe un puntero al primer elemento de un arreglo de bools
 Escribe en un display de 16x16 el contenido de ese arreglo
 Nota: debe estar inicializado el display con las herramientas de <disdrv.h> */
-void printBoard(bool p2board[][DISSIZE])
+void printBoard(const bool p2board[][DISSIZE])
+{
+  int i,j;
+  for( i=0 ; i < DISSIZE ; i++ )
+  {
+    for( j=0 ; j < DISSIZE ; j++)
+    {
+      display_write(i,j,p2board[i][j]);
+    }
+  }
+}
+
+void printCars(bool p2board[][DISSIZE])
 {
   int i,j;
   for( i=0 ; i < DISSIZE ; i++ )
@@ -718,7 +806,7 @@ Funcion: Escribe en el display el contenido del arreglo en las posiciones pedida
 Cuidado: las coordenadas deben tener en cuenta que la primera posicion es {0,0}
 */
 
-void printChar(bool p2Letters[5][4], int init_x, int init_y)
+void printChar(const bool p2Letters[5][4], int init_x, int init_y)
 {
   int i,j;
   for( i = 0 ; i < LENGHT_Y ; i++ )
@@ -733,7 +821,7 @@ void printChar(bool p2Letters[5][4], int init_x, int init_y)
 void moveFrog(uint8_t where,frog_t *frogCoords)
 {
   switch(where)
-  {        
+  {
       case FROG_UP:
           if(frogCoords->y > FROG_Y_MIN)
           {
@@ -752,17 +840,17 @@ void moveFrog(uint8_t where,frog_t *frogCoords)
           else if(frogCoords->y > FROG_Y_MAX)
           {
               frogCoords->y = FROG_Y_MAX;
-          }    
+          }
           break;
       case FROG_RIGHT:
           if(frogCoords->x < FROG_X_MAX)
           {
               frogCoords->x++;
-          }      
+          }
           else if(frogCoords->x > FROG_X_MAX)
           {
-              frogCoords->x = FROG_X_MAX; 
-          }    
+              frogCoords->x = FROG_X_MAX;
+          }
           break;
       case FROG_LEFT:
           if(frogCoords->x > FROG_X_MIN)
@@ -772,9 +860,9 @@ void moveFrog(uint8_t where,frog_t *frogCoords)
           else if(frogCoords->x < FROG_X_MIN)   //programacion defensiva
           {
               frogCoords->x = FROG_X_MIN;
-          }    
+          }
           break;
-   }      
+   }
 }
 
 void showLives(int lives)
@@ -785,12 +873,12 @@ void showLives(int lives)
             printBoard(noLives);
             break;
         case 1:
-            printBoard(oneLive);    
+            printBoard(oneLive);
             break;
         case 2:
             printBoard(twoLives);
             break;
-        case 3:    
+        case 3:
             printBoard(threeLives);
             break;
         case 4:
@@ -805,7 +893,7 @@ void showLives(int lives)
 
 /*copyBoard:
  Copia todos los elementos de un arreglo a otro, de tamano DISSIZE*/
-void copyBoard(bool destination[][DISSIZE],bool source[][DISSIZE])
+void copyBoard(bool destination[][DISSIZE],const bool source[][DISSIZE])
 {
     int i,j;
     for( i=0; i<DISSIZE ; i++ )
@@ -813,8 +901,8 @@ void copyBoard(bool destination[][DISSIZE],bool source[][DISSIZE])
         for(j=0 ; j<DISSIZE ; j++)
         {
             destination[i][j]=source[i][j];
-        }        
-    }    
+        }
+    }
 }
 
 
@@ -822,7 +910,7 @@ void copyBoard(bool destination[][DISSIZE],bool source[][DISSIZE])
 /****************************MOVIMIENTO DE AUTOS*********************************/
 
 /*cars_routine
- * Recibe un puntero a un arreglo con la posicion de los autos y un puntero a la posicion de la rana 
+ * Recibe un puntero a un arreglo con la posicion de los autos y un puntero a la posicion de la rana
  * Si se subio de nivel (enviar NULL como primer parametro), aumenta la velocidad del movimiento de los autos
  * Sino, mueve los autos (se fija si en este llamado los tiene que mover o no)
  * Recibe NULL si se subio de nivel*/

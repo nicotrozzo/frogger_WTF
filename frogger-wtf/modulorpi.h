@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <semaphore.h>
+#include <string.h>
 
 #include "termlib.h"
 #include "joydrv.h"
@@ -28,15 +29,17 @@
 #define POSITION_X 1
 #define POSITION_Y 1
 #define NOFCHARS 3
-#define INIT_Y 8
-#define FIL1 3
+#define LETTER_POS_Y 8
+#define FIL1 1
 #define Y_SEPARATION 2
-#define FIL2 (FIL1+Y_SEPARATION)
+#define FIL2 (FIL1+LENGHT_Y+Y_SEPARATION)
 #define LENGHT_X 4
 #define LENGHT_Y 5
 #define MAXNUMBERS 6
 #define DISPLAY_MIDDLE 3
-#define CHANGE_SCORE_TIMES 5
+#define CHANGE_SCORE_TIMES 50
+#define N_OF_LETTERS 3
+#define N_OF_NUMBERS 6
 
 enum movefrog { FROG_UP, FROG_DOWN, FROG_RIGHT, FROG_LEFT };
 
@@ -45,4 +48,3 @@ void* output_thread(void* p2gameData);
 
 
 #endif /* MODULO_RPI_H*/
-
