@@ -32,6 +32,8 @@ void showPreviousScore(void *pArg);
 void showNextScore(void *pArg);
 void load_scoreboard(void *pArg);
 void close_scoreboard(void *pArg);
+void load_scores(void *pArg);
+
 
 void output_init(void);
 void output_clear(void);

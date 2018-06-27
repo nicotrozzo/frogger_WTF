@@ -505,7 +505,8 @@ void* output_thread(void* pointer)
     char name[4];
     char charedScore[7];//hacer DEFINES DE TOTODODODODODODO
     char charedPosition;
-    int i,position,waitCounter = CHANGE_SCORE_TIMES;
+    //int i,position,waitCounter = CHANGE_SCORE_TIMES;
+    int i,waitCounter = CHANGE_SCORE_TIMES;
     bool change = true;
 
     while(!pGameData->quitGame)
@@ -521,7 +522,6 @@ void* output_thread(void* pointer)
                     break;
                 case START_SCOREBOARD_ID:
                     printBoard(trophie);
-                    position = 0;
                     break;
                 case START_QUIT_ID:
                     printBoard(quit);
@@ -538,7 +538,7 @@ void* output_thread(void* pointer)
         {
             if(pGameData->scoreFile)  //si no se cargo el archivo no hace nada
             {
-                if(!pGameData->moveFrog.flag)  //si no pidieron ver otro puntaje
+                if(!pGameData->move.flag)  //si no pidieron ver otro puntaje
                 {
                   if(change)
                   {
@@ -559,25 +559,12 @@ void* output_thread(void* pointer)
                   {
                       printBoard(off);
                       printChar(numbers[charedPosition - '0'],POSITION_X,POSITION_Y);
-                      for( i=0 ; i < NOFCHARS ; i++)
-                      {
-                          printChar(letters[name[i]-'A'], (LENGHT_X + 1)*i + 1 , LETTER_POS_Y); //imprime en el display cada letra del arreglo nombre, supone que estan todas en mayuscula
-                      }
+                      showName(name);   //OJO NO ESTA PROBADOOOOOOOO
                   }
                   else  //sino, debe mostrar el puntaje
                   {
                       printBoard(off);
-                      for( i=0 ; (i < MAXNUMBERS) && (i < strlen(charedScore)) ; i++) //el largo de charedScore debe ser MENOR O IGUAL A MAXNUMBERS para que funcione
-                      {
-                          if(i < DISPLAY_MIDDLE)  //distingue si hay que imprimir en la primera o segunda fila
-                          {
-                              printChar(numbers[charedScore[i]-'0'], (LENGHT_X + 1)*i + 1 , FIL1); //imprime en el display cada numero del arreglo score
-                          }
-                          else
-                          {
-                              printChar(numbers[charedScore[i]-'0'], (LENGHT_X + 1)*(i-DISPLAY_MIDDLE) + 1 , FIL2);
-                          }
-                      }
+                      showScore(charedScore);   //OJO ESTO NO ESTA PROBADO
                   }
                   if(dispTimer)   //entra cada un determinado tiempo
                   {
@@ -591,14 +578,14 @@ void* output_thread(void* pointer)
                 }
                 else
                 {
-                    if(pGameData->moveFrog.where == FROG_UP)
+                    if(pGameData->move.where == FROG_UP)
                     {
-                        if(position != 0) //es ciclico
+                        if(pGameData->position != 0) //es ciclico
                         {
-                            position --; //posicion anterior en el top
+                            pGameData->position--; //posicion anterior en el top
                             fseek(pGameData->scoreFile, 0, SEEK_SET);//voy al principio de archivo
 
-                            while((fgetc(pGameData->scoreFile)) != ('1' + position) )  // busco en la primer posicion de cada renglon el numero deseado
+                            while((fgetc(pGameData->scoreFile)) != ('1' + pGameData->position) )  // busco en la primer posicion de cada renglon el numero deseado
                             {
                                 while( (charedPosition = fgetc(pGameData->scoreFile)) != '\n' );
                             }
@@ -606,7 +593,7 @@ void* output_thread(void* pointer)
                         }
                       else // si la posicion actual es 0
                       {
-                          position = 4;//voy al ultimo lugar
+                          pGameData->position = 4;//voy al ultimo lugar
                           while((charedPosition = fgetc(pGameData->scoreFile)) != '5' )
                           {
                               while( (charedPosition = fgetc(pGameData->scoreFile)) != '\n' );// busco el numero 5
@@ -614,20 +601,20 @@ void* output_thread(void* pointer)
                           fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion
                       }
                     }
-                    else if ( pGameData->moveFrog.where == FROG_DOWN)
+                    else if ( pGameData->move.where == FROG_DOWN)
                     {
-                        if(position != 4)
+                        if(pGameData->position != 4)
                         {
-                            position ++;
+                            pGameData->position ++;
                             while( (charedPosition = fgetc(pGameData->scoreFile)) != '\n'); //voy a la siguiente posicion en el top
                         }
                         else
                         {
-                            position = 0;
+                            pGameData->position = 0;
                             fseek(pGameData->scoreFile, 0, SEEK_SET);//voy al principio del archivo
                         }
                     }
-                    pGameData->moveFrog.flag = 0;//pongo el flag de move en 0 para avisar que ya termine
+                    pGameData->move.flag = 0;//pongo el flag de move en 0 para avisar que ya termine
                     waitCounter = CHANGE_SCORE_TIMES;
                     change = true;
                 }
@@ -641,10 +628,10 @@ void* output_thread(void* pointer)
               cars_routine(carsBoard,&frogCoords);  //mueve los autos
               carsTimer = false;
             }
-            if(pGameData->moveFrog.flag)
+            if(pGameData->move.flag)
             {
-                moveFrog(pGameData->moveFrog.where,&frogCoords);    //mueve la rana si hay que moverla
-                pGameData->moveFrog.flag = false;
+                moveFrog(pGameData->move.where,&frogCoords);    //mueve la rana si hay que moverla
+                pGameData->move.flag = false;
             }
             if( checkCollision(&frogCoords,carsBoard) )         //FIJARSE EL ORDEN! SI PERDIO CAPAZ HAYA QUE PONER UN BREAK
             {
@@ -656,7 +643,7 @@ void* output_thread(void* pointer)
                 showLives(--pGameData->lives);  //muestra al jugador la cantidad de vidas restantes
                 display_update();
                 sleep(1);
-                pGameData->moveFrog.flag = false; //no interesa si quisieron mover la rana mientras se mostraba el mensaje, se tira ese evento
+                pGameData->move.flag = false; //no interesa si quisieron mover la rana mientras se mostraba el mensaje, se tira ese evento
             }
             else if( checkWin(&frogCoords,carsBoard) )
             {
@@ -675,7 +662,7 @@ void* output_thread(void* pointer)
                     pGameData->levelUp = 0;
                     display_update();
                     sleep(1);
-                    pGameData->moveFrog.flag = false; //no interesa si quisieron mover la rana mientras se mostraba el mensaje, se tira ese evento
+                    pGameData->move.flag = false; //no interesa si quisieron mover la rana mientras se mostraba el mensaje, se tira ese evento
                 }
             }
             else if(maxPosition > frogCoords.y)
@@ -726,7 +713,42 @@ void* output_thread(void* pointer)
         /*ESTADO DE GUARDAR PUNTAJE*/
         while( pGameData->currentState->stateID == SAVE_SCORE_ID )
         {
-            printf("Ahora estarias guardando tu puntaje si pudieras, puto\n");
+            showScore(itoa(pGameData->score,charedScore,10); //VER QUE PASA CON EL NULL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            sleep(3);//mostrar puntaje y pedir letras
+            pGameData->move.flag = false;
+            while(!enter)
+            {
+                showName(pGameData->player);
+                //display_update();
+                if(carsTimer);
+                
+                if(pGameData->move.flag)
+                {
+                    sw
+                
+                }    
+                switch(pGameData->position)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                
+                
+                }        
+                //imprimir las 3 letras del arreglo, hacer parpadear la que esta seleccionada
+            
+                //PARPADEO
+            
+            }
+            
+            
+            
+            
+            if(pGameData->scoreFile);
+                
         }
 
     }
@@ -910,9 +932,35 @@ void copyBoard(bool destination[][DISSIZE],const bool source[][DISSIZE])
         }
     }
 }
-
-
-
+/*showScore: recibe un arreglo de numeros y los imprime en el display, arriba los 3 primeros y abajo los 3 siguientes. Si tiene mas de 6 numeros 
+ ignora los restantes.
+ DEBE ESTAR DEFINIDO EL ARREGLO NUMBERS[10][5][4] CON LO QUE SE QUIERE QUE SE MUESTRE CON CADA NUMERO
+ Usa la funcion printChar */
+void showScore(char charedScore[])
+{
+    int i;
+    for( i=0 ; (i < MAXNUMBERS) && (i < strlen(charedScore)) ; i++) //el largo de charedScore debe ser MENOR O IGUAL A MAXNUMBERS para que funcione
+    {
+        if(i < DISPLAY_MIDDLE)  //distingue si hay que imprimir en la primera o segunda fila
+        {
+            printChar(numbers[charedScore[i]-'0'], (LENGHT_X + 1)*i + 1 , FIL1); //imprime en el display cada numero del arreglo score
+        }
+        else
+        {
+            printChar(numbers[charedScore[i]-'0'], (LENGHT_X + 1)*(i-DISPLAY_MIDDLE) + 1 , FIL2);
+        }
+    }
+}    
+/*showName: recibe un arreglo de letras MAYUSCULAS y las imprime en el display
+ DEBE ESTAR DEFINIDIO EL ARREGLO LETTER CON TODAS LAS LETRAS DEL ABECEDARIO (26)*/
+void showName(char name[])
+{
+    int i;
+    for( i=0 ; i < NOFCHARS ; i++)
+    {
+        printChar(letters[name[i]-'A'], (LENGHT_X + 1)*i + 1 , LETTER_POS_Y); //imprime en el display cada letra del arreglo nombre, supone que estan todas en mayuscula
+    }
+}
 /****************************MOVIMIENTO DE AUTOS*********************************/
 
 /*cars_routine

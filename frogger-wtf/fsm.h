@@ -58,7 +58,7 @@ state_t game[9+1] = {
     {ENTER_EVENT,pauseMenuResume,non_act_routine,GAME_ID},
     {ARRIVE_EVENT,game,checkLevelUp,GAME_ID},
     {COLLISION_EVENT,game,checkLives,GAME_ID},
-    {GAME_OVER_EVENT,saveScoreChar,non_act_routine,GAME_ID},
+    {GAME_OVER_EVENT,saveScoreChar,load_scores,GAME_ID},
     {FORWARD_EVENT,game,update_score,GAME_ID},
     {END_TABLE,game,non_act_routine,GAME_ID}
 };

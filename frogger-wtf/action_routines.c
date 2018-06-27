@@ -6,33 +6,6 @@
 
 #include "action_routines.h"
 
-/*ESTO TIENE QUE IR EN EL .H PERO NETBEANS NO QUIERE*/
-/*#define LEVEL_UP_SCORE 100
-#define FORWARD_SCORE 10
-#define EMPTY_SPACES 5
-
-enum charManage {CURR = -1, NEXT = 0, PREV, START}; // esto se usa para las funciones que mueven la letras para guardar puntaje
-
-extern struct STATE saveScoreChar[];
-
-void non_act_routine(void *pArg);
-void frog_up(void *pArg);
-void frog_down(void *pArg);
-void frog_left(void *pArg);
-void frog_right(void *pArg);
-void start_game(void *pArg);
-void f_letter_up(void *pArg);
-void f_letter_down(void *pArg);
-void previousChar(void *pArg);
-void nextChar(void *pArg);
-void end_game(void *pArg);
-void saveScore(void *pArg);
-void update_score(void *pArg);
-void checkLives(void *pArg);
-void checkLevelUp(void *pArg);
-void showPreviousScore(void *pArg);
-void showNextScore(void *pArg);*/
-/*ESTO TIENE QUE IR EN EL .H PERO NETBEANS NO QUIERE*/
 extern sem_t levelUpSem;
 
 static void letter_up(void *pArg, int letter);
@@ -49,6 +22,7 @@ void non_act_routine(void *pArg)
 void load_scoreboard(void *pArg)
 {
     ((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r");
+    pGameData->position = 0;
 }
 
 void close_scoreboard(void *pArg)
@@ -56,44 +30,54 @@ void close_scoreboard(void *pArg)
     fclose(((gameData_t *)pArg)->scoreFile);
 }
 
+void load_scores(void *pArg)
+{
+    int i;
+    ((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r+");
+    for( i=0 ; i < NOFCHARS ; i++ )
+    {    
+        ((gameData_t *)pArg)->player[i]='A';
+    }
+    pGameData->position = 0;
+}
 
 void frog_up(void *pArg)
 {
   gameData_t *pData = pArg;
-  if(pData->moveFrog.flag == false)
+  if(pData->move.flag == false)
   {    
-    pData->moveFrog.flag = true;
-    pData->moveFrog.where = FROG_UP;
+    pData->move.flag = true;
+    pData->move.where = FROG_UP;
   }  
 }
 
 void frog_down(void *pArg)
 {
   gameData_t *pData = pArg;
-  if(pData->moveFrog.flag == false)
+  if(pData->move.flag == false)
   {    
-    pData->moveFrog.flag = true;
-    pData->moveFrog.where = FROG_DOWN;
+    pData->move.flag = true;
+    pData->move.where = FROG_DOWN;
   }  
 }
 
 void frog_left(void *pArg)
 {
   gameData_t *pData = pArg;
-  if(pData->moveFrog.flag == false)
+  if(pData->move.flag == false)
   {    
-    pData->moveFrog.flag = true;
-    pData->moveFrog.where = FROG_LEFT;
+    pData->move.flag = true;
+    pData->move.where = FROG_LEFT;
   }  
 }
 
 void frog_right(void *pArg)
 {
   gameData_t *pData = pArg;
-  if(pData->moveFrog.flag == false)
+  if(pData->move.flag == false)
   {
-    pData->moveFrog.flag = true;
-    pData->moveFrog.where = FROG_RIGHT;
+    pData->move.flag = true;
+    pData->move.where = FROG_RIGHT;
   } 
 }
 
@@ -105,7 +89,7 @@ void start_game(void *pArg)
   pData->levelUp = false;
   pData->score = 0;
   checkLevelUp(NULL);
-  pData->moveFrog.flag = false;
+  pData->move.flag = false;
   int letter;
   for(letter = 0; letter < 3; letter++)
   {
@@ -136,20 +120,20 @@ void nextChar(void *pArg)
 
 void showNextScore(void *pArg)
 {
-  if(!((gameData_t*)pArg)->moveFrog.flag)   //OJO POSIBLE PERDIDA DE EVENTOS
+  if(!((gameData_t*)pArg)->move.flag)   //OJO POSIBLE PERDIDA DE EVENTOS
   {    
-    ((gameData_t*)pArg)->moveFrog.flag = true;  
-    ((gameData_t*)pArg)->moveFrog.where = FROG_DOWN;
+    ((gameData_t*)pArg)->move.flag = true;  
+    ((gameData_t*)pArg)->move.where = FROG_DOWN;
   }
 }
 
 
 void showPreviousScore(void *pArg)
 {
-  if(!((gameData_t*)pArg)->moveFrog.flag)
+  if(!((gameData_t*)pArg)->move.flag)
   {    
-    ((gameData_t*)pArg)->moveFrog.flag = true;  
-    ((gameData_t*)pArg)->moveFrog.where = FROG_UP;
+    ((gameData_t*)pArg)->move.flag = true;  
+    ((gameData_t*)pArg)->move.where = FROG_UP;
   }
 }
 

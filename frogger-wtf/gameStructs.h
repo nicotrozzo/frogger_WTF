@@ -41,18 +41,19 @@ typedef struct
 {
     bool flag;
     uint8_t where;
-}moveFrog_t;
+}move_t;
 
 typedef struct
 {
     int lives;
+    char position;
     bool levelUp; 
     bool quitGame;
-    moveFrog_t moveFrog; 
+    move_t move; 
     char player[3];
     unsigned int score;
     FILE *scoreFile;
-    scorer_t (*pTop10)[10];     //pensar si conviene
+   // scorer_t (*pTop10)[10];     //pensar si conviene
     state_t *currentState;
     event_queue_t *pEventQueue;
 }gameData_t;
