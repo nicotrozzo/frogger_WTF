@@ -432,13 +432,14 @@ void* output_thread(void* pointer)
 
     while(!pGameData->quitGame)
     {
+        /*ESTADOS INICIALES, MENU DE INICIO: EMPEZAR A JUGAR, MOSTRAR SCOREBOARD O SALIR DEL JUEGO*/
         while( (pGameData->currentState->stateID == START_PLAY_ID || pGameData->currentState->stateID == START_QUIT_ID || pGameData->currentState->stateID == START_SCOREBOARD_ID) && !pGameData->quitGame )//mientras esta en los estados del startmenu
         {
-            switch(pGameData->currentState->stateID)
+            switch(pGameData->currentState->stateID)    //muestra el bitmap correspondiente a cada estado
             {
                 case START_PLAY_ID:
                     printBoard(play); 
-                    copyBoard(carsBoard,initCarsBoard);
+                    copyBoard(carsBoard,initCarsBoard); //va a pasar al estado de juego, carga el estado inicial de los autos
                     break;
                 case START_SCOREBOARD_ID:
                     printBoard(trophie);
@@ -452,10 +453,11 @@ void* output_thread(void* pointer)
               display_update();
               dispTimer = false;
             }
-        }
+        
+         /*ESTADO DE MOSTRAR EL SCOREBOARD*/
         while( pGameData->currentState->stateID == SCORE_BOARD_ID )
         {
-            int position = 0;       //VER QUE HACER!!!!!!!!!!!!!!!! ASI NO VA A FUNCIONAR XQ SIEMPRE VALE 0
+            //int position = 0;       //VER QUE HACER!!!!!!!!!!!!!!!! ASI NO VA A FUNCIONAR XQ SIEMPRE VALE 0
             if(pGameData->scoreFile)  //si no se cargo el archivo no hace nada
             {
               if(!pGameData.moveFrog.flag)  //si no pidieron ver otro puntaje
@@ -501,7 +503,7 @@ void* output_thread(void* pointer)
               }
               else
               {
-                if(pGameData.moveFrog.where == FROG_UP)
+                if(pGameData->moveFrog.where == FROG_UP)
                 {
                   if(position != 0) //es ciclico
                   {
@@ -531,7 +533,7 @@ void* output_thread(void* pointer)
                     fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion
                   }
                 }
-                else if ( pGameData.moveFrog.where == FROG_DOWN)
+                else if ( pGameData->moveFrog.where == FROG_DOWN)
                 {
                   if(position != 4)
                   {
@@ -544,12 +546,12 @@ void* output_thread(void* pointer)
                     fseek(pGameData->scoreFile, 0, SEEK_SET);//voy al principio del archivo
                   }
                 }
-                pGameData.moveFrog.flag = 0;//pongo el flag de move en 0 para avisar que ya termine
+                pGameData->moveFrog.flag = 0;//pongo el flag de move en 0 para avisar que ya termine
                 waitCounter = CHANGE_SCORE_TIMES;
               }
             }
         }    
-        
+        /*ESTADO DE JUEGO*/    
         while( pGameData->currentState->stateID == GAME_ID )//mover autos,VER CARS_ROUTINE
         {
             if(carsTimer)
@@ -572,6 +574,7 @@ void* output_thread(void* pointer)
                 showLives(--pGameData->lives);  //muestra al jugador la cantidad de vidas restantes
                 display_update();
                 sleep(1); 
+                pGameData->moveFrog.flag = false; //no interesa si quisieron mover la rana mientras se mostraba el mensaje, se tira ese evento
             }
             else if( checkWin(&frogCoords,carsBoard) )
             {
@@ -590,17 +593,18 @@ void* output_thread(void* pointer)
                     pGameData->levelUp = 0;
                     display_update();
                     sleep(1);
+                    pGameData->moveFrog.flag = false; //no interesa si quisieron mover la rana mientras se mostraba el mensaje, se tira ese evento
                 }
             }               
             else if(maxPosition > frogCoords.y)
             {
-                maxPosition = frogCoords.y;     //se fija si avanzo mas que antes, en caso afirmativo le avisa al main para actualizar el puntaje
+                maxPosition = frogCoords.y;     //se fija si avanzo mas que antes, si lo hizo le avisa al main para actualizar el puntaje
                 if( !emit_event(pGameData->pEventQueue,FORWARD_EVENT) )
                 {
                     printf("Couldn't emit event\n");
                 }
             }
-            if(pGameData -> lives )
+            if(pGameData -> lives ) //si el jugador no perdio, imprime si es que haya que imprimir 
             {
                 printBoard(carsBoard);  //Escribe en el display el estado actual de autos y troncos
                 if(dispTimer)
@@ -609,7 +613,7 @@ void* output_thread(void* pointer)
                     {
                         frogCounter = FROG_REFRESH;
                         //toggle = !toggle;
-                        display_write(frogCoords.y,frogCoords.x,0);  //prende/apaga la posicion de la rana
+                        display_write(frogCoords.y,frogCoords.x,0);  //apaga la posicion de la rana, una cada FROG_REFRESH veces
                     }
                     else
                     {
@@ -620,6 +624,7 @@ void* output_thread(void* pointer)
                 }              
             }
         }
+        /*ESTADOS DE PAUSA: SEGUIR JUGANDO O VOLVER AL MENU DE INICIO*/
         while( pGameData->currentState->stateID == PAUSE_RESUME_ID || pGameData->currentState->stateID == PAUSE_RESTART_ID )
         {
             if( pGameData->currentState->stateID == PAUSE_RESUME_ID)
@@ -636,6 +641,7 @@ void* output_thread(void* pointer)
               dispTimer = false;
             }
         }
+        /*ESTADO DE GUARDAR PUNTAJE*/
         while( pGameData->currentState->stateID == SAVE_SCORE_ID )
         {
             printf("Ahora estarias guardando tu puntaje si pudieras, puto\n");
