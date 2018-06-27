@@ -722,11 +722,7 @@ void* output_thread(void* pointer)
                 //display_update();
                 if(carsTimer);
                 
-                if(pGameData->move.flag)
-                {
-                    sw
-                
-                }    
+                    
                 switch(pGameData->position)
                 {
                     case 0:
