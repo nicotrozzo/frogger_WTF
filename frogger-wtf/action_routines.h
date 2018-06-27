@@ -30,6 +30,8 @@ void checkLives(void *pArg);
 void checkLevelUp(void *pArg);
 void showPreviousScore(void *pArg);
 void showNextScore(void *pArg);
+void load_scoreboard(void *pArg);
+void close_scoreboard(void *pArg);
 
 void output_init(void);
 void output_clear(void);

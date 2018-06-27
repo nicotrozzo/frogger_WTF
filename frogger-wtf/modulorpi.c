@@ -546,7 +546,13 @@ void* output_thread(void* pointer)
                       while( (name[0] = fgetc(pGameData->scoreFile)) == ' ');  //avanza hasta que no haya espacios y queda guardada la primera letra en el arreglo
                       fgets(&name[1],3,pGameData->scoreFile); //CUIDADO PUEDE ESTAR SOBREESCRIBIENDO ALGO O NO ALCANZARLE EL LUGAR PARA EL TERMINADOR//carga el nombre de la posicion actual
                       while( (charedScore[0] = fgetc(pGameData->scoreFile)) == ' '); //avanza hasta que no haya espacios y queda guardado el primer numero en el arreglo
-                      fgets(&charedScore[1],MAXNUMBERS,pGameData->scoreFile); //carga el string con el puntaje de la posicion actual
+                      i = 0;
+                      while(charedScore[i] != '\n')
+                      {
+                          charedScore[++i] = fgetc(pGameData->scoreFile);
+                      }
+                      charedScore[i] = '\0';
+                      fseek(pGameData->scoreFile, -1, SEEK_CUR);
                       change = false;
                   }
                   if(waitCounter)   //si todavia tiene que mostrar el nombre, lo hace

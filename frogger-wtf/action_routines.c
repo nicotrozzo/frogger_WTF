@@ -48,8 +48,14 @@ void non_act_routine(void *pArg)
 
 void load_scoreboard(void *pArg)
 {
-    ((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r+");
+    ((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r");
 }
+
+void close_scoreboard(void *pArg)
+{
+    fclose(((gameData_t *)pArg)->scoreFile);
+}
+
 
 void frog_up(void *pArg)
 {
