@@ -101,7 +101,7 @@ const bool offChar[LENGTH_Y][LENGTH_X] = {
     {0,0,0,0},
     {0,0,0,0},
     {0,0,0,0},
-    {0,0,0,0},
+    {0,0,0,0}
   };
 
 const bool initCarsBoard[DISSIZE][DISSIZE] = {
