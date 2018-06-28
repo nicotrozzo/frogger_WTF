@@ -28,6 +28,7 @@ void load_scoreboard(void *pArg)
 void close_scoreboard(void *pArg)
 {
     fclose(((gameData_t *)pArg)->scoreFile);
+    ((gameData_t *)pArg)->scoreFile = NULL;
 }
 
 void load_scores(void *pArg)
@@ -203,6 +204,7 @@ void saveScore(void *pArg)
     
     
     fclose(pGameData->scoreFile);
+    ((gameData_t *)pArg)->scoreFile = NULL;
 }
 
 

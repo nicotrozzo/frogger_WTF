@@ -564,6 +564,7 @@ void* output_thread(void* pointer)
                       }
                       charedScore[i] = '\0';
                       fseek(pGameData->scoreFile, -1, SEEK_CUR);
+                      waitCounter = CHANGE_SCORE_TIMES; //reinicia contador para muestra del nombre o puntaje
                       change = false;
                   }
                   if(waitCounter)   //si todavia tiene que mostrar el nombre, lo hace
@@ -626,7 +627,7 @@ void* output_thread(void* pointer)
                         }
                     }
                     pGameData->move.flag = 0;//pongo el flag de move en 0 para avisar que ya termine
-                    waitCounter = CHANGE_SCORE_TIMES;
+                    
                     change = true;
                 }
             }
@@ -734,12 +735,14 @@ void* output_thread(void* pointer)
                 {
                     sprintf(charedScore,"%d",MAXSCORE);     //en el display no se pueden mostrar mas de 6 digitos
                 }    
+                printBoard(off);    //borra lo que hubiera en el display
                 showScore(charedScore); //muestra el puntaje del jugador 
                 sleep(3);//mostrar puntaje y pedir letras   //durante 3 segundos
                 pGameData->move.flag = false;   //si movieron el joystick durante ese tiempo no intresa
                 waitCounter = WAIT_NAME_BLINK;  //inicializa variable para parpadeo de la letra seleccionada
                 firstTime = false;
             }    
+            printBoard(off);
             showName(pGameData->player,SCORE_NAME_Y);   //muestra las letras guardadas en su nombre                
             if(dispTimer)
             {
