@@ -9,7 +9,7 @@
 #include "eventQueue.h"
 #include "gameStructs.h"
 #include "timer_threads.h"
-#include <stdlib.h>
+
 extern sem_t levelUpSem;
 
 const bool letters[N_OF_LETTERS][LENGTH_Y][LENGTH_X] = {
@@ -725,8 +725,15 @@ void* output_thread(void* pointer)
         while( pGameData->currentState->stateID == SAVE_SCORE_ID )
         {
             if(firstTime)
-            {   
-                itoa(pGameData->score,charedScore,10); //guarda en charedScore el puntaje pasado a string
+            {  
+                if(pGameData->score <= MAXSCORE)
+                {    
+                    sprintf(charedScore,"%d",pGameData->score); //guarda en charedScore el puntaje pasado a string
+                }
+                else
+                {
+                    sprintf(charedScore,"%d",MAXSCORE);     //en el display no se pueden mostrar mas de 6 digitos
+                }    
                 showScore(charedScore); //muestra el puntaje del jugador 
                 sleep(3);//mostrar puntaje y pedir letras   //durante 3 segundos
                 pGameData->move.flag = false;   //si movieron el joystick durante ese tiempo no intresa

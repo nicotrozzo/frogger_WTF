@@ -25,7 +25,7 @@
 #define FROG_X_MIN 0
 #define FROG_Y_MIN 0
 
-/*PARA ESTADO DE SHOW SCOREBOARD*/
+/*PARA ESTADOS DE SCOREBOARD*/
 #define POSITION_X 1
 #define POSITION_Y 1
 #define NOFCHARS 3
@@ -43,12 +43,12 @@
 #define N_OF_NUMBERS 10
 #define SCORE_NAME_Y 5
 #define WAIT_NAME_BLINK 20
+#define MAXSCORE 999999
 
 enum movefrog { FROG_UP, FROG_DOWN, FROG_RIGHT, FROG_LEFT };
 
 void* input_thread (void* event);
 void* output_thread(void* p2gameData);
 
-//extern char* itoa( int value, char * str, int base );
 
 #endif /* MODULO_RPI_H*/
