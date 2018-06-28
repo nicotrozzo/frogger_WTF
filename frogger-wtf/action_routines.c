@@ -10,7 +10,7 @@ extern sem_t levelUpSem;
 
 static void letter_up(void *pArg, int letter);
 static void letter_down(void *pArg, int letter);
-static int getScoreChar(int whatToDo);
+//static int getScoreChar(int whatToDo);
 
 
 
@@ -22,7 +22,7 @@ void non_act_routine(void *pArg)
 void load_scoreboard(void *pArg)
 {
     ((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r");
-    pGameData->position = 0;
+    ((gameData_t *)pArg)->position = 0;
 }
 
 void close_scoreboard(void *pArg)
@@ -38,7 +38,7 @@ void load_scores(void *pArg)
     {    
         ((gameData_t *)pArg)->player[i]='A';
     }
-    pGameData->position = 0;
+    ((gameData_t *)pArg)->position = 0;
 }
 
 void frog_up(void *pArg)
