@@ -751,24 +751,24 @@ void* output_thread(void* pointer)
                 if(!--waitCounter)
                 {
                     toggle = !toggle;
-                    if(!toggle) //si toca apagar, apaga la posicion seleccionada para que parpadee
-                    {    
-                        switch(pGameData->position)    
-                        {
-                            case 0:
-                                printChar(offChar,X_SEPARATION,SCORE_NAME_Y);
-                                break;
-                            case 1:
-                                printChar(offChar,2*X_SEPARATION+LENGTH_X,SCORE_NAME_Y);
-                                break;
-                            case 2:
-                                printChar(offChar,3*X_SEPARATION+2*LENGTH_X,SCORE_NAME_Y);
-                                break;  
-                            default:
-                                pGameData->position = 0;
-                        }
-                    }
                     waitCounter = WAIT_NAME_BLINK;
+                }
+                if(!toggle) //si toca apagar, apaga la posicion seleccionada para que parpadee
+                {    
+                    switch(pGameData->position)    
+                    {
+                        case 0:
+                            printChar(offChar,X_SEPARATION,SCORE_NAME_Y);
+                            break;
+                        case 1:
+                            printChar(offChar,2*X_SEPARATION+LENGTH_X,SCORE_NAME_Y);
+                            break;
+                        case 2:
+                            printChar(offChar,3*X_SEPARATION+2*LENGTH_X,SCORE_NAME_Y);
+                            break;  
+                        default:
+                            pGameData->position = 0;
+                    }
                 }
                 display_update();
                 dispTimer = false;                

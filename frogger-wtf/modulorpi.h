@@ -42,7 +42,7 @@
 #define N_OF_LETTERS 26
 #define N_OF_NUMBERS 10
 #define SCORE_NAME_Y 5
-#define WAIT_NAME_BLINK 20
+#define WAIT_NAME_BLINK 10
 #define MAXSCORE 999999
 
 enum movefrog { FROG_UP, FROG_DOWN, FROG_RIGHT, FROG_LEFT };
