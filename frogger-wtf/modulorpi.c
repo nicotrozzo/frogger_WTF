@@ -751,8 +751,9 @@ void* output_thread(void* pointer)
                                 break;
                             case 2:
                                 printChar(offChar,3*X_SEPARATION+2*LENGTH_X,SCORE_NAME_Y);
-                                break;
+                                break;  
                             default:
+                                pGameData->position = 0;
                         }
                     }
                     waitCounter = WAIT_NAME_BLINK;

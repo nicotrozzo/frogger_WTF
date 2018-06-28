@@ -49,5 +49,6 @@ enum movefrog { FROG_UP, FROG_DOWN, FROG_RIGHT, FROG_LEFT };
 void* input_thread (void* event);
 void* output_thread(void* p2gameData);
 
+//extern char* itoa( int value, char * str, int base );
 
 #endif /* MODULO_RPI_H*/
