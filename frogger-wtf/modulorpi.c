@@ -533,6 +533,7 @@ void* output_thread(void* pointer)
                     break;
                 case START_SCOREBOARD_ID:
                     printBoard(trophie);
+                    waitCounter = CHANGE_SCORE_TIMES;  
                     break;
                 case START_QUIT_ID:
                     printBoard(quit);
@@ -737,6 +738,7 @@ void* output_thread(void* pointer)
                 }    
                 printBoard(off);    //borra lo que hubiera en el display
                 showScore(charedScore); //muestra el puntaje del jugador 
+                display_update();
                 sleep(3);//mostrar puntaje y pedir letras   //durante 3 segundos
                 pGameData->move.flag = false;   //si movieron el joystick durante ese tiempo no intresa
                 waitCounter = WAIT_NAME_BLINK;  //inicializa variable para parpadeo de la letra seleccionada
@@ -771,7 +773,6 @@ void* output_thread(void* pointer)
                 display_update();
                 dispTimer = false;                
             }            
-            waitCounter = CHANGE_SCORE_TIMES;    
                             
         }
 
