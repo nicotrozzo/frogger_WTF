@@ -534,6 +534,7 @@ void* output_thread(void* pointer)
                 case START_SCOREBOARD_ID:
                     printBoard(trophie);
                     waitCounter = CHANGE_SCORE_TIMES;  
+                    change = true;
                     break;
                 case START_QUIT_ID:
                     printBoard(quit);
