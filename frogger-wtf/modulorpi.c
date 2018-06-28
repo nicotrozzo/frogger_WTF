@@ -9,7 +9,7 @@
 #include "eventQueue.h"
 #include "gameStructs.h"
 #include "timer_threads.h"
-
+#include <stdlib.h>
 extern sem_t levelUpSem;
 
 const bool letters[N_OF_LETTERS][LENGTH_Y][LENGTH_X] = {
