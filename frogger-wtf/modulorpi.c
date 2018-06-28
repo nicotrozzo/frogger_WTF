@@ -12,7 +12,7 @@
 
 extern sem_t levelUpSem;
 
-const bool letters[N_OF_LETTERS][LENGHT_Y][LENGHT_X] = {
+const bool letters[N_OF_LETTERS][LENGTH_Y][LENGTH_X] = {
   { {1,1,1,1},
     {1,0,0,1},
     {1,1,1,1},
@@ -33,7 +33,7 @@ const bool letters[N_OF_LETTERS][LENGHT_Y][LENGHT_X] = {
   }                     //HACER LETRASSSSSSSSSS
 };
 
-const bool numbers[N_OF_NUMBERS][LENGHT_Y][LENGHT_X] = {
+const bool numbers[N_OF_NUMBERS][LENGTH_Y][LENGTH_X] = {
   { {1,1,1,1},
     {1,0,0,1},
     {1,0,0,1},
@@ -95,6 +95,14 @@ const bool numbers[N_OF_NUMBERS][LENGHT_Y][LENGHT_X] = {
     {1,1,1,1}
   }
 };
+
+const bool offChar[LENGTH_Y][LENGTH_X] = { 
+    {0,0,0,0},
+    {0,0,0,0},
+    {0,0,0,0},
+    {0,0,0,0},
+    {0,0,0,0},
+  },
 
 const bool initCarsBoard[DISSIZE][DISSIZE] = {
     {1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1},
@@ -753,14 +761,11 @@ void* output_thread(void* pointer)
                 dispTimer = false;                
             }            
             waitCounter = CHANGE_SCORE_TIMES;    
-            if(pGameData->scoreFile)
-                
+                            
         }
 
     }
     display_clear();
-    //printBoard(off);
-    display_update();
     return NULL;
 }
 
@@ -843,9 +848,9 @@ Cuidado: las coordenadas deben tener en cuenta que la primera posicion es {0,0}
 void printChar(const bool p2Letters[][LENGTH_X], int init_x, int init_y)
 {
   int i,j;
-  for( i = 0 ; i < LENGHT_Y ; i++ )
+  for( i = 0 ; i < LENGTH_Y ; i++ )
   {
-    for( j = 0 ; j < LENGHT_X ; j++)
+    for( j = 0 ; j < LENGTH_X ; j++)
     {
       display_write(i+init_y,j+init_x,p2Letters[i][j]);
     }
@@ -895,9 +900,7 @@ void moveFrog(uint8_t where,frog_t *frogCoords)
           {
               frogCoords->x = FROG_X_MIN;
           }
-          break;
-      default:
-          
+          break;          
    }
 }
 
@@ -920,8 +923,6 @@ void showLives(int lives)
         case 4:
             printBoard(fourLives);
             break;
-        default:
-            
     }
 }
 
@@ -951,11 +952,11 @@ void showScore(char charedScore[])
     {
         if(i < DISPLAY_MIDDLE)  //distingue si hay que imprimir en la primera o segunda fila
         {
-            printChar(numbers[charedScore[i]-'0'], (LENGHT_X + 1)*i + 1 , FIL1); //imprime en el display cada numero del arreglo score
+            printChar(numbers[charedScore[i]-'0'], (LENGTH_X + 1)*i + 1 , FIL1); //imprime en el display cada numero del arreglo score
         }
         else
         {
-            printChar(numbers[charedScore[i]-'0'], (LENGHT_X + 1)*(i-DISPLAY_MIDDLE) + 1 , FIL2);
+            printChar(numbers[charedScore[i]-'0'], (LENGTH_X + 1)*(i-DISPLAY_MIDDLE) + 1 , FIL2);
         }
     }
 }    
@@ -966,7 +967,7 @@ void showName(char name[],int pos_y)
     int i;
     for( i=0 ; i < NOFCHARS ; i++)
     {
-        printChar(letters[name[i]-'A'], (LENGHT_X + 1)*i + 1 , pos_y); //imprime en el display cada letra del arreglo nombre, supone que estan todas en mayuscula
+        printChar(letters[name[i]-'A'], (LENGTH_X + 1)*i + 1 , pos_y); //imprime en el display cada letra del arreglo nombre, supone que estan todas en mayuscula
     }
 }
 /****************************MOVIMIENTO DE AUTOS*********************************/
