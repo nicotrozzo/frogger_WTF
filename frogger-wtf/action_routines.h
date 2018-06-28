@@ -44,6 +44,9 @@ void output_clear(void);
 #define EMPTY_SPACES 5
 #define LIVES 5
 #define SCORE_FILE "scoreBoard.txt"
+#define MAX_POSITION 2
+#define MIN_POSITION 2
+
 enum charManage {CURR = -1, NEXT = 0, PREV, START}; // esto se usa para las funciones que mueven la letras para guardar puntaje
 
 

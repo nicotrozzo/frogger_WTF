@@ -372,6 +372,9 @@ static void shift_left_row(bool row[DISSIZE][DISSIZE], int row_num);
 static void showLives(int lives);
 static void copyBoard(bool destination[][DISSIZE],const bool source[][DISSIZE]);
 static void printChar(const bool p2Letters[5][4], int init_x, int init_y);
+static void showName(char name[],int pos_y);
+static void showScore(char charedScore[]);
+
 
 void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
 {
@@ -502,12 +505,12 @@ void* output_thread(void* pointer)
     bool toggle = false;    //variable para el parpadeo de la rana
     
     /*variables de estado escorbord*/
-    char name[4];
-    char charedScore[7];//hacer DEFINES DE TOTODODODODODODO
-    char charedPosition;
+    char name[NOFCHARS + 1];      
+    char charedScore[MAXNUMBERS + 1];   //arreglo para levantar los puntajes de los archivos como strings
+    char charedPosition;                //variable para el caracter con la posicion del jugador
     //int i,position,waitCounter = CHANGE_SCORE_TIMES;
     int i,waitCounter = CHANGE_SCORE_TIMES;
-    bool change = true;
+    bool change = true,firstTime = true;
 
     while(!pGameData->quitGame)
     {
@@ -559,7 +562,7 @@ void* output_thread(void* pointer)
                   {
                       printBoard(off);
                       printChar(numbers[charedPosition - '0'],POSITION_X,POSITION_Y);
-                      showName(name);   //OJO NO ESTA PROBADOOOOOOOO
+                      showName(name,LETTER_POS_Y);   //OJO NO ESTA PROBADOOOOOOOO
                   }
                   else  //sino, debe mostrar el puntaje
                   {
@@ -713,37 +716,44 @@ void* output_thread(void* pointer)
         /*ESTADO DE GUARDAR PUNTAJE*/
         while( pGameData->currentState->stateID == SAVE_SCORE_ID )
         {
-            showScore(itoa(pGameData->score,charedScore,10); //VER QUE PASA CON EL NULL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            sleep(3);//mostrar puntaje y pedir letras
-            pGameData->move.flag = false;
-            while(!enter)
+            if(firstTime)
+            {   
+                itoa(pGameData->score,charedScore,10); //guarda en charedScore el puntaje pasado a string
+                showScore(charedScore); //muestra el puntaje del jugador 
+                sleep(3);//mostrar puntaje y pedir letras   //durante 3 segundos
+                pGameData->move.flag = false;   //si movieron el joystick durante ese tiempo no intresa
+                waitCounter = WAIT_NAME_BLINK;  //inicializa variable para parpadeo de la letra seleccionada
+                firstTime = false;
+            }    
+            showName(pGameData->player,SCORE_NAME_Y);   //muestra las letras guardadas en su nombre                
+            if(dispTimer)
             {
-                showName(pGameData->player);
-                //display_update();
-                if(carsTimer);
-                
-                    
-                switch(pGameData->position)
+                if(!--waitCounter)
                 {
-                    case 0:
-                        break;
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                
-                
-                }        
-                //imprimir las 3 letras del arreglo, hacer parpadear la que esta seleccionada
-            
-                //PARPADEO
-            
-            }
-            
-            
-            
-            
-            if(pGameData->scoreFile);
+                    toggle = !toggle;
+                    if(!toggle) //si toca apagar, apaga la posicion seleccionada para que parpadee
+                    {    
+                        switch(pGameData->position)    
+                        {
+                            case 0:
+                                printChar(offChar,X_SEPARATION,SCORE_NAME_Y);
+                                break;
+                            case 1:
+                                printChar(offChar,2*X_SEPARATION+LENGTH_X,SCORE_NAME_Y);
+                                break;
+                            case 2:
+                                printChar(offChar,3*X_SEPARATION+2*LENGTH_X,SCORE_NAME_Y);
+                                break;
+                            default:
+                        }
+                    }
+                    waitCounter = WAIT_NAME_BLINK;
+                }
+                display_update();
+                dispTimer = false;                
+            }            
+            waitCounter = CHANGE_SCORE_TIMES;    
+            if(pGameData->scoreFile)
                 
         }
 
@@ -823,14 +833,14 @@ void printCars(bool p2board[][DISSIZE])
 
 /*printChar:
 Recibe:
-  -Puntero a un arreglo de bools de 3 dimensiones
+  -Puntero a una matriz de bools con filas de largo LENGTH_X(tamano de bitmaps de las letras) 
   -Numero de elemento del arreglo al que se quiere acceder
   -Coordenadas iniciales (tener en cuenta que arranca en 0)
 Funcion: Escribe en el display el contenido del arreglo en las posiciones pedidas
 Cuidado: las coordenadas deben tener en cuenta que la primera posicion es {0,0}
 */
 
-void printChar(const bool p2Letters[5][4], int init_x, int init_y)
+void printChar(const bool p2Letters[][LENGTH_X], int init_x, int init_y)
 {
   int i,j;
   for( i = 0 ; i < LENGHT_Y ; i++ )
@@ -886,6 +896,8 @@ void moveFrog(uint8_t where,frog_t *frogCoords)
               frogCoords->x = FROG_X_MIN;
           }
           break;
+      default:
+          
    }
 }
 
@@ -909,7 +921,7 @@ void showLives(int lives)
             printBoard(fourLives);
             break;
         default:
-            printf("Cuantas vidas queres que tenga?\n");
+            
     }
 }
 
@@ -947,14 +959,14 @@ void showScore(char charedScore[])
         }
     }
 }    
-/*showName: recibe un arreglo de letras MAYUSCULAS y las imprime en el display
+/*showName: recibe un arreglo de letras MAYUSCULAS y las imprime en el display, en la fila que se indique con el segundo parametro
  DEBE ESTAR DEFINIDIO EL ARREGLO LETTER CON TODAS LAS LETRAS DEL ABECEDARIO (26)*/
-void showName(char name[])
+void showName(char name[],int pos_y)
 {
     int i;
     for( i=0 ; i < NOFCHARS ; i++)
     {
-        printChar(letters[name[i]-'A'], (LENGHT_X + 1)*i + 1 , LETTER_POS_Y); //imprime en el display cada letra del arreglo nombre, supone que estan todas en mayuscula
+        printChar(letters[name[i]-'A'], (LENGHT_X + 1)*i + 1 , pos_y); //imprime en el display cada letra del arreglo nombre, supone que estan todas en mayuscula
     }
 }
 /****************************MOVIMIENTO DE AUTOS*********************************/

@@ -46,7 +46,7 @@ typedef struct
 typedef struct
 {
     int lives;
-    char position;
+    int position;
     bool levelUp; 
     bool quitGame;
     move_t move; 

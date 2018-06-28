@@ -29,17 +29,20 @@
 #define POSITION_X 1
 #define POSITION_Y 1
 #define NOFCHARS 3
+#define MAXNUMBERS 6
 #define LETTER_POS_Y 8
 #define FIL1 1
+#define X_SEPARATION 1
 #define Y_SEPARATION 2
 #define FIL2 (FIL1+LENGHT_Y+Y_SEPARATION)
 #define LENGHT_X 4
 #define LENGHT_Y 5
-#define MAXNUMBERS 6
 #define DISPLAY_MIDDLE 3
 #define CHANGE_SCORE_TIMES 50
-#define N_OF_LETTERS 3
-#define N_OF_NUMBERS 6
+#define N_OF_LETTERS 26
+#define N_OF_NUMBERS 10
+#define SCORE_NAME_Y 5
+#define WAIT_NAME_BLINK 20
 
 enum movefrog { FROG_UP, FROG_DOWN, FROG_RIGHT, FROG_LEFT };
 

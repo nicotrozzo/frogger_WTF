@@ -99,22 +99,36 @@ void start_game(void *pArg)
 
 void f_letter_up(void *pArg)
 {
-  letter_up(pArg, getScoreChar(CURR));
+  letter_up(pArg, ((gameData_t*)pArg)->position);
 }
 
 void f_letter_down(void *pArg)
 {
-  letter_down(pArg, getScoreChar(CURR));
+  letter_down(pArg, ((gameData_t*)pArg)->position);
 }
 
 void previousChar(void *pArg)
 {
-  getScoreChar(PREV);
+    if(((gameData_t*)pArg)->position > MIN_POSITION)
+    {    
+        ((gameData_t*)pArg)->position--;
+    }
+    else
+    {
+        ((gameData_t*)pArg)->position = MAX_POSITION;
+    }    
 }
 
 void nextChar(void *pArg)
 {
-  getScoreChar(NEXT);
+    if(((gameData_t*)pArg)->position < MAX_POSITION)
+    {    
+        ((gameData_t*)pArg)->position++;
+    }
+    else
+    {
+        ((gameData_t*)pArg)->position = MIN_POSITION;
+    } 
 }
 
 
@@ -180,12 +194,15 @@ void update_score(void *pArg)
 {
   gameData_t* pGameData = pArg;
   pGameData->score += FORWARD_SCORE;
-  printf("FORWARD!, score: %d\n",pGameData->score);
 }
 
 void saveScore(void *pArg)
 {
-
+    gameData_t* pGameData = pArg;
+    printf("banca que estoy quemado, ahora lo escribo\n");
+    
+    
+    fclose(pGameData->scoreFile);
 }
 
 
@@ -212,6 +229,10 @@ static void letter_up(void *pArg, int letter)
     {
         pData->player[letter]--;
     }
+    else if(pData->player[letter] == 'A')
+    {
+        pData->player[letter] = 'Z';
+    }        
 }
 
 static void letter_down(void *pArg, int letter)
@@ -221,9 +242,13 @@ static void letter_down(void *pArg, int letter)
     {
         pData->player[letter]++;
     }
+    else if(pData->player[letter] == 'Z')
+    {
+        pData->player[letter] = 'A';
+    }    
 }
 
-static int getScoreChar(int whatToDo)
+/*static int getScoreChar(int whatToDo)
 {
   static int scoreChar = 0;
   switch(whatToDo)
@@ -249,7 +274,7 @@ static int getScoreChar(int whatToDo)
         return scoreChar;    
   }  
   return scoreChar; //esto no se usa, solo para evitar warning
-} 
+} */
 
 void output_init(void)
 {
