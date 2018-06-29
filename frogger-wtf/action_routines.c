@@ -234,7 +234,7 @@ void saveScore(void *pArg)
         fseek(readFile, -i-NOFCHARS-positionLen-3, SEEK_CUR); //vuelve hasta el principio de la linea. -i-2 para volver del puntaje                                                                           //y el espacio,-NOFCHARS-1 para volver del nombre y el espacio, -positionLen para volver del puntaje 
         if(otherScore < pGameData->score)   
         {
-            fprintf(writeFile,"%u %s %u\n",position,pGameData->player,pGameData->score);
+            fprintf(writeFile,"%d %s %u\n",position,pGameData->player,pGameData->score);
             printIncPositions(readFile,writeFile);        //escribe todo el resto de las posiciones, sumandoles 1 porque bajan un lugar
             done = true;
         }
@@ -306,7 +306,7 @@ void printIncPositions(FILE *p2read,FILE *p2write )
     fscanf(p2read,"%u",&position);
     do
     {
-        while(fgetc() != ' ');  //saltea la posicion
+        while(fgetc(p2read) != ' ');  //saltea la posicion
         fprintf(p2write,"%u ",++position);
     }    
     while(!copyLine(p2read,p2write));
