@@ -198,12 +198,12 @@ void update_score(void *pArg)
 
 void saveScore(void *pArg)
 {
-    bool done = false;
+    //bool done = false;
     gameData_t* pGameData = pArg;
     ((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r+");   //abre archivo para guardar el puntaje
     //comparar con los puntajes desde el primero para abajo, si el puntaje actual es menor o igual al de la posicion,ir al siguiente, si es mayor
     //asignarle esa posicion en el archivo, enter, y sumarle uno a todas las posiciones
-    while(!done)
+    /*while(!done)
     {
         charedPosition = fgetc(pGameData->scoreFile); //obtiene la posicion en el scoreBoard (primer caracter de la linea)
         fseek(pGameData->scoreFile, 1, SEEK_CUR);  //avanza el espacio
@@ -218,7 +218,7 @@ void saveScore(void *pArg)
         charedScore[i] = '\0';
         fseek(pGameData->scoreFile, -1, SEEK_CUR);
         
-    }    
+    } */   
     printf("banca que estoy quemado, ahora lo escribo\n");
     
     

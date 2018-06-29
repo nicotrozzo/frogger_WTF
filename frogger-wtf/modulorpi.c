@@ -557,10 +557,9 @@ void* output_thread(void* pointer)
                   {
                       charedPosition = fgetc(pGameData->scoreFile); //obtiene la posicion en el scoreBoard (primer caracter de la linea)
                       fseek(pGameData->scoreFile, 1, SEEK_CUR);  //avanza el espacio
-                      fgets(name,4,pGameData->scoreFile); //carga el nombre de la posicion actual
+                      fgets(name,NOFCHARS + 1,pGameData->scoreFile); //carga el nombre de la posicion actual, con un terminador
                       fseek(pGameData->scoreFile, 1, SEEK_CUR);  //avanza el espacio
                       
-   //                   while( (charedScore[0] = fgetc(pGameData->scoreFile)) == ' '); //avanza hasta que no haya espacios y queda guardado el primer numero en el arreglo
                       i = -1;
                       do
                       {
@@ -568,7 +567,7 @@ void* output_thread(void* pointer)
                       }
                       while(charedScore[i] != '\n');
                       charedScore[i] = '\0';
-                      fseek(pGameData->scoreFile, -1, SEEK_CUR);
+                      fseek(pGameData->scoreFile, -1, SEEK_CUR);    //deja el cursor en el final de la linea
                       waitCounter = CHANGE_SCORE_TIMES; //reinicia contador para muestra del nombre o puntaje
                       change = false;
                   }
@@ -576,12 +575,12 @@ void* output_thread(void* pointer)
                   {
                       printBoard(off);
                       printChar(numbers[charedPosition - '0'],POSITION_X,POSITION_Y);
-                      showName(name,LETTER_POS_Y);   //OJO NO ESTA PROBADOOOOOOOO
+                      showName(name,LETTER_POS_Y);   
                   }
                   else  //sino, debe mostrar el puntaje
                   {
                       printBoard(off);
-                      showScore(charedScore);   //OJO ESTO NO ESTA PROBADO
+                      showScore(charedScore);  
                   }
                   if(dispTimer)   //entra cada un determinado tiempo
                   {
@@ -734,7 +733,7 @@ void* output_thread(void* pointer)
             {  
                 if(pGameData->score <= MAXSCORE)
                 {    
-                    sprintf(charedScore,"%d",pGameData->score); //guarda en charedScore el puntaje pasado a string
+                    sprintf(charedScore,"%u",pGameData->score); //guarda en charedScore el puntaje pasado a string
                 }
                 else
                 {
@@ -791,15 +790,15 @@ Devuelve 1 si la rana choco, 0 si no choco.
     Ademas, si choco la devuelve a su posicion inicial */
 bool checkCollision(frog_t *frogCoords,bool board[][DISSIZE])
 {
-  if(board[frogCoords->y][frogCoords->x]) //OJO X E Y!!!
+  if(board[frogCoords->y][frogCoords->x]) //si la posicion de la rana esta prendida (1) en el tablero de los autos, significa que choco
   {
-      frogCoords->x = INIT_X;
+      frogCoords->x = INIT_X;   //devuelve la rana a su posicion inicial
       frogCoords->y = INIT_Y;
-      return true;
+      return true;  //avisa que choco
   }
   else
   {
-      return false;
+      return false; //avisa que no choco
   }
 }
 
@@ -812,14 +811,14 @@ bool checkWin(frog_t *frogCoords, bool board[][DISSIZE])
 {
   if(!frogCoords->y)   //si la rana esta en la ultima fila(fila 0)
   {
-    board[frogCoords->y][frogCoords->x] = 1;    //OJO X E Y//deja prendido el lugar adonde llego la rana
-    frogCoords->y = INIT_Y;    //OJO!!
-    frogCoords->x = INIT_X;     //devuelve la rana a su posicion inicial
-    return true;
+    board[frogCoords->y][frogCoords->x] = 1;    //deja prendido el lugar adonde llego la rana
+    frogCoords->y = INIT_Y;    //devuelve la rana a su posicion inicial
+    frogCoords->x = INIT_X;     
+    return true;    //avisa que gano
   }
   else
   {
-    return false;
+    return false;   //avisa que todavia no llego
   }
 
 }
@@ -873,6 +872,10 @@ void printChar(const bool p2Letters[][LENGTH_X], int init_x, int init_y)
   }
 }
 
+
+/*moveFrog:
+ Recibe un entero con identificador para saber adonde mover la rana y un puntero a las coordenadas de la rana
+ Si el movimiento pedido de la rana no excede el display, la mueve adonde corresponda*/
 void moveFrog(uint8_t where,frog_t *frogCoords)
 {
   switch(where)
@@ -882,7 +885,7 @@ void moveFrog(uint8_t where,frog_t *frogCoords)
           {
               frogCoords->y--;
           }
-          else if(frogCoords->y < FROG_Y_MIN)
+          else if(frogCoords->y < FROG_Y_MIN)   //saturacion, si es el minimo queda igual
           {
               frogCoords->y = FROG_Y_MIN;
           }
@@ -912,7 +915,7 @@ void moveFrog(uint8_t where,frog_t *frogCoords)
           {
               frogCoords->x--;
           }
-          else if(frogCoords->x < FROG_X_MIN)   //programacion defensiva
+          else if(frogCoords->x < FROG_X_MIN)  
           {
               frogCoords->x = FROG_X_MIN;
           }
@@ -920,6 +923,8 @@ void moveFrog(uint8_t where,frog_t *frogCoords)
    }
 }
 
+/*showLives:
+ Recibe la cantidad de vidas que le quedan al jugador y en funcion de eso imprime algo distinto*/
 void showLives(int lives)
 {
     switch(lives)
@@ -945,7 +950,7 @@ void showLives(int lives)
 
 
 /*copyBoard:
- Copia todos los elementos de un arreglo a otro, de tamano DISSIZE*/
+ Copia todos los elementos de un arreglo a otro, de tamano DISSIZE*DISSIZE*/
 void copyBoard(bool destination[][DISSIZE],const bool source[][DISSIZE])
 {
     int i,j;
@@ -958,13 +963,20 @@ void copyBoard(bool destination[][DISSIZE],const bool source[][DISSIZE])
     }
 }
 /*showScore: recibe un arreglo de numeros y los imprime en el display, arriba los 3 primeros y abajo los 3 siguientes. Si tiene mas de 6 numeros 
- ignora los restantes.
- DEBE ESTAR DEFINIDO EL ARREGLO NUMBERS[10][5][4] CON LO QUE SE QUIERE QUE SE MUESTRE CON CADA NUMERO
+ muestra 999.999
+ DEBE ESTAR DEFINIDO EL ARREGLO NUMBERS[10][5][4] CON UN BITMAP PARA CADA NUMERO
  Usa la funcion printChar */
 void showScore(char charedScore[])
 {
     int i;
-    for( i=0 ; (i < MAXNUMBERS) && (i < strlen(charedScore)) ; i++) //el largo de charedScore debe ser MENOR O IGUAL A MAXNUMBERS para que funcione
+    if(strlen(charedScore) > MAXNUMBERS)    //si el puntaje es mas grande que 999999, muestra 999999 que es lo maximo que entra en el display
+    {
+        for( i=0 ; i < MAXNUMBERS ; i++)
+        {
+            charedScore[i] = '9';   
+        }
+    }    
+    for( i=0 ; (i < MAXNUMBERS) && (i < strlen(charedScore) ; i++) //el largo de charedScore debe ser MENOR O IGUAL A MAXNUMBERS para que funcione
     {
         if(i < DISPLAY_MIDDLE)  //distingue si hay que imprimir en la primera o segunda fila
         {
