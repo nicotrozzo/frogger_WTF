@@ -34,7 +34,6 @@ void close_scoreboard(void *pArg)
 void load_scores(void *pArg)
 {
     int i;
-    ((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r+");
     for( i=0 ; i < NOFCHARS ; i++ )
     {    
         ((gameData_t *)pArg)->player[i]='A';
@@ -170,7 +169,7 @@ void checkLevelUp(void *pArg)
     ((gameData_t*)pArg)->score += LEVEL_UP_SCORE;
     ((gameData_t*)pArg)->levelUp = true;
     sem_post(&levelUpSem);
-    printf("LEVEL UP!, score: %d\n",((gameData_t*)pArg)->score);
+    printf("LEVEL UP!, score: %u\n",((gameData_t*)pArg)->score);
     times = 0;
   }
   else      //si no subio de nivel significa que solo llego arriba
@@ -178,7 +177,7 @@ void checkLevelUp(void *pArg)
     ((gameData_t*)pArg)->score += ARRIVE_SCORE;  
     ((gameData_t*)pArg)->levelUp = false;
     sem_post(&levelUpSem);
-    printf("ARRIVED!, score: %d\n",((gameData_t*)pArg)->score);
+    printf("ARRIVED!, score: %u\n",((gameData_t*)pArg)->score);
   }
 }
 
@@ -199,7 +198,27 @@ void update_score(void *pArg)
 
 void saveScore(void *pArg)
 {
+    bool done = false;
     gameData_t* pGameData = pArg;
+    ((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r+");   //abre archivo para guardar el puntaje
+    //comparar con los puntajes desde el primero para abajo, si el puntaje actual es menor o igual al de la posicion,ir al siguiente, si es mayor
+    //asignarle esa posicion en el archivo, enter, y sumarle uno a todas las posiciones
+    while(!done)
+    {
+        charedPosition = fgetc(pGameData->scoreFile); //obtiene la posicion en el scoreBoard (primer caracter de la linea)
+        fseek(pGameData->scoreFile, 1, SEEK_CUR);  //avanza el espacio
+        fgets(name,4,pGameData->scoreFile); //carga el nombre de la posicion actual
+        fseek(pGameData->scoreFile, 1, SEEK_CUR);  //avanza el espacio
+        i = -1;
+        do
+        {
+            charedScore[++i] = fgetc(pGameData->scoreFile);   //levanta todos los caracteres del puntaje
+        }
+        while(charedScore[i] != '\n');
+        charedScore[i] = '\0';
+        fseek(pGameData->scoreFile, -1, SEEK_CUR);
+        
+    }    
     printf("banca que estoy quemado, ahora lo escribo\n");
     
     
