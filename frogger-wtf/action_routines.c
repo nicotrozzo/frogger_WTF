@@ -11,7 +11,7 @@ extern sem_t levelUpSem;
 static void letter_up(void *pArg, int letter);
 static void letter_down(void *pArg, int letter);
 static void printIncPositions(FILE *p2read,FILE *p2write );
-static void copyLine(FILE *p2read,FILE *p2write );
+static bool copyLine(FILE *p2read,FILE *p2write );
 
 
 void non_act_routine(void *pArg)
@@ -329,7 +329,7 @@ bool copyLine(FILE *p2read,FILE *p2write )
     }    
     else
     {
-        fungetc(caracter,p2read);
+        ungetc(caracter,p2read);
         return 0;
     }    
 }
