@@ -551,7 +551,7 @@ void* output_thread(void* pointer)
                     break;
                 case START_SCOREBOARD_ID:
                     printBoard(trophie);
-                    waitCounter = CHANGE_SCORE_TIMES;  
+                    waitCounter = CHANGE_SCORE_TIMES;  //para el siguiente estado
                     change = true;
                     break;
                 case START_QUIT_ID:
@@ -726,6 +726,11 @@ void* output_thread(void* pointer)
                     dispTimer = false;
                 }
             }
+            else    //si perdio, prepara el siguiente estado
+            {
+                firstTime = true;
+                toggle = true;
+            }    
         }
         /*ESTADOS DE PAUSA: SEGUIR JUGANDO O VOLVER AL MENU DE INICIO*/
         while( pGameData->currentState->stateID == PAUSE_RESUME_ID || pGameData->currentState->stateID == PAUSE_RESTART_ID )
