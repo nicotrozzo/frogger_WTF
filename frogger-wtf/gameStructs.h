@@ -25,11 +25,11 @@ typedef struct STATE
     int stateID;
 } state_t;
 
-typedef struct
+/*typedef struct
 {
     char player[3];
     uint score;
-} scorer_t;
+} scorer_t;*/
 
 typedef struct
 {
@@ -50,10 +50,9 @@ typedef struct
     bool levelUp; 
     bool quitGame;
     move_t move; 
-    char player[3];
+    char player[NOFCHARS + 1];
     unsigned int score;
     FILE *scoreFile;
-   // scorer_t (*pTop10)[10];     //pensar si conviene
     state_t *currentState;
     event_queue_t *pEventQueue;
 }gameData_t;

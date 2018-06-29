@@ -514,9 +514,8 @@ void* output_thread(void* pointer)
     
     /*variables de estado escorbord*/
     char name[NOFCHARS + 1];      
-    char charedScore[MAXNUMBERS + 1];   //arreglo para levantar los puntajes de los archivos como strings
+    char charedScore[MAXNUMBERS + 1 + 5];   //arreglo para levantar los puntajes de los archivos como strings (+5 de seguridad por si hacen MUCHOS puntos)
     char charedPosition;                //variable para el caracter con la posicion del jugador
-    //int i,position,waitCounter = CHANGE_SCORE_TIMES;
     int i,waitCounter = CHANGE_SCORE_TIMES;
     bool change = true,firstTime = true;
 
@@ -729,7 +728,7 @@ void* output_thread(void* pointer)
         /*ESTADO DE GUARDAR PUNTAJE*/
         while( pGameData->currentState->stateID == SAVE_SCORE_ID )
         {
-            if(firstTime)
+            if(firstTime)   //si es la primera vez, muestra el puntaje por 3 segundos
             {  
                 if(pGameData->score <= MAXSCORE)
                 {    
@@ -742,8 +741,8 @@ void* output_thread(void* pointer)
                 printBoard(off);    //borra lo que hubiera en el display
                 showScore(charedScore); //muestra el puntaje del jugador 
                 display_update();
-                sleep(3);//mostrar puntaje y pedir letras   //durante 3 segundos
-                pGameData->move.flag = false;   //si movieron el joystick durante ese tiempo no intresa
+                sleep(3);               //durante 3 segundos
+                pGameData->move.flag = false;   //si movieron el joystick durante ese tiempo no interesa
                 waitCounter = WAIT_NAME_BLINK;  //inicializa variable para parpadeo de la letra seleccionada
                 firstTime = false;
             }    

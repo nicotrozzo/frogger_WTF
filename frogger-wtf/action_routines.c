@@ -38,6 +38,7 @@ void load_scores(void *pArg)
     {    
         ((gameData_t *)pArg)->player[i]='A';
     }
+    ((gameData_t *)pArg)->player[i]='\0';   //terminador
     ((gameData_t *)pArg)->position = 0;
 }
 
@@ -198,35 +199,57 @@ void update_score(void *pArg)
 
 void saveScore(void *pArg)
 {
-    //bool done = false;
+    bool done = false;
     gameData_t* pGameData = pArg;
+    char charedScore[MAXNUMBERS + 1 + 5];
+    unsigned int otherScore;
+    int i = -1,positionLen = 0,position = 1; 
     ((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r+");   //abre archivo para guardar el puntaje
-    //comparar con los puntajes desde el primero para abajo, si el puntaje actual es menor o igual al de la posicion,ir al siguiente, si es mayor
+    //comparar con los puntajes desde el primero para abajo, si el puntaje nuevo es menor o igual al de la posicion,ir al siguiente, si es mayor
     //asignarle esa posicion en el archivo, enter, y sumarle uno a todas las posiciones
-    /*while(!done)
+    while(!done)
     {
-        charedPosition = fgetc(pGameData->scoreFile); //obtiene la posicion en el scoreBoard (primer caracter de la linea)
-        fseek(pGameData->scoreFile, 1, SEEK_CUR);  //avanza el espacio
-        fgets(name,4,pGameData->scoreFile); //carga el nombre de la posicion actual
-        fseek(pGameData->scoreFile, 1, SEEK_CUR);  //avanza el espacio
-        i = -1;
+        while(fgetc(pGameData->scoreFile) != ' ')
+        {
+            positionLen++;    //avanza hasta el primer espacio, o sea que saltea la posicion, pero obtiene su largo
+        }    
+        fseek(pGameData->scoreFile, NOFCHARS + 1, SEEK_CUR);  //saltea el nombre y el espacio
         do
         {
-            charedScore[++i] = fgetc(pGameData->scoreFile);   //levanta todos los caracteres del puntaje
+            charedScore[++i] = fgetc(pGameData->scoreFile);   //levanta todos los caracteres del puntaje de la linea actual
         }
         while(charedScore[i] != '\n');
-        charedScore[i] = '\0';
-        fseek(pGameData->scoreFile, -1, SEEK_CUR);
+        charedScore[i] = '\0';  //terminador al final del string, i tiene el valor del largo del puntaje
+        fseek(pGameData->scoreFile, -1, SEEK_CUR);  //queda apuntando a la ultima posicion de la linea
+        sscanf(charedScore,"%d",&otherScore);   //obtiene el puntaje de la posicion siendo analizada
+        if(otherScore < pGameData->score)   
+        {
+            fseek(pGameData->scoreFile, -i-NOFCHARS-positionLen-3, SEEK_CUR);    //vuelve en la linea hasta el principio de la linea. -i-2 para volver del puntaje y el espacio,-NOFCHARS-1 para volver del nombre y el espacio, -positionLen para volver del puntaje 
+            fprintf(pGameData->scoreFile,"%u %s %u\n",position,pGameData->player,pGameData->score);
+            incPositions(pGameData->scoreFile);            
+        }    
         
-    } */   
-    printf("banca que estoy quemado, ahora lo escribo\n");
+    }    
     
     
     fclose(pGameData->scoreFile);
     ((gameData_t *)pArg)->scoreFile = NULL;
 }
 
+/*Recibe un puntero al inicio de la linea de un archivo
+ Cada linea de ese archivo comienza con algun numero, la funcion incrementa en 1 dicho numero de la linea indicada para abajo*/
+void incPositions(FILE *p2file)
+{
+    unsigned int position;
+    fscanf(p2file,"%u",&position);
+    while(!feof(p2file))
+    {
+        //borrar posicion anterior
+        fprintf(p2file,"%u",++position);
+    
+    }    
 
+}
 
 
 /* end_game:
