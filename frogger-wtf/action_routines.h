@@ -44,6 +44,7 @@ void output_clear(void);
 #define EMPTY_SPACES 5
 #define LIVES 5
 #define SCORE_FILE "scoreBoard.txt"
+#define SCORE_AUX_FILE "scoreAux.txt"
 #define MAX_POSITION 2
 #define MIN_POSITION 0
 

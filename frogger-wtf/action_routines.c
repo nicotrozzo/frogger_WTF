@@ -10,8 +10,8 @@ extern sem_t levelUpSem;
 
 static void letter_up(void *pArg, int letter);
 static void letter_down(void *pArg, int letter);
-//static int getScoreChar(int whatToDo);
-
+static void printIncPositions(FILE *p2read,FILE *p2write );
+static void copyLine(FILE *p2read,FILE *p2write );
 
 
 void non_act_routine(void *pArg)
@@ -204,52 +204,49 @@ void saveScore(void *pArg)
     char charedScore[MAXNUMBERS + 1 + 5];
     unsigned int otherScore;
     int i = -1,positionLen = 0,position = 1; 
-    ((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r+");   //abre archivo para guardar el puntaje
+    //((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r");   //abre archivo para leer los  puntajes
+    FILE *readFile = fopen(SCORE_FILE,"r");
+    FILE *writeFile = fopen(SCORE_AUX_FILE,"w");    //abre archivo para escribir puntajes
     //comparar con los puntajes desde el primero para abajo, si el puntaje nuevo es menor o igual al de la posicion,ir al siguiente, si es mayor
     //asignarle esa posicion en el archivo, enter, y sumarle uno a todas las posiciones
     while(!done)
     {
-        while(fgetc(pGameData->scoreFile) != ' ')
+        while(fgetc(readFile) != ' ')
         {
-            positionLen++;    //avanza hasta el primer espacio, o sea que saltea la posicion, pero obtiene su largo
+            positionLen++;    //avanza hasta el primer espacio, o sea que saltea la posicion y obtiene su largo
         }    
-        fseek(pGameData->scoreFile, NOFCHARS + 1, SEEK_CUR);  //saltea el nombre y el espacio
+        fseek(readFile, NOFCHARS + 1, SEEK_CUR);  //saltea el nombre y el espacio
         do
         {
-            charedScore[++i] = fgetc(pGameData->scoreFile);   //levanta todos los caracteres del puntaje de la linea actual
+            charedScore[++i] = fgetc(readFile);   //levanta todos los caracteres del puntaje de la linea actual
         }
         while(charedScore[i] != '\n');
         charedScore[i] = '\0';  //terminador al final del string, i tiene el valor del largo del puntaje
-        fseek(pGameData->scoreFile, -1, SEEK_CUR);  //queda apuntando a la ultima posicion de la linea
+        fseek(readFile, -1, SEEK_CUR);  //queda apuntando a la ultima posicion de la linea
         sscanf(charedScore,"%d",&otherScore);   //obtiene el puntaje de la posicion siendo analizada
+        fseek(pGameData->scoreFile, -i-NOFCHARS-positionLen-3, SEEK_CUR); //vuelve hasta el principio de la linea. -i-2 para volver del puntaje 
+                                                                          //y el espacio,-NOFCHARS-1 para volver del nombre y el espacio, -positionLen para volver del puntaje 
         if(otherScore < pGameData->score)   
         {
-            fseek(pGameData->scoreFile, -i-NOFCHARS-positionLen-3, SEEK_CUR);    //vuelve en la linea hasta el principio de la linea. -i-2 para volver del puntaje y el espacio,-NOFCHARS-1 para volver del nombre y el espacio, -positionLen para volver del puntaje 
-            fprintf(pGameData->scoreFile,"%u %s %u\n",position,pGameData->player,pGameData->score);
-            incPositions(pGameData->scoreFile);            
+            fprintf(writeFile,"%u %s %u\n",position,pGameData->player,pGameData->score);
+            printIncPositions(readFile,writeFile);        //escribe todo el resto de las posiciones, sumandoles 1 porque bajan un lugar
+            done = true;
+        }
+        else
+        {
+            copyLine(readFile,writeFile);
         }    
-        
     }    
-    
-    
-    fclose(pGameData->scoreFile);
+    fclose(readFile);
+    fclose(writeFile);
+    char command[30];
+    sprintf(command,"rm %s",SCORE_FILE);    
+    system(command);        //borra el archivo viejo
+    sprintf(command,"mv %s %s",SCORE_AUX_FILE,SCORE_FILE);       
+    system(command); //renombra el nuevo para que se llame como el viejo
     ((gameData_t *)pArg)->scoreFile = NULL;
 }
 
-/*Recibe un puntero al inicio de la linea de un archivo
- Cada linea de ese archivo comienza con algun numero, la funcion incrementa en 1 dicho numero de la linea indicada para abajo*/
-void incPositions(FILE *p2file)
-{
-    unsigned int position;
-    fscanf(p2file,"%u",&position);
-    while(!feof(p2file))
-    {
-        //borrar posicion anterior
-        fprintf(p2file,"%u",++position);
-    
-    }    
-
-}
 
 
 /* end_game:
@@ -266,7 +263,7 @@ void end_game(void *pArg)
 
 /*AUX FUNCTIONS*/
 
-static void letter_up(void *pArg, int letter)
+void letter_up(void *pArg, int letter)
 {
     gameData_t *pData = pArg;
     if(pData->player[letter] > 'A')
@@ -279,7 +276,7 @@ static void letter_up(void *pArg, int letter)
     }        
 }
 
-static void letter_down(void *pArg, int letter)
+void letter_down(void *pArg, int letter)
 {
     gameData_t *pData = pArg;
     if( pData->player[letter] < 'Z')
@@ -292,34 +289,34 @@ static void letter_down(void *pArg, int letter)
     }    
 }
 
-/*static int getScoreChar(int whatToDo)
-{
-  static int scoreChar = 0;
-  switch(whatToDo)
-  {
-    case CURR:
-        return scoreChar;
-    case PREV:
-        if(--scoreChar >= 0);
-        else
-        {
-          scoreChar = 2;
-        }
-        break;
-    case NEXT:
-        if(++scoreChar <= 2);
-        else
-        {
-          scoreChar = 0;
-        }
-        break;
-    default:
-        scoreChar = 0;
-        return scoreChar;    
-  }  
-  return scoreChar; //esto no se usa, solo para evitar warning
-} */
 
+/*Recibe un puntero al inicio de la linea de un archivo de lectura y otro al inicio de la linea de un archivo de escritura
+ Cada linea del archivo de lectura comienza con algun numero, la funcion escribe en el archivo de lectura dicho numero 
+ * incrementado en 1 de la linea apuntada para abajo*/
+void printIncPositions(FILE *p2read,FILE *p2write )
+{
+    unsigned int position;
+    fscanf(p2read,"%u",&position);
+    while(!feof(p2read))
+    {
+        fprintf(p2write,"%u",++position);
+        copyLine(p2read,p2write);
+    }    
+}
+
+/*copyLine:
+ Recibe dos punteros a archivos, lee de uno y escribe en el otro, copia la linea del de lectura al de escritura, incluido el '\n'*/
+void copyLine(FILE *p2read,FILE *p2write )
+{
+    int caracter = fgetc(p2read);
+    do
+    {
+        fputc(caracter,p2write);
+    }    
+    while( (caracter = fgetc(p2read)) != '\n');
+}
+
+/*Inicializacion del output*/
 void output_init(void)
 {
     display_init();
@@ -327,8 +324,3 @@ void output_init(void)
     display_update();
 }
 
-void output_clear(void)
-{
-    display_clear();
-    display_update();
-}

@@ -30,7 +30,26 @@ const bool letters[N_OF_LETTERS][LENGTH_Y][LENGTH_X] = {
     {1,0,0,0},
     {1,0,0,0},
     {1,1,1,1}
-  }                     //HACER LETRASSSSSSSSSS
+  },                     //HACER LETRASSSSSSSSSS
+  { {1,1,1,0},
+    {1,0,0,1},
+    {1,0,0,1},
+    {1,0,0,1},
+    {1,1,1,0}
+  },
+  { {1,1,1,1},
+    {1,0,0,0},
+    {1,1,1,0},
+    {1,0,0,0},
+    {1,1,1,1}
+  },      
+  { {1,1,1,1},
+    {1,0,0,0},
+    {1,1,1,0},
+    {1,0,0,0},
+    {1,0,0,0}
+  }, 
+
 };
 
 const bool numbers[N_OF_NUMBERS][LENGTH_Y][LENGTH_X] = {
@@ -774,10 +793,8 @@ void* output_thread(void* pointer)
                 }
                 display_update();
                 dispTimer = false;                
-            }            
-                            
+            }                                        
         }
-
     }
     display_clear();
     return NULL;
