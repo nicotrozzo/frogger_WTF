@@ -50,7 +50,7 @@ typedef struct
     bool levelUp; 
     bool quitGame;
     move_t move; 
-    char player[NOFCHARS + 1];
+    char player[4];
     unsigned int score;
     FILE *scoreFile;
     state_t *currentState;

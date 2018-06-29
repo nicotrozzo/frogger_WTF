@@ -203,7 +203,7 @@ void saveScore(void *pArg)
     gameData_t* pGameData = pArg;
     char charedScore[MAXNUMBERS + 1 + 5];
     unsigned int otherScore;
-    int i = -1,positionLen = 0,position = 1; 
+    int i,positionLen = 0,position = 1; 
     //((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r");   //abre archivo para leer los  puntajes
     FILE *readFile = fopen(SCORE_FILE,"r");
     FILE *writeFile = fopen(SCORE_AUX_FILE,"w");    //abre archivo para escribir puntajes
@@ -216,6 +216,7 @@ void saveScore(void *pArg)
             positionLen++;    //avanza hasta el primer espacio, o sea que saltea la posicion y obtiene su largo
         }    
         fseek(readFile, NOFCHARS + 1, SEEK_CUR);  //saltea el nombre y el espacio
+        i = -1;
         do
         {
             charedScore[++i] = fgetc(readFile);   //levanta todos los caracteres del puntaje de la linea actual
@@ -224,7 +225,7 @@ void saveScore(void *pArg)
         charedScore[i] = '\0';  //terminador al final del string, i tiene el valor del largo del puntaje
         fseek(readFile, -1, SEEK_CUR);  //queda apuntando a la ultima posicion de la linea
         sscanf(charedScore,"%d",&otherScore);   //obtiene el puntaje de la posicion siendo analizada
-        fseek(pGameData->scoreFile, -i-NOFCHARS-positionLen-3, SEEK_CUR); //vuelve hasta el principio de la linea. -i-2 para volver del puntaje 
+        fseek(readFile, -i-NOFCHARS-positionLen-3, SEEK_CUR); //vuelve hasta el principio de la linea. -i-2 para volver del puntaje 
                                                                           //y el espacio,-NOFCHARS-1 para volver del nombre y el espacio, -positionLen para volver del puntaje 
         if(otherScore < pGameData->score)   
         {
@@ -235,7 +236,8 @@ void saveScore(void *pArg)
         else
         {
             copyLine(readFile,writeFile);
-        }    
+            position++;
+        }        
     }    
     fclose(readFile);
     fclose(writeFile);
