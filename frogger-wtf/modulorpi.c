@@ -976,7 +976,7 @@ void showScore(char charedScore[])
             charedScore[i] = '9';   
         }
     }    
-    for( i=0 ; (i < MAXNUMBERS) && (i < strlen(charedScore) ; i++) //el largo de charedScore debe ser MENOR O IGUAL A MAXNUMBERS para que funcione
+    for( i=0 ; (i < MAXNUMBERS) && (i < strlen(charedScore)) ; i++) //el largo de charedScore debe ser MENOR O IGUAL A MAXNUMBERS para que funcione
     {
         if(i < DISPLAY_MIDDLE)  //distingue si hay que imprimir en la primera o segunda fila
         {
