@@ -136,7 +136,7 @@ bool emit_event( event_queue_t* queue , uint16_t type )
   }
   else
   {
-    queue -> p2write -> ack = false;   // marco el lugar como ocupado
+
     queue -> p2write -> type = type; // guardo el ID del evento
 
 
@@ -150,7 +150,7 @@ bool emit_event( event_queue_t* queue , uint16_t type )
       (queue -> p2write) ++; // si no avanza una posicion
     }
     temp -> p2NextEv = (struct EVENT*) queue -> p2write;// guardo en el evento anterior un puntero al evento actual para no tener que problems con el movimiento en get_event
-
+    temp -> p2write -> ack = false;   // marco el lugar como ocupado
     return true;
   }
 }
