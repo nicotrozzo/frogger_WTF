@@ -12,7 +12,7 @@
 
 extern sem_t levelUpSem;
 
-const bool letters[N_OF_LETTERS][LENGTH_Y][LENGTH_X] = {
+const bool letters[][LENGTH_Y][LENGTH_X] = {
   { {1,1,1,1},
     {1,0,0,1},
     {1,1,1,1},
@@ -522,7 +522,7 @@ static void showName(char name[],int pos_y);
 static void showScore(char charedScore[]);
 static void init_dividers(int divMax[],int div);
 static void getLineInfo(FILE scoreFile,char *p2charedPosition,char name[],char charedScore[]);
-static void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],frog_t *frogCoords);
+static void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],frog_t *frogCoords char *maxPosition);
 
 void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
 {
@@ -642,7 +642,7 @@ void* output_thread(void* pointer)
     frog_t frogCoords = {7,15};
     uint8_t frogCounter = FROG_REFRESH;
     gameData_t *pGameData = pointer;
-    int maxPosition = INIT_Y;
+    char maxPosition = INIT_Y;
     printBoard(off);    //apaga el display
     display_update();
 
@@ -669,8 +669,7 @@ void* output_thread(void* pointer)
             {
                 case START_PLAY_ID:
                     printBoard(play);
-                    init_play(carsBoard,initCarsBoard,frogCoords);
-                    
+                    init_play(carsBoard,initCarsBoard,&frogCoords,&maxPosition);    //inicializa siguiente estado
                     break;
                 case START_SCOREBOARD_ID:
                     printBoard(trophie);
@@ -687,42 +686,42 @@ void* output_thread(void* pointer)
               dispTimer = false;
             }
         }
-         /*ESTADO DE MOSTRAR EL SCOREBOARD*/
+        /*ESTADO DE MOSTRAR EL SCOREBOARD*/
         while( pGameData->currentState->stateID == SCORE_BOARD_ID )
         {
             if(pGameData->scoreFile)  //si no se cargo el archivo no hace nada
             {
                 if(!pGameData->move.flag)  //si no pidieron ver otro puntaje
                 {
-                  if(change)
-                  {
-                      getLineInfo(pGameData->scoreFile,&charedPosition,name,charedScore);                     
-                      waitCounter = CHANGE_SCORE_TIMES; //reinicia contador para muestra del nombre o puntaje
-                      change = false;
-                  }
-                  
-                  if(waitCounter)   //si todavia tiene que mostrar el nombre, lo hace
-                  {
-                      printBoard(off);
-                      printChar(numbers[charedPosition - '0'],POSITION_X,POSITION_Y);
-                     // showPosition(positionChar)
-                      showName(name,LETTER_POS_Y);   
-                  }
-                  else  //sino, debe mostrar el puntaje
-                  {
-                      printBoard(off);
-                      showScore(charedScore);  
-                  }        
-                  
-                  if(dispTimer)   //entra cada un determinado tiempo
-                  {
-                    if(waitCounter)
+                    if(change)
                     {
-                      waitCounter--; //espera a tener que mostrar el puntaje
+                        getLineInfo(pGameData->scoreFile,&charedPosition,name,charedScore);                     
+                        waitCounter = CHANGE_SCORE_TIMES; //reinicia contador para muestra del nombre o puntaje
+                        change = false;
                     }
-                    dispTimer = false;  //avisa que ya vio el evento de timer;
-                    display_update();
-                  }
+
+                    if(waitCounter)   //si todavia tiene que mostrar el nombre, lo hace
+                    {
+                        printBoard(off);
+                        printChar(numbers[charedPosition - '0'],POSITION_X,POSITION_Y);
+                       // showPosition(positionChar)
+                        showName(name,LETTER_POS_Y);   
+                    }
+                    else  //sino, debe mostrar el puntaje
+                    {
+                        printBoard(off);
+                        showScore(charedScore);  
+                    }        
+
+                    if(dispTimer)   //entra cada un determinado tiempo
+                    {
+                      if(waitCounter)
+                      {
+                        waitCounter--; //espera a tener que mostrar el puntaje
+                      }
+                      dispTimer = false;  //avisa que ya vio el evento de timer;
+                      display_update();
+                    }
                 }
                 else
                 {
@@ -1157,12 +1156,13 @@ void showName(char name[],int pos_y)
 }
 
 /*Inicializa el estado de game*/
-void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],frog_t *frogCoords)
+void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],frog_t *frogCoords,char *maxPosition)
 {
     copyBoard(carsBoard,initCarsBoard); //va a pasar al estado de juego, carga el estado inicial de los autos
     cars_routine(NULL,NULL);            //inicializa velocidad de los autos
     frogCoords->x = INIT_X;
     frogCoords->y = INIT_Y;
+    *maxPosition = 0;
 }
 /****************************MOVIMIENTO DE AUTOS*********************************/
 
