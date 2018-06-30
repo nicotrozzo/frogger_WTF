@@ -520,7 +520,9 @@ static void copyBoard(bool destination[][DISSIZE],const bool source[][DISSIZE]);
 static void printChar(const bool p2Letters[5][4], int init_x, int init_y);
 static void showName(char name[],int pos_y);
 static void showScore(char charedScore[]);
-
+static void init_dividers(int divMax[],int div);
+static void getLineInfo(FILE scoreFile,char *p2charedPosition,char name[],char charedScore[]);
+static void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],frog_t *frogCoords);
 
 void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
 {
@@ -654,7 +656,8 @@ void* output_thread(void* pointer)
     char name[NOFCHARS + 1];      
     char charedScore[MAXNUMBERS + 1 + 5];   //arreglo para levantar los puntajes de los archivos como strings (+5 de seguridad por si hacen MUCHOS puntos)
     char charedPosition;                //variable para el caracter con la posicion del jugador
-    int i,waitCounter = CHANGE_SCORE_TIMES;
+    int i;
+    unsigned int waitCounter = CHANGE_SCORE_TIMES;
     bool change = true,firstTime = true;
 
     while(!pGameData->quitGame)
@@ -666,7 +669,8 @@ void* output_thread(void* pointer)
             {
                 case START_PLAY_ID:
                     printBoard(play);
-                    copyBoard(carsBoard,initCarsBoard); //va a pasar al estado de juego, carga el estado inicial de los autos
+                    init_play(carsBoard,initCarsBoard,frogCoords);
+                    
                     break;
                 case START_SCOREBOARD_ID:
                     printBoard(trophie);
@@ -692,32 +696,24 @@ void* output_thread(void* pointer)
                 {
                   if(change)
                   {
-                      charedPosition = fgetc(pGameData->scoreFile); //obtiene la posicion en el scoreBoard (primer caracter de la linea)
-                      fseek(pGameData->scoreFile, 1, SEEK_CUR);  //avanza el espacio
-                      fgets(name,NOFCHARS + 1,pGameData->scoreFile); //carga el nombre de la posicion actual, con un terminador
-                      fseek(pGameData->scoreFile, 1, SEEK_CUR);  //avanza el espacio                      
-                      i = -1;
-                      do
-                      {
-                          charedScore[++i] = fgetc(pGameData->scoreFile);   //levanta todos los caracteres del puntaje
-                      }
-                      while(charedScore[i] != '\n');
-                      charedScore[i] = '\0';
-                      fseek(pGameData->scoreFile, -1, SEEK_CUR);    //deja el cursor en el final de la linea
+                      getLineInfo(pGameData->scoreFile,&charedPosition,name,charedScore);                     
                       waitCounter = CHANGE_SCORE_TIMES; //reinicia contador para muestra del nombre o puntaje
                       change = false;
                   }
+                  
                   if(waitCounter)   //si todavia tiene que mostrar el nombre, lo hace
                   {
                       printBoard(off);
                       printChar(numbers[charedPosition - '0'],POSITION_X,POSITION_Y);
+                     // showPosition(positionChar)
                       showName(name,LETTER_POS_Y);   
                   }
                   else  //sino, debe mostrar el puntaje
                   {
                       printBoard(off);
                       showScore(charedScore);  
-                  }                 
+                  }        
+                  
                   if(dispTimer)   //entra cada un determinado tiempo
                   {
                     if(waitCounter)
@@ -739,16 +735,16 @@ void* output_thread(void* pointer)
 
                             while((fgetc(pGameData->scoreFile)) != ('1' + pGameData->position) )  // busco en la primer posicion de cada renglon el numero deseado
                             {
-                                while( (charedPosition = fgetc(pGameData->scoreFile)) != '\n' );
+                                while( fgetc(pGameData->scoreFile) != '\n' );
                             }
                             fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion
                         }
                         else // si la posicion actual es 0
                         {
                             pGameData->position = 4;//voy al ultimo lugar
-                            while((charedPosition = fgetc(pGameData->scoreFile)) != '5' )
+                            while((charedPosition = fgetc(pGameData->scoreFile)) != '5' ) // busco el numero 5
                             {
-                                while( (charedPosition = fgetc(pGameData->scoreFile)) != '\n' );// busco el numero 5
+                                while( fgetc(pGameData->scoreFile) != '\n' );   //avanza hasta la siguiente linea
                             }
                             fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion
                         }
@@ -758,7 +754,7 @@ void* output_thread(void* pointer)
                         if(pGameData->position != 4)
                         {
                             pGameData->position ++;
-                            while( (charedPosition = fgetc(pGameData->scoreFile)) != '\n'); //voy a la siguiente posicion en el top
+                            while( fgetc(pGameData->scoreFile) != '\n'); //voy a la siguiente posicion en el top
                         }
                         else
                         {
@@ -766,14 +762,13 @@ void* output_thread(void* pointer)
                             fseek(pGameData->scoreFile, 0, SEEK_SET);//voy al principio del archivo
                         }
                     }
-                    pGameData->move.flag = 0;//pongo el flag de move en 0 para avisar que ya termine
-                    
-                    change = true;
+                    pGameData->move.flag = false;   //pongo el flag de move en 0 para avisar que ya termine                    
+                    change = true;  //avisa a la parte que muestra todo que se cambio de posicion
                 }
             }
         }
         /*ESTADO DE JUEGO*/
-        while( pGameData->currentState->stateID == GAME_ID )//mover autos,VER CARS_ROUTINE
+        while( pGameData->currentState->stateID == GAME_ID )
         {
             if(carsTimer)
             {
@@ -785,7 +780,7 @@ void* output_thread(void* pointer)
                 moveFrog(pGameData->move.where,&frogCoords);    //mueve la rana si hay que moverla
                 pGameData->move.flag = false;
             }
-            if( checkCollision(&frogCoords,carsBoard) )         //FIJARSE EL ORDEN! SI PERDIO CAPAZ HAYA QUE PONER UN BREAK
+            if( checkCollision(&frogCoords,carsBoard) )         
             {
                 maxPosition = INIT_Y;
                 if( !emit_event(pGameData->pEventQueue,COLLISION_EVENT) )   //si la rana choco, le avisa al kernel
@@ -1101,6 +1096,29 @@ void copyBoard(bool destination[][DISSIZE],const bool source[][DISSIZE])
         }
     }
 }
+
+/*getLineInfo:
+ Recibe: -Puntero al archivo con el scoreboard, apuntando al principio de alguna linea
+         -Puntero a un char donde se guardara la posicion de la linea
+         -Arreglo donde guardara el nombre de la linea
+         -Arreglo donde se guarda el puntaje de la linea 
+ Deja el cursor en el final de la linea*/
+void getLineInfo(FILE scoreFile,char *p2charedPosition,char name[],char charedScore[])
+{
+    int i = -1;
+    *p2charedPosition = fgetc(scoreFile); //obtiene la posicion en el scoreBoard (primer caracter de la linea)
+    fseek(scoreFile, 1, SEEK_CUR);  //avanza el espacio
+    fgets(name,NOFCHARS + 1,scoreFile); //carga el nombre de la posicion actual, con un terminador
+    fseek(scoreFile, 1, SEEK_CUR);  //avanza el espacio                      
+    do
+    {
+        charedScore[++i] = fgetc(scoreFile);   //levanta todos los caracteres del puntaje
+    }
+    while(charedScore[i] != '\n');
+    charedScore[i] = '\0';
+    fseek(scoreFile, -1, SEEK_CUR);    //deja el cursor en el final de la linea
+}
+
 /*showScore: recibe un arreglo de numeros y los imprime en el display, arriba los 3 primeros y abajo los 3 siguientes. Si tiene mas de 6 numeros 
  muestra 999.999
  DEBE ESTAR DEFINIDO EL ARREGLO NUMBERS[10][5][4] CON UN BITMAP PARA CADA NUMERO
@@ -1137,22 +1155,37 @@ void showName(char name[],int pos_y)
         printChar(letters[name[i]-'A'], (LENGTH_X + 1)*i + 1 , pos_y); //imprime en el display cada letra del arreglo nombre, supone que estan todas en mayuscula
     }
 }
+
+/*Inicializa el estado de game*/
+void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],frog_t *frogCoords)
+{
+    copyBoard(carsBoard,initCarsBoard); //va a pasar al estado de juego, carga el estado inicial de los autos
+    cars_routine(NULL,NULL);            //inicializa velocidad de los autos
+    frogCoords->x = INIT_X;
+    frogCoords->y = INIT_Y;
+}
 /****************************MOVIMIENTO DE AUTOS*********************************/
 
 /*cars_routine
  * Recibe un puntero a un arreglo con la posicion de los autos y un puntero a la posicion de la rana
  * Si se subio de nivel (enviar NULL como primer parametro), aumenta la velocidad del movimiento de los autos
  * Sino, mueve los autos (se fija si en este llamado los tiene que mover o no)
- * Recibe NULL si se subio de nivel*/
+ * Recibe NULL en el segundo parametro si hay que inicializar los dividers
+ * Recibe NULL en el primer parametro si se subio de nivel*/
 
 void cars_routine(bool carsBoard[][DISSIZE],frog_t *frogCoords)
 {
-    static int dividersMax[DISSIZE] = {0, 15, 20, 8, 15, 20, 8, 15, 0, 12, 7, 12, 10, 7, 10, 0}; // Cuando se suba de nivel, estos máximos se decrementarán para hacer que el ciclo de avance de carril sea más rápido.
-    static int dividers[DISSIZE] = {0, 15, 20, 8, 15, 20, 8, 15, 0, 12, 7, 12, 10, 7, 10, 0}; // Ante un evento de timer, se decrementa el divider de cada carril, logrando así que cada carril tenga su ciclo de timer, cuando el divider llega a 0.
+    static int dividersMax[DISSIZE]; // Cuando se suba de nivel, estos máximos se decrementarán para hacer que el ciclo de avance de carril sea más rápido.
+    static int dividers[DISSIZE];  // Ante un evento de timer, se decrementa el divider de cada carril, logrando así que cada carril tenga su ciclo de timer, cuando el divider llega a 0.
     bool ways[DISSIZE] = {0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0};
     int row = 0;
 
-    if(!carsBoard) // Si se tiene que subir de nivel, se efectua un cambio en el máximo de los divisores.
+
+    if(!frogCoords)
+    {
+        init_dividers(dividersMax,dividers);
+    }  
+    else if(!carsBoard) // Si se tiene que subir de nivel, se efectua un cambio en el máximo de los divisores.
     {
         for(row = 0 ; row < DISSIZE ; row++)
         {
@@ -1231,4 +1264,29 @@ void shift_left_row(bool row[DISSIZE][DISSIZE], int row_num)
         row[row_num][15-i] = aux1;
         aux1 = aux2;
     }
+}
+
+void init_dividers(int divMax[],int div)
+{
+    int i;
+    divMax[0] = 0;
+    divMax[1] = 15;
+    divMax[2] = 20;
+    divMax[3] = 8;
+    divMax[4] = 15;
+    divMax[5] = 20;
+    divMax[6] = 8;
+    divMax[7] = 15;
+    divMax[8] = 0;
+    divMax[9] = 12;
+    divMax[10] = 7;
+    divMax[11] = 12;
+    divMax[12] = 10;
+    divMax[13] = 7;
+    divMax[14] = 10;
+    divMax[15] = 0;
+    for( i=0 ; i < DISSIZE ; i++)
+    {    
+        div[i] = divMax[i];
+    }            
 }

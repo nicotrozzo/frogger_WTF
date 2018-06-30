@@ -21,7 +21,7 @@ void non_act_routine(void *pArg)
 
 void load_scoreboard(void *pArg)
 {
-    gameData_t pData = pArg;
+    gameData_t *pData = pArg;
     pData->scoreFile = fopen(SCORE_FILE,"r");
     pData->position = 0;
 }
@@ -212,8 +212,7 @@ void saveScore(void *pArg)
     char command[30];
     FILE *readFile = fopen(SCORE_FILE,"r");  
     FILE *writeFile = fopen(SCORE_AUX_FILE,"w");    //abre archivo para escribir puntajes
-    //comparar con los puntajes desde el primero para abajo, si el puntaje nuevo es menor o igual al de la posicion,ir al siguiente, si es mayor
-    //asignarle esa posicion en el archivo, enter, y sumarle uno a todas las posiciones
+    
     while(!done)
     {
         i = -1;
