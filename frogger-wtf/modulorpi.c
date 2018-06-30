@@ -865,7 +865,7 @@ void* output_thread(void* pointer)
         while( pGameData->currentState->stateID == SAVE_SCORE_ID )
         {
             if(firstTime)   //si es la primera vez, muestra el puntaje por 3 segundos
-            {  
+            {
                 if(pGameData->score <= MAXSCORE)
                 {    
                     sprintf(charedScore,"%u",pGameData->score); //guarda en charedScore el puntaje pasado a string
