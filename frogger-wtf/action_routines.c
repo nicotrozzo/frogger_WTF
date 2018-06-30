@@ -21,14 +21,36 @@ void non_act_routine(void *pArg)
 
 void load_scoreboard(void *pArg)
 {
-    ((gameData_t *)pArg)->scoreFile = fopen(SCORE_FILE,"r");
-    ((gameData_t *)pArg)->position = 0;
+    gameData_t pData = pArg;
+    pData->scoreFile = fopen(SCORE_FILE,"r");
+    pData->position = 0;
 }
 
 void close_scoreboard(void *pArg)
 {
     fclose(((gameData_t *)pArg)->scoreFile);
     ((gameData_t *)pArg)->scoreFile = NULL;
+
+    
+void showNextScore(void *pArg)
+{
+  //cargar info siguiente linea
+    
+  if(!((gameData_t*)pArg)->move.flag)   //OJO POSIBLE PERDIDA DE EVENTOS
+  {    
+    ((gameData_t*)pArg)->move.flag = true;  
+    ((gameData_t*)pArg)->move.where = FROG_DOWN;
+  }
+}
+
+
+void showPreviousScore(void *pArg)
+{
+  if(!((gameData_t*)pArg)->move.flag)
+  {    
+    ((gameData_t*)pArg)->move.flag = true;  
+    ((gameData_t*)pArg)->move.where = FROG_UP;
+  }
 }
 
 void load_scores(void *pArg)
@@ -133,24 +155,7 @@ void nextChar(void *pArg)
 }
 
 
-void showNextScore(void *pArg)
-{
-  if(!((gameData_t*)pArg)->move.flag)   //OJO POSIBLE PERDIDA DE EVENTOS
-  {    
-    ((gameData_t*)pArg)->move.flag = true;  
-    ((gameData_t*)pArg)->move.where = FROG_DOWN;
-  }
-}
 
-
-void showPreviousScore(void *pArg)
-{
-  if(!((gameData_t*)pArg)->move.flag)
-  {    
-    ((gameData_t*)pArg)->move.flag = true;  
-    ((gameData_t*)pArg)->move.where = FROG_UP;
-  }
-}
 
 /*checkLevelUp:
  Recibe un puntero a gameData o NULL

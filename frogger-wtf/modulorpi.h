@@ -31,12 +31,12 @@
 #define NOFCHARS 3
 #define MAXNUMBERS 6
 #define LETTER_POS_Y 8
+#define LENGTH_X 4
+#define LENGTH_Y 5
 #define FIL1 1
 #define X_SEPARATION 1
 #define Y_SEPARATION 2
-#define FIL2 (FIL1+LENGTH_Y+Y_SEPARATION)
-#define LENGTH_X 4
-#define LENGTH_Y 5
+#define FIL2 (FIL1 + LENGTH_Y +Y_SEPARATION)
 #define DISPLAY_MIDDLE 3
 #define CHANGE_SCORE_TIMES 50
 #define N_OF_LETTERS 26

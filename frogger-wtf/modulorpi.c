@@ -643,14 +643,14 @@ void* output_thread(void* pointer)
     int maxPosition = INIT_Y;
     printBoard(off);    //apaga el display
     display_update();
-    
+
     bool carsTimer = false, dispTimer = false;
     pthread_t frogTid, dispTid;
     pthread_create(&frogTid,NULL,carsTimeThread,&carsTimer);    //creacion de timer para parpadeo de la rana
     pthread_create(&dispTid,NULL,dispTimeThread,&dispTimer);
     bool toggle = false;    //variable para el parpadeo de la rana
-    
-    /*variables de estado escorbord*/
+
+    /*variables de estado scoreboard*/
     char name[NOFCHARS + 1];      
     char charedScore[MAXNUMBERS + 1 + 5];   //arreglo para levantar los puntajes de los archivos como strings (+5 de seguridad por si hacen MUCHOS puntos)
     char charedPosition;                //variable para el caracter con la posicion del jugador
@@ -695,8 +695,7 @@ void* output_thread(void* pointer)
                       charedPosition = fgetc(pGameData->scoreFile); //obtiene la posicion en el scoreBoard (primer caracter de la linea)
                       fseek(pGameData->scoreFile, 1, SEEK_CUR);  //avanza el espacio
                       fgets(name,NOFCHARS + 1,pGameData->scoreFile); //carga el nombre de la posicion actual, con un terminador
-                      fseek(pGameData->scoreFile, 1, SEEK_CUR);  //avanza el espacio
-                      
+                      fseek(pGameData->scoreFile, 1, SEEK_CUR);  //avanza el espacio                      
                       i = -1;
                       do
                       {
@@ -718,7 +717,7 @@ void* output_thread(void* pointer)
                   {
                       printBoard(off);
                       showScore(charedScore);  
-                  }
+                  }                 
                   if(dispTimer)   //entra cada un determinado tiempo
                   {
                     if(waitCounter)
@@ -744,15 +743,15 @@ void* output_thread(void* pointer)
                             }
                             fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion
                         }
-                      else // si la posicion actual es 0
-                      {
-                          pGameData->position = 4;//voy al ultimo lugar
-                          while((charedPosition = fgetc(pGameData->scoreFile)) != '5' )
-                          {
-                              while( (charedPosition = fgetc(pGameData->scoreFile)) != '\n' );// busco el numero 5
-                          }
-                          fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion
-                      }
+                        else // si la posicion actual es 0
+                        {
+                            pGameData->position = 4;//voy al ultimo lugar
+                            while((charedPosition = fgetc(pGameData->scoreFile)) != '5' )
+                            {
+                                while( (charedPosition = fgetc(pGameData->scoreFile)) != '\n' );// busco el numero 5
+                            }
+                            fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion
+                        }
                     }
                     else if ( pGameData->move.where == FROG_DOWN)
                     {
