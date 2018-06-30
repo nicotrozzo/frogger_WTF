@@ -520,9 +520,9 @@ static void copyBoard(bool destination[][DISSIZE],const bool source[][DISSIZE]);
 static void printChar(const bool p2Letters[5][4], int init_x, int init_y);
 static void showName(char name[],int pos_y);
 static void showScore(char charedScore[]);
-static void init_dividers(int divMax[],int div);
-static void getLineInfo(FILE scoreFile,char *p2charedPosition,char name[],char charedScore[]);
-static void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],frog_t *frogCoords char *maxPosition);
+static void init_dividers(int divMax[],int div[]);
+static void getLineInfo(FILE *scoreFile,char *p2charedPosition,char name[],char charedScore[]);
+static void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],frog_t *frogCoords, char *maxPosition);
 
 void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
 {
@@ -656,7 +656,6 @@ void* output_thread(void* pointer)
     char name[NOFCHARS + 1];      
     char charedScore[MAXNUMBERS + 1 + 5];   //arreglo para levantar los puntajes de los archivos como strings (+5 de seguridad por si hacen MUCHOS puntos)
     char charedPosition;                //variable para el caracter con la posicion del jugador
-    int i;
     unsigned int waitCounter = CHANGE_SCORE_TIMES;
     bool change = true,firstTime = true;
 
@@ -1102,7 +1101,7 @@ void copyBoard(bool destination[][DISSIZE],const bool source[][DISSIZE])
          -Arreglo donde guardara el nombre de la linea
          -Arreglo donde se guarda el puntaje de la linea 
  Deja el cursor en el final de la linea*/
-void getLineInfo(FILE scoreFile,char *p2charedPosition,char name[],char charedScore[])
+void getLineInfo(FILE *scoreFile,char *p2charedPosition,char name[],char charedScore[])
 {
     int i = -1;
     *p2charedPosition = fgetc(scoreFile); //obtiene la posicion en el scoreBoard (primer caracter de la linea)
@@ -1266,7 +1265,7 @@ void shift_left_row(bool row[DISSIZE][DISSIZE], int row_num)
     }
 }
 
-void init_dividers(int divMax[],int div)
+void init_dividers(int divMax[],int div[])
 {
     int i;
     divMax[0] = 0;
