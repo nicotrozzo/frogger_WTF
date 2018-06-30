@@ -30,7 +30,7 @@ void close_scoreboard(void *pArg)
 {
     fclose(((gameData_t *)pArg)->scoreFile);
     ((gameData_t *)pArg)->scoreFile = NULL;
-
+}
     
 void showNextScore(void *pArg)
 {
