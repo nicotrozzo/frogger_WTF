@@ -657,7 +657,7 @@ void* output_thread(void* pointer)
     char name[NOFCHARS + 1];      
     char charedScore[MAXNUMBERS + 1 + 5];   //arreglo para levantar los puntajes de los archivos como strings (+5 de seguridad por si hacen MUCHOS puntos)
     char charedPosition;                //variable para el caracter con la posicion del jugador
-    int maxPosition;    //variable para saber cuantas posiciones hay
+    int totalScores;    //variable para saber cuantos puntajes hay
     unsigned int waitCounter = CHANGE_SCORE_TIMES;
     bool change = true,firstTime = true;
 
