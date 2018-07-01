@@ -804,6 +804,7 @@ void* output_thread(void* pointer)
                 {
                     printf("Couldn't emit event\n");
                 }
+                
                 showLives(--pGameData->lives);  //muestra al jugador la cantidad de vidas restantes
                 display_update();
                 sleep(1);
@@ -1199,7 +1200,7 @@ void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],fro
     cars_routine(NULL,NULL);            //inicializa velocidad de los autos
     frogCoords->x = INIT_X;
     frogCoords->y = INIT_Y;
-    *maxPosition = 0;
+    *maxPosition = INIT_Y;
 }
 /****************************MOVIMIENTO DE AUTOS*********************************/
 

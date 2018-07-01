@@ -161,7 +161,7 @@ void nextChar(void *pArg)
 void checkLevelUp(void *pArg)
 {
   static int8_t times = 0;
-  static int level = 1;
+  static unsigned int level = 1;
   if(!pArg) //si la llaman con el NULL significa que tiene que reiniciar el contador y el nivel
   {
       times = 0;
@@ -196,6 +196,7 @@ void update_score(void *pArg)
 {
   gameData_t* pGameData = pArg;
   pGameData->score += FORWARD_SCORE;
+  printf("FORWARD! score: %d\n",pGameData->score);
 }
 
 void saveScore(void *pArg)
