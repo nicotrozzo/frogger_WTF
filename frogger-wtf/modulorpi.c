@@ -819,6 +819,25 @@ void* output_thread(void* pointer)
                 showLives(--pGameData->lives);  //muestra al jugador la cantidad de vidas restantes
                 display_update();
                 sleep(1);
+                if(!pGameData->lives)   //si perdio, muestra el puntaje
+                {
+                    if(pGameData->score <= MAXSCORE)
+                    {    
+                        sprintf(charedScore,"%u",pGameData->score); //guarda en charedScore el puntaje pasado a string
+                    }
+                    else
+                    {
+                        sprintf(charedScore,"%d",MAXSCORE);     //en el display no se pueden mostrar mas de 6 digitos
+                    }    
+                    printBoard(off);    //borra lo que hubiera en el display
+                    showScore(charedScore); //muestra el puntaje del jugador 
+                    display_update();
+                    sleep(3);               //durante 3 segundos
+                    pGameData->move.flag = false;   //si movieron el joystick durante ese tiempo no interesa
+                    waitCounter = WAIT_NAME_BLINK;  //inicializa variable para parpadeo de la letra seleccionada
+                    firstTime = false;
+                    toggle = true;
+                }    
                 sem_post(&collisionSem);
                 pGameData->move.flag = false; //no interesa si quisieron mover la rana mientras se mostraba el mensaje, se tira ese evento
             }
@@ -869,11 +888,7 @@ void* output_thread(void* pointer)
                     dispTimer = false;
                 }
             }
-            else    //si perdio, prepara el siguiente estado
-            {
-                firstTime = true;
-                toggle = true;
-            }    
+           
         }
         /*ESTADOS DE PAUSA: SEGUIR JUGANDO O VOLVER AL MENU DE INICIO*/
         while( pGameData->currentState->stateID == PAUSE_RESUME_ID || pGameData->currentState->stateID == PAUSE_RESTART_ID )
@@ -894,25 +909,7 @@ void* output_thread(void* pointer)
         }
         /*ESTADO DE GUARDAR PUNTAJE*/
         while( pGameData->currentState->stateID == SAVE_SCORE_ID )
-        {
-            if(firstTime)   //si es la primera vez, muestra el puntaje por 3 segundos
-            {
-                if(pGameData->score <= MAXSCORE)
-                {    
-                    sprintf(charedScore,"%u",pGameData->score); //guarda en charedScore el puntaje pasado a string
-                }
-                else
-                {
-                    sprintf(charedScore,"%d",MAXSCORE);     //en el display no se pueden mostrar mas de 6 digitos
-                }    
-                printBoard(off);    //borra lo que hubiera en el display
-                showScore(charedScore); //muestra el puntaje del jugador 
-                display_update();
-                sleep(3);               //durante 3 segundos
-                pGameData->move.flag = false;   //si movieron el joystick durante ese tiempo no interesa
-                waitCounter = WAIT_NAME_BLINK;  //inicializa variable para parpadeo de la letra seleccionada
-                firstTime = false;
-            }    
+        {             
             printBoard(off);
             showName(pGameData->player,SCORE_NAME_Y);   //muestra las letras guardadas en su nombre                
             if(pGameData->move.flag)    //si cambiaron, reinicia el parpadeo

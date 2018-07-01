@@ -184,6 +184,7 @@ void checkLevelUp(void *pArg)
 void checkLives(void *pArg)
 {
   gameData_t *pGameData = pArg;  
+  sem_wait(&collisionSem);
   if(!pGameData-> lives)
   {
     emit_event(pGameData->pEventQueue,GAME_OVER_EVENT);  //DESPUES VER QUE HACER CAPAZ EMIT_EVENT CON OTRO EVENTO
