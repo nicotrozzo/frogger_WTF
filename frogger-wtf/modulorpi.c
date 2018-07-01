@@ -1156,12 +1156,11 @@ void getLineInfo(FILE *scoreFile,char *p2charedPosition,char name[],char charedS
 void firstLinePosition(FILE *p2file)    //VER QUE PASA EN LA PRIMERA LINEA
 {
     int caracter = '\0';
-    while( caracter != '\n')
+    while( caracter != '\n')    //busca el fin de la linea anterior
     {
-        fseek(p2file,-2,SEEK_CUR);  //busca el fin de la linea anterior
+        fseek(p2file,-2,SEEK_CUR);  
         caracter = fgetc(p2file);
     }    
-    fseek(p2file,1,SEEK_CUR);
 }
 /*getTotalScores:
  Recibe puntero al archivo de scoreboard
