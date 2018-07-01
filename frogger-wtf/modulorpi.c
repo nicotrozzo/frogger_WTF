@@ -10,7 +10,7 @@
 #include "gameStructs.h"
 #include "timer_threads.h"
 
-extern sem_t levelUpSem;
+extern sem_t levelUpSem,collisionSem;
 
 const bool letters[][LENGTH_Y][LENGTH_X] = {
   { {1,1,1,1},
