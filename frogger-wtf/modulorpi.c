@@ -524,6 +524,7 @@ static void init_dividers(int divMax[],int div[]);
 static void getLineInfo(FILE *scoreFile,char *p2charedPosition,char name[],char charedScore[]);
 static void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],frog_t *frogCoords, char *maxPosition);
 static void firstLinePosition(FILE *p2file);
+static int getTotalScores(FILE *p2file);
 
 void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
 {
@@ -748,12 +749,16 @@ void* output_thread(void* pointer)
                         }
                         else // si la posicion actual es 0
                         {
-                            pGameData->position = getTotalScores(pGameData->scoreFile)-1; //va al ultimo lugar
+                            if( (pGameData->position = getTotalScores(pGameData->scoreFile)-1) > 4 )
+                            {
+                                pGameData->position = 4;
+                            }    
+                            //pGameData->position = getTotalScores(pGameData->scoreFile)-1; //va al ultimo lugar
                            
                             //TIENE QUE IR AL FINAL Y VOLVER EL CURSOR AL PRINCIPIO DE LA LINEA POR SI NO HAY 5!
                             fseek(pGameData->scoreFile,0, SEEK_END);    //va al final del archivo
                             
-                            if(!pGameData->position)   //va al principio de la ultima linea actual
+                            if(pGameData->position)   //va al principio de la ultima linea 
                             {    
                                 firstLinePosition(pGameData->scoreFile);    
                             }
@@ -1166,11 +1171,12 @@ int getTotalScores(FILE *p2file)
     int totalScores = 0;
     fpos_t initpos;
     fgetpos(p2file,&initpos);      //obtiene posicion actual del cursor
-    while(fgetc(p2file) != EOF)
+    do
     {
-        while(fgetc(p2file) != '\n');
+        while(fgetc(p2file) != '\n');   //avanza una linea
         totalScores++;
     }   
+    while(fgetc(p2file) != EOF);
     fsetpos(p2file,&initpos);  //devuelve a la posicion inicial el cursor
     return totalScores;
 }
