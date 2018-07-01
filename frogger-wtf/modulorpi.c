@@ -819,6 +819,7 @@ void* output_thread(void* pointer)
                 showLives(--pGameData->lives);  //muestra al jugador la cantidad de vidas restantes
                 display_update();
                 sleep(1);
+                sem_post(&collisionSem);
                 pGameData->move.flag = false; //no interesa si quisieron mover la rana mientras se mostraba el mensaje, se tira ese evento
             }
             else if( checkWin(&frogCoords,carsBoard) )

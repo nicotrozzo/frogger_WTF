@@ -24,7 +24,7 @@
 
 state_t* fsm_handler(state_t *currentState, uint16_t newEvent, void *pActRoutineData);
 
-sem_t levelUpSem;
+sem_t levelUpSem, collisionSem;
 
 int main(void) 
 {
@@ -41,6 +41,7 @@ int main(void)
     pthread_create(&input_id,NULL,input_thread,gameData.pEventQueue);  //creacion de threads de input y output
     pthread_create(&output_id,NULL,output_thread,&gameData);
     sem_init(&levelUpSem,0,0);
+    sem_init(&collisionSem,0,0);
     while( !gameData.quitGame )
     {
         if( (event = get_event(gameData.pEventQueue)) )
