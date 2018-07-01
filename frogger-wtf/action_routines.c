@@ -135,7 +135,6 @@ void previousChar(void *pArg)
     {
         ((gameData_t*)pArg)->position = MAX_POSITION;
     }  
-    ((gameData_t*)pArg)->move.flag = true;  //avisa que movieron
 }
 
 void nextChar(void *pArg)
@@ -148,7 +147,6 @@ void nextChar(void *pArg)
     {
         ((gameData_t*)pArg)->position = MIN_POSITION;
     } 
-    ((gameData_t*)pArg)->move.flag = true;  //avisa que movieron
 }
 
 
@@ -196,7 +194,6 @@ void update_score(void *pArg)
 {
   gameData_t* pGameData = pArg;
   pGameData->score += FORWARD_SCORE;
-  printf("FORWARD! score: %d\n",pGameData->score);
 }
 
 void saveScore(void *pArg)
@@ -242,8 +239,7 @@ void saveScore(void *pArg)
         }        
     }    
     fclose(readFile);
-    fclose(writeFile);
-    
+    fclose(writeFile);    
     sprintf(command,"rm %s",SCORE_FILE);    
     system(command);        //borra el archivo viejo
     sprintf(command,"mv %s %s",SCORE_AUX_FILE,SCORE_FILE);       
