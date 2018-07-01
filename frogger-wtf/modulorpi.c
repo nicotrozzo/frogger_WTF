@@ -699,7 +699,6 @@ void* output_thread(void* pointer)
                 {
                     waitCounter = CHANGE_SCORE_TIMES;  
                     change = true;
-                    //totalScores = getTotalScores(pGameData->scoreFile);
                     firstTime = false;
                 }
                 if(!pGameData->move.flag)  //si no pidieron ver otro puntaje
@@ -715,7 +714,7 @@ void* output_thread(void* pointer)
                     {
                         printBoard(off);
                         //printChar(numbers[charedPosition - '0'],POSITION_X,POSITION_Y);
-                        showPosition(positionChar);
+                        showPosition(positionChars);
                         showName(name,LETTER_POS_Y);   
                     }
                     else  //sino, debe mostrar el puntaje
@@ -742,16 +741,14 @@ void* output_thread(void* pointer)
                         {
                             pGameData->position--; //posicion anterior en el top
                             fseek(pGameData->scoreFile, 0, SEEK_SET);//voy al principio de archivo
-
-                            while((fgetc(pGameData->scoreFile)) != ('1' + pGameData->position) )  // busco en la primer posicion de cada renglon el numero deseado
-                            {
+                            for( i=0 ; i < pGameData->position ; i++)
+                            {    
                                 while( fgetc(pGameData->scoreFile) != '\n' );
                             }
-                            fseek(pGameData->scoreFile, -1, SEEK_CUR);  //como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion
                         }
                         else // si la posicion actual es 0
                         {
-                            if((pGameData->position = getTotalScores(pGameData->scoreFile)-1) > 999)
+                            if( (pGameData->position = getTotalScores(pGameData->scoreFile)-1) > 999)
                             {
                                 pGameData->position = 999;      
                                 for( i=0 ; i < 999 ; i++)
@@ -762,7 +759,7 @@ void* output_thread(void* pointer)
                             }    
                             else
                             {    
-                                fseek(pGameData->scoreFile,0, SEEK_END);    //va al final del archivo
+                                fseek(pGameData->scoreFile,-2, SEEK_END);    //va al final del archivo                                
                             }
                             if(pGameData->position)   //va al principio de la ultima linea 
                             {    
@@ -1149,6 +1146,7 @@ void getLineInfo(FILE *scoreFile,char positionChars[],char name[],char charedSco
         positionChars[++i] = fgetc(scoreFile); //obtiene la posicion en el scoreBoard (primeros caracteres de la linea)
     }
     while(positionChars[i] != ' ');
+    positionChars[i]='\0';
     //fseek(scoreFile, 1, SEEK_CUR);  //avanza el espacio
     fgets(name,NOFCHARS + 1,scoreFile); //carga el nombre de la posicion actual, con un terminador
     fseek(scoreFile, 1, SEEK_CUR);  //avanza el espacio                      
@@ -1181,6 +1179,7 @@ int getTotalScores(FILE *p2file)
     int totalScores = 0;
     fpos_t initpos;
     fgetpos(p2file,&initpos);      //obtiene posicion actual del cursor
+    rewind(p2file);
     do
     {
         while(fgetc(p2file) != '\n');   //avanza una linea
