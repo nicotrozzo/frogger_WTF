@@ -6,7 +6,7 @@
 
 #include "action_routines.h"
 
-extern sem_t levelUpSem;
+extern sem_t levelUpSem, collisionSem;
 
 static void letter_up(void *pArg, int letter);
 static void letter_down(void *pArg, int letter);
