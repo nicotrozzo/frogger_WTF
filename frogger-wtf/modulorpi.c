@@ -740,6 +740,10 @@ void* output_thread(void* pointer)
                         else // si la posicion actual es 0
                         {
                             pGameData->position = 4;//voy al ultimo lugar
+                           
+                            //TIENE QUE IR AL FINAL Y VOLVER EL CURSOR AL PRINCIPIO DE LA LINEA POR SI NO HAY 5!
+                            fseek(pGameData->scoreFile,0, SEEK_END);//va al final del archivo
+                            lineFirstPosition(pGameData->scoreFile);
                             while((charedPosition = fgetc(pGameData->scoreFile)) != '5' ) // busco el numero 5
                             {
                                 while( fgetc(pGameData->scoreFile) != '\n' );   //avanza hasta la siguiente linea
@@ -798,7 +802,7 @@ void* output_thread(void* pointer)
                     printf("Couldn't emit event\n");
                 }
                 //ALLEGRO TIENE QUE TENER ESTE MISMO SEMAFORO
-                sem_wait(&levelUpSem);
+                sem_wait(&levelUpSem);  //espera que el nucleo del juego se fije si subio de nivel
                 if(pGameData->levelUp)
                 {
                     copyBoard(carsBoard,initCarsBoard);
@@ -883,6 +887,12 @@ void* output_thread(void* pointer)
             }    
             printBoard(off);
             showName(pGameData->player,SCORE_NAME_Y);   //muestra las letras guardadas en su nombre                
+            if(pGameData->move.flag)    //si cambiaron de caracter seleccionado, reinicia el parpadeo (solo rutinas de accion de next y previous modifican el flag)
+            {
+                toggle = true;
+                waitCounter = WAIT_NAME_BLINK;
+                pGameData->move.flag = false;
+            }    
             if(dispTimer)
             {
                 if(!--waitCounter)
@@ -922,16 +932,16 @@ Devuelve 1 si la rana choco, 0 si no choco.
     Ademas, si choco la devuelve a su posicion inicial */
 bool checkCollision(frog_t *frogCoords,bool board[][DISSIZE])
 {
-  if(board[frogCoords->y][frogCoords->x]) //si la posicion de la rana esta prendida (1) en el tablero de los autos, significa que choco
-  {
-      frogCoords->x = INIT_X;   //devuelve la rana a su posicion inicial
-      frogCoords->y = INIT_Y;
-      return true;  //avisa que choco
-  }
-  else
-  {
-      return false; //avisa que no choco
-  }
+    if(board[frogCoords->y][frogCoords->x]) //si la posicion de la rana esta prendida (1) en el tablero de los autos, significa que choco
+    {
+        frogCoords->x = INIT_X;   //devuelve la rana a su posicion inicial
+        frogCoords->y = INIT_Y;
+        return true;  //avisa que choco
+    }
+    else
+    {
+        return false; //avisa que no choco
+    }
 }
 
 /*checkWin:
@@ -1115,6 +1125,19 @@ void getLineInfo(FILE *scoreFile,char *p2charedPosition,char name[],char charedS
     while(charedScore[i] != '\n');
     charedScore[i] = '\0';
     fseek(scoreFile, -1, SEEK_CUR);    //deja el cursor en el final de la linea
+}
+
+/*lineFirstPosition:
+ Recibe un puntero a un archivo y coloca el cursor al principio de la linea en la que este*/
+void lineFirstPosition(FILE *p2file)    //VER QUE PASA EN LA PRIMERA LINEA
+{
+    int caracter = '\0';
+    while( caracter != '\n')
+    {
+        fseek(p2file,-2,SEEK_CUR);  //busca el fin de la linea anterior
+        caracter = fgetc(p2file);
+    }    
+    fseek(p2file,1,SEEK_CUR);
 }
 
 /*showScore: recibe un arreglo de numeros y los imprime en el display, arriba los 3 primeros y abajo los 3 siguientes. Si tiene mas de 6 numeros 

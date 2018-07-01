@@ -33,10 +33,8 @@ void close_scoreboard(void *pArg)
 }
     
 void showNextScore(void *pArg)
-{
-  //cargar info siguiente linea
-    
-  if(!((gameData_t*)pArg)->move.flag)   //OJO POSIBLE PERDIDA DE EVENTOS
+{    
+  if(!((gameData_t*)pArg)->move.flag) 
   {    
     ((gameData_t*)pArg)->move.flag = true;  
     ((gameData_t*)pArg)->move.where = FROG_DOWN;
@@ -113,11 +111,6 @@ void start_game(void *pArg)
   pData->score = 0;
   checkLevelUp(NULL);
   pData->move.flag = false;
-  int letter;
-  for(letter = 0; letter < 3; letter++)
-  {
-    pData->player[letter] = 'A';
-  }
 }
 
 void f_letter_up(void *pArg)
@@ -139,7 +132,8 @@ void previousChar(void *pArg)
     else
     {
         ((gameData_t*)pArg)->position = MAX_POSITION;
-    }    
+    }  
+    ((gameData_t*)pArg)->move.flag = true;  //avisa que movieron
 }
 
 void nextChar(void *pArg)
@@ -152,9 +146,8 @@ void nextChar(void *pArg)
     {
         ((gameData_t*)pArg)->position = MIN_POSITION;
     } 
+    ((gameData_t*)pArg)->move.flag = true;  //avisa que movieron
 }
-
-
 
 
 /*checkLevelUp:
@@ -166,24 +159,25 @@ void nextChar(void *pArg)
 void checkLevelUp(void *pArg)
 {
   static int8_t times = 0;
-  if(!pArg) //si la llaman con el NULL significa que tiene que reiniciar el contador
+  static int level = 1;
+  if(!pArg) //si la llaman con el NULL significa que tiene que reiniciar el contador y el nivel
   {
       times = 0;
+      level = 1;
   }    
-  else if(++times >= EMPTY_SPACES)  //sino se fija si subio de nivel
+  else if(++times >= EMPTY_SPACES)  //sino si subio de nivel suma el puntaje correspondiente
   {
-    ((gameData_t*)pArg)->score += LEVEL_UP_SCORE;
+    ++level;      
+    ((gameData_t*)pArg)->score += LEVEL_UP_SCORE*level; //suma el puntaje correspondiente, en funcion del nivel al que paso
     ((gameData_t*)pArg)->levelUp = true;
-    sem_post(&levelUpSem);
-    printf("LEVEL UP!, score: %u\n",((gameData_t*)pArg)->score);
+    sem_post(&levelUpSem);      //avisa que se proceso el evento
     times = 0;
   }
   else      //si no subio de nivel significa que solo llego arriba
   {
-    ((gameData_t*)pArg)->score += ARRIVE_SCORE;  
-    ((gameData_t*)pArg)->levelUp = false;
-    sem_post(&levelUpSem);
-    printf("ARRIVED!, score: %u\n",((gameData_t*)pArg)->score);
+    ((gameData_t*)pArg)->score += ARRIVE_SCORE*level;  //suma el puntaje correspondiente, en funcion del nivel
+    ((gameData_t*)pArg)->levelUp = false;               
+    sem_post(&levelUpSem);      //avisa que se proceso el evento
   }
 }
 
