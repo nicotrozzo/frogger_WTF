@@ -523,6 +523,7 @@ static void showScore(char charedScore[]);
 static void init_dividers(int divMax[],int div[]);
 static void getLineInfo(FILE *scoreFile,char *p2charedPosition,char name[],char charedScore[]);
 static void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],frog_t *frogCoords, char *maxPosition);
+static void lineFirstPosition(FILE *p2file);
 
 void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
 {
@@ -742,8 +743,16 @@ void* output_thread(void* pointer)
                             pGameData->position = 4;//voy al ultimo lugar
                            
                             //TIENE QUE IR AL FINAL Y VOLVER EL CURSOR AL PRINCIPIO DE LA LINEA POR SI NO HAY 5!
-                            fseek(pGameData->scoreFile,0, SEEK_END);//va al final del archivo
-                            lineFirstPosition(pGameData->scoreFile);
+                            /*fseek(pGameData->scoreFile,0, SEEK_END);    //va al final del archivo
+                            if(!position)   
+                            {    
+                                lineFirstPosition(pGameData->scoreFile);    //va al principio de la linea
+                            }
+                            else    //si esta en la primera posicion va al comienzo del archivo
+                            {
+                                rewind(pGameData->scoreFile);    
+                            }*/
+                            
                             while((charedPosition = fgetc(pGameData->scoreFile)) != '5' ) // busco el numero 5
                             {
                                 while( fgetc(pGameData->scoreFile) != '\n' );   //avanza hasta la siguiente linea
