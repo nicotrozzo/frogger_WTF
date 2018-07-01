@@ -523,7 +523,7 @@ static void showScore(char charedScore[]);
 static void init_dividers(int divMax[],int div[]);
 static void getLineInfo(FILE *scoreFile,char *p2charedPosition,char name[],char charedScore[]);
 static void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],frog_t *frogCoords, char *maxPosition);
-static void lineFirstPosition(FILE *p2file);
+static void firstLinePosition(FILE *p2file);
 
 void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
 {
@@ -657,7 +657,7 @@ void* output_thread(void* pointer)
     char name[NOFCHARS + 1];      
     char charedScore[MAXNUMBERS + 1 + 5];   //arreglo para levantar los puntajes de los archivos como strings (+5 de seguridad por si hacen MUCHOS puntos)
     char charedPosition;                //variable para el caracter con la posicion del jugador
-    int totalScores;    //variable para saber cuantos puntajes hay
+    //int totalScores;    //variable para saber cuantos puntajes hay
     unsigned int waitCounter = CHANGE_SCORE_TIMES;
     bool change = true,firstTime = true;
 
@@ -689,14 +689,16 @@ void* output_thread(void* pointer)
         /*ESTADO DE MOSTRAR EL SCOREBOARD*/
         while( pGameData->currentState->stateID == SCORE_BOARD_ID )
         {
-            if(firstTime)
-            {
-                waitCounter = CHANGE_SCORE_TIMES;  
-                change = true;
-                firstTime = false;
-            }    
+                
             if(pGameData->scoreFile)  //si no se cargo el archivo no hace nada
             {
+                if(firstTime)
+                {
+                    waitCounter = CHANGE_SCORE_TIMES;  
+                    change = true;
+                    //totalScores = getTotalScores(pGameData->scoreFile);
+                    firstTime = false;
+                }
                 if(!pGameData->move.flag)  //si no pidieron ver otro puntaje
                 {
                     if(change)
@@ -746,24 +748,25 @@ void* output_thread(void* pointer)
                         }
                         else // si la posicion actual es 0
                         {
-                            pGameData->position = 4;//voy al ultimo lugar
+                            pGameData->position = getTotalScores(pGameData->scoreFile)-1; //va al ultimo lugar
                            
                             //TIENE QUE IR AL FINAL Y VOLVER EL CURSOR AL PRINCIPIO DE LA LINEA POR SI NO HAY 5!
-                            /*fseek(pGameData->scoreFile,0, SEEK_END);    //va al final del archivo
-                            if(!position)   
+                            fseek(pGameData->scoreFile,0, SEEK_END);    //va al final del archivo
+                            
+                            if(!pGameData->position)   //va al principio de la ultima linea actual
                             {    
-                                lineFirstPosition(pGameData->scoreFile);    //va al principio de la linea
+                                firstLinePosition(pGameData->scoreFile);    
                             }
-                            else    //si esta en la primera posicion va al comienzo del archivo
+                            else   
                             {
                                 rewind(pGameData->scoreFile);    
-                            }*/
+                            }
                             
-                            while((charedPosition = fgetc(pGameData->scoreFile)) != '5' ) // busco el numero 5
+                            /*while((charedPosition = fgetc(pGameData->scoreFile)) != '5' ) // busco el numero 5
                             {
                                 while( fgetc(pGameData->scoreFile) != '\n' );   //avanza hasta la siguiente linea
                             }
-                            fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion
+                            fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion*/
                         }
                     }
                     else if ( pGameData->move.where == FROG_DOWN)
@@ -1143,9 +1146,9 @@ void getLineInfo(FILE *scoreFile,char *p2charedPosition,char name[],char charedS
     fseek(scoreFile, -1, SEEK_CUR);    //deja el cursor en el final de la linea
 }
 
-/*lineFirstPosition:
+/*firstLinePosition:
  Recibe un puntero a un archivo y coloca el cursor al principio de la linea en la que este*/
-void lineFirstPosition(FILE *p2file)    //VER QUE PASA EN LA PRIMERA LINEA
+void firstLinePosition(FILE *p2file)    //VER QUE PASA EN LA PRIMERA LINEA
 {
     int caracter = '\0';
     while( caracter != '\n')
@@ -1154,6 +1157,22 @@ void lineFirstPosition(FILE *p2file)    //VER QUE PASA EN LA PRIMERA LINEA
         caracter = fgetc(p2file);
     }    
     fseek(p2file,1,SEEK_CUR);
+}
+/*getTotalScores:
+ Recibe puntero al archivo de scoreboard
+ Devuelve cantidad de puntajes que hay(usa que cada linea termina en '\n')*/
+int getTotalScores(FILE *p2file)
+{
+    int totalScores = 0;
+    fpos_t initpos;
+    fgetpos(p2file,&initpos);      //obtiene posicion actual del cursor
+    while(fgetc(p2file) != EOF)
+    {
+        while(fgetc(p2file) != '\n');
+        totalScores++;
+    }   
+    fsetpos(p2file,&initpos);  //devuelve a la posicion inicial el cursor
+    return totalScores;
 }
 
 /*showScore: recibe un arreglo de numeros y los imprime en el display, arriba los 3 primeros y abajo los 3 siguientes. Si tiene mas de 6 numeros 
