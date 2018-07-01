@@ -657,6 +657,7 @@ void* output_thread(void* pointer)
     char name[NOFCHARS + 1];      
     char charedScore[MAXNUMBERS + 1 + 5];   //arreglo para levantar los puntajes de los archivos como strings (+5 de seguridad por si hacen MUCHOS puntos)
     char charedPosition;                //variable para el caracter con la posicion del jugador
+    int maxPosition;    //variable para saber cuantas posiciones hay
     unsigned int waitCounter = CHANGE_SCORE_TIMES;
     bool change = true,firstTime = true;
 
@@ -673,8 +674,7 @@ void* output_thread(void* pointer)
                     break;
                 case START_SCOREBOARD_ID:
                     printBoard(trophie);
-                    waitCounter = CHANGE_SCORE_TIMES;  //para el siguiente estado
-                    change = true;
+                    firstTime = true;            
                     break;
                 case START_QUIT_ID:
                     printBoard(quit);
@@ -689,6 +689,12 @@ void* output_thread(void* pointer)
         /*ESTADO DE MOSTRAR EL SCOREBOARD*/
         while( pGameData->currentState->stateID == SCORE_BOARD_ID )
         {
+            if(firstTime)
+            {
+                waitCounter = CHANGE_SCORE_TIMES;  
+                change = true;
+                firstTime = false;
+            }    
             if(pGameData->scoreFile)  //si no se cargo el archivo no hace nada
             {
                 if(!pGameData->move.flag)  //si no pidieron ver otro puntaje
@@ -831,7 +837,7 @@ void* output_thread(void* pointer)
                     printf("Couldn't emit event\n");
                 }
             }
-            if(pGameData -> lives ) //si el jugador no perdio, imprime si es que haya que imprimir
+            if(pGameData -> lives) //si el jugador no perdio, imprime si es que haya que imprimir
             {
                 printCars(carsBoard);  //Escribe en el display el estado actual de autos y troncos
                 if(dispTimer)
@@ -896,7 +902,7 @@ void* output_thread(void* pointer)
             }    
             printBoard(off);
             showName(pGameData->player,SCORE_NAME_Y);   //muestra las letras guardadas en su nombre                
-            if(pGameData->move.flag)    //si cambiaron de caracter seleccionado, reinicia el parpadeo (solo rutinas de accion de next y previous modifican el flag)
+            if(pGameData->move.flag)    //si cambiaron, reinicia el parpadeo
             {
                 toggle = true;
                 waitCounter = WAIT_NAME_BLINK;

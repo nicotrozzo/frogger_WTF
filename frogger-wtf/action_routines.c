@@ -116,11 +116,13 @@ void start_game(void *pArg)
 void f_letter_up(void *pArg)
 {
   letter_up(pArg, ((gameData_t*)pArg)->position);
+  ((gameData_t*)pArg)->move.flag = true;  //avisa que movieron
 }
 
 void f_letter_down(void *pArg)
 {
   letter_down(pArg, ((gameData_t*)pArg)->position);
+  ((gameData_t*)pArg)->move.flag = true;  //avisa que movieron
 }
 
 void previousChar(void *pArg)
