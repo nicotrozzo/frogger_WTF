@@ -228,7 +228,7 @@ void saveScore(void *pArg)
         sscanf(charedScore,"%d",&otherScore);   //obtiene el puntaje de la posicion siendo analizada
         fseek(readFile, -i-NOFCHARS-positionLen-2, SEEK_CUR); //vuelve hasta el principio de la linea. -i-1 para volver del puntaje  
                                                               //y el espacio,-NOFCHARS-1 para volver del nombre y el espacio, -positionLen para volver del puntaje 
-        if(otherScore < pGameData->score)   
+        if(otherScore <= pGameData->score)   
         {
             fprintf(writeFile,"%d %s %u\n",position,pGameData->player,pGameData->score);
             printIncPositions(readFile,writeFile);        //escribe todo el resto de las posiciones, sumandoles 1 porque bajan un lugar
