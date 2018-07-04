@@ -24,6 +24,8 @@
 #define FROG_Y_MAX 15
 #define FROG_X_MIN 0
 #define FROG_Y_MIN 0
+#define O 0
+#define X 1
 
 /*PARA ESTADOS DE SCOREBOARD*/
 #define POSITION_X 1

@@ -111,6 +111,7 @@ void start_game(void *pArg)
   pData->score = 0;
   checkLevelUp(NULL);
   pData->move.flag = false;
+  inicializar nivel!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
 void f_letter_up(void *pArg)
