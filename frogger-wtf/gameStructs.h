@@ -25,17 +25,6 @@ typedef struct STATE
     int stateID;
 } state_t;
 
-/*typedef struct
-{
-    char player[3];
-    uint score;
-} scorer_t;*/
-
-typedef struct
-{
-    uint8_t x;
-    uint8_t y;
-}frog_t;
 
 typedef struct
 {
@@ -45,9 +34,15 @@ typedef struct
 
 typedef struct
 {
+    bool up;
+    int number;
+}level_t;
+
+typedef struct
+{
     int lives;
     int position;
-    bool levelUp; 
+    level_t level; 
     bool quitGame;
     move_t move; 
     char player[4];
@@ -56,6 +51,13 @@ typedef struct
     state_t *currentState;
     event_queue_t *pEventQueue;
 }gameData_t;
+
+typedef struct
+{
+    uint8_t x;
+    uint8_t y;
+}frog_t;
+
 
 enum ids {
     START_PLAY_ID,

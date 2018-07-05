@@ -107,11 +107,11 @@ void start_game(void *pArg)
   gameData_t *pData = pArg;
   pData->lives = LIVES;
   pData->quitGame = false;
-  pData->levelUp = false;
+  pData->level.up = false;
+  pData->level.number = 1;
   pData->score = 0;
-  checkLevelUp(NULL);
+  checkLevelUp(NULL);   
   pData->move.flag = false;
-  inicializar nivel!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
 void f_letter_up(void *pArg)
@@ -160,24 +160,22 @@ void nextChar(void *pArg)
 void checkLevelUp(void *pArg)
 {
   static int8_t times = 0;
-  static unsigned int level = 1;
-  if(!pArg) //si la llaman con el NULL significa que tiene que reiniciar el contador y el nivel
+  gameData_t pGameData = pArg;
+  if(!pArg) //si la llaman con el NULL significa que tiene que reiniciar el contador
   {
       times = 0;
-      level = 1;
   }    
   else if(++times >= EMPTY_SPACES)  //sino si subio de nivel suma el puntaje correspondiente
-  {
-    ++level;      
-    ((gameData_t*)pArg)->score += LEVEL_UP_SCORE*level; //suma el puntaje correspondiente, en funcion del nivel al que paso
-    ((gameData_t*)pArg)->levelUp = true;
+  {   
+    pGameData->score += LEVEL_UP_SCORE*(++pGameData->level.number); //aumenta el nivel y suma el puntaje correspondiente, en funcion del nivel al que paso
+    pGameData->level.up = true;
     sem_post(&levelUpSem);      //avisa que se proceso el evento
     times = 0;
   }
   else      //si no subio de nivel significa que solo llego arriba
   {
-    ((gameData_t*)pArg)->score += ARRIVE_SCORE*level;  //suma el puntaje correspondiente, en funcion del nivel
-    ((gameData_t*)pArg)->levelUp = false;               
+    pGameData->score += ARRIVE_SCORE*level;  //suma el puntaje correspondiente, en funcion del nivel
+    pGameData->level.up = false;               
     sem_post(&levelUpSem);      //avisa que se proceso el evento
   }
 }
@@ -256,8 +254,7 @@ void saveScore(void *pArg)
  arriba de todo*/
 void end_game(void *pArg)
 {
-    gameData_t *pData = pArg;
-    checkLevelUp(NULL);
+    gameData_t *pData = pArg;     
     pData->quitGame = 1;
 }
 

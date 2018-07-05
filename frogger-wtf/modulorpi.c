@@ -520,6 +520,7 @@ static void copyBoard(bool destination[][DISSIZE],const bool source[][DISSIZE]);
 static void printChar(const bool p2Letters[5][4], int init_x, int init_y);
 static void showName(char name[],int pos_y);
 static void showScore(char charedScore[]);
+static void showLevel(int level);
 static void init_dividers(int divMax[],int div[]);
 static void getLineInfo(FILE *scoreFile,char positionChars[],char name[],char charedScore[]);
 static void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],frog_t *frogCoords, char *maxPosition);
@@ -713,7 +714,6 @@ void* output_thread(void* pointer)
                     if(waitCounter)   //si todavia tiene que mostrar el nombre, lo hace
                     {
                         printBoard(off);
-                        //printChar(numbers[charedPosition - '0'],POSITION_X,POSITION_Y);
                         showPosition(positionChars);
                         showName(name,LETTER_POS_Y);   
                     }
@@ -850,13 +850,15 @@ void* output_thread(void* pointer)
                 }
                 //ALLEGRO TIENE QUE TENER ESTE MISMO SEMAFORO
                 sem_wait(&levelUpSem);  //espera que el nucleo del juego se fije si subio de nivel
-                if(pGameData->levelUp)
+                if(pGameData->level.up)
                 {
                     copyBoard(carsBoard,initCarsBoard);
                     cars_routine(NULL,&frogCoords);
                     printBoard(levelUp);    //avisa al jugador que subio de nivel
-                    pGameData->levelUp = 0;
+                    pGameData->level.up = 0;
                     display_update();
+                    sleep(1);
+                    showLevel(pGameData->level.number); //muestra a que nivel paso
                     sleep(1);
                     pGameData->move.flag = false; //no interesa si quisieron mover la rana mientras se mostraba el mensaje, se tira ese evento
                 }
@@ -1232,6 +1234,24 @@ void showPosition(char positionChars[])
     {
         printChar(numbers[positionChars[i]-'0'], (LENGTH_X + 1)*i + 1 , POSITION_Y); //imprime en el display cada carcter del arreglo nombre
     }
+}
+
+/*recibe el nivel al que paso e imprime en pantalla "LVL"\n"_ _ _" Si el nivel es mayor a 999, muestra 999(nunca va a pasar, te desafio)*/
+void showLevel(int level)
+{
+    int i;
+    char levelChars[4];
+    char show[] = "LVL"; 
+    showName(show,1);  //muestra LVL en la parte de arriba del display 
+    if(level > 999)
+    {
+        level = 999;
+    }    
+    sscanf(levelChars,"%d",level); //guarda el nivel pasado a string 
+    for( i=0 ; (i<3) && (i<strlen(levelChars)) ; i++)
+    {    
+        printChar(numbers[levelChars[i]-'0'], (LENGTH_X + 1)*i + 1 , FIL1); //imprime en el display cada numero del nivel      
+    }    
 }
 /*Inicializa el estado de game*/
 void init_play(bool carsBoard[][DISSIZE],const bool initCarsBoard[][DISSIZE],frog_t *frogCoords,char *maxPosition)
