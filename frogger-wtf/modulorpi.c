@@ -1247,7 +1247,7 @@ void showLevel(int level)
     {
         level = 999;
     }    
-    sscanf(levelChars,"%d",level); //guarda el nivel pasado a string 
+    sprintf(levelChars,"%d",level); //guarda el nivel pasado a string 
     for( i=0 ; (i<3) && (i<strlen(levelChars)) ; i++)
     {    
         printChar(numbers[levelChars[i]-'0'], (LENGTH_X + 1)*i + 1 , FIL1); //imprime en el display cada numero del nivel      
