@@ -859,6 +859,7 @@ void* output_thread(void* pointer)
                     display_update();
                     sleep(1);
                     showLevel(pGameData->level.number); //muestra a que nivel paso
+                    display_update();
                     sleep(1);
                     pGameData->move.flag = false; //no interesa si quisieron mover la rana mientras se mostraba el mensaje, se tira ese evento
                 }
@@ -1242,6 +1243,7 @@ void showLevel(int level)
     int i;
     char levelChars[4];
     char show[] = "LVL"; 
+    printBoard(off);
     showName(show,1);  //muestra LVL en la parte de arriba del display 
     if(level > 999)
     {
@@ -1250,7 +1252,7 @@ void showLevel(int level)
     sprintf(levelChars,"%d",level); //guarda el nivel pasado a string 
     for( i=0 ; (i<3) && (i<strlen(levelChars)) ; i++)
     {    
-        printChar(numbers[levelChars[i]-'0'], (LENGTH_X + 1)*i + 1 , FIL1); //imprime en el display cada numero del nivel      
+        printChar(numbers[levelChars[i]-'0'], (LENGTH_X + 1)*i + 1 , FIL2); //imprime en el display cada numero del nivel      
     }    
 }
 /*Inicializa el estado de game*/

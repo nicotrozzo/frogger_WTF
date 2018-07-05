@@ -174,7 +174,7 @@ void checkLevelUp(void *pArg)
   }
   else      //si no subio de nivel significa que solo llego arriba
   {
-    pGameData->score += ARRIVE_SCORE*level;  //suma el puntaje correspondiente, en funcion del nivel
+    pGameData->score += ARRIVE_SCORE*pGameData->level.number;  //suma el puntaje correspondiente, en funcion del nivel
     pGameData->level.up = false;               
     sem_post(&levelUpSem);      //avisa que se proceso el evento
   }
