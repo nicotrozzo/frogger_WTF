@@ -160,7 +160,7 @@ void nextChar(void *pArg)
 void checkLevelUp(void *pArg)
 {
   static int8_t times = 0;
-  gameData_t pGameData = pArg;
+  gameData_t *pGameData = pArg;
   if(!pArg) //si la llaman con el NULL significa que tiene que reiniciar el contador
   {
       times = 0;
