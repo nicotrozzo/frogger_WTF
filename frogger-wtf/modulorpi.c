@@ -615,17 +615,14 @@ void* input_thread (void* eventQueue)//genera eventos de movimiento del joystick
     if (trigger_lock_x && my_coordinates.x < JOY_THRESHOLD && my_coordinates.x > -JOY_THRESHOLD)  //bloqueo de lectura para evitar que se envie el evento si se mantiene presionado
     {
       trigger_lock_x = false;
-      //printf("TRIGGERLOCKX OFF\n");
     }
     if (trigger_lock_y && my_coordinates.y < JOY_THRESHOLD && my_coordinates.y > -JOY_THRESHOLD)  //bloqueo de lectura para evitar que se envie el evento si se mantiene presionado
     {
       trigger_lock_y = false;
-      //printf("TRIGGERLOCKY OFF\n");
     }
     if (switch_lock && my_switch == J_NOPRESS)  //bloqueo de lectura para evitar que se envie el evento si se mantiene presionado
     {
       switch_lock = false;
-      //printf("SWITCHLOCK OFF\n");
     }
   }
 }
@@ -661,7 +658,6 @@ void* output_thread(void* pointer)
     char charedScore[MAXNUMBERS + 1 + 5];   //arreglo para levantar los puntajes de los archivos como strings (+5 de seguridad por si hacen MUCHOS puntos)
     char positionChars[4];                //arreglo para la posicion del jugador
     int i;
-    //int totalScores;    //variable para saber cuantos puntajes hay
     unsigned int waitCounter = CHANGE_SCORE_TIMES;
     bool change = true,firstTime = true;
 

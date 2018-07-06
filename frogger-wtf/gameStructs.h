@@ -25,7 +25,6 @@ typedef struct STATE
     int stateID;
 } state_t;
 
-
 typedef struct
 {
     bool flag;
