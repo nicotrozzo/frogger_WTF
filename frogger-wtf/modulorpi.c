@@ -731,7 +731,7 @@ void* output_thread(void* pointer)
                 }
                 else
                 {
-                    if(pGameData->move.where == FROG_UP)
+                    if(pGameData->move.where == UP)
                     {
                         if(pGameData->position > 0) //es ciclico
                         {
@@ -773,7 +773,7 @@ void* output_thread(void* pointer)
                             fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion*/
                         }
                     }
-                    else if ( pGameData->move.where == FROG_DOWN)
+                    else if ( pGameData->move.where == DOWN)
                     {
                         if(pGameData->position < (getTotalScores(pGameData->scoreFile)-1) )
                         {
@@ -1046,7 +1046,7 @@ void moveFrog(uint8_t where,frog_t *frogCoords)
 {
   switch(where)
   {
-      case FROG_UP:
+      case UP:
           if(frogCoords->y > FROG_Y_MIN)
           {
               frogCoords->y--;
@@ -1056,7 +1056,7 @@ void moveFrog(uint8_t where,frog_t *frogCoords)
               frogCoords->y = FROG_Y_MIN;
           }
           break;
-      case FROG_DOWN:
+      case DOWN:
           if(frogCoords->y < FROG_Y_MAX)
           {
               frogCoords->y++;
@@ -1066,7 +1066,7 @@ void moveFrog(uint8_t where,frog_t *frogCoords)
               frogCoords->y = FROG_Y_MAX;
           }
           break;
-      case FROG_RIGHT:
+      case RIGHT:
           if(frogCoords->x < FROG_X_MAX)
           {
               frogCoords->x++;
@@ -1076,7 +1076,7 @@ void moveFrog(uint8_t where,frog_t *frogCoords)
               frogCoords->x = FROG_X_MAX;
           }
           break;
-      case FROG_LEFT:
+      case LEFT:
           if(frogCoords->x > FROG_X_MIN)
           {
               frogCoords->x--;

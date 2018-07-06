@@ -37,7 +37,7 @@ void showNextScore(void *pArg)
   if(!((gameData_t*)pArg)->move.flag) 
   {    
     ((gameData_t*)pArg)->move.flag = true;  
-    ((gameData_t*)pArg)->move.where = FROG_DOWN;
+    ((gameData_t*)pArg)->move.where = DOWN;
   }
 }
 
@@ -47,7 +47,7 @@ void showPreviousScore(void *pArg)
   if(!((gameData_t*)pArg)->move.flag)
   {    
     ((gameData_t*)pArg)->move.flag = true;  
-    ((gameData_t*)pArg)->move.where = FROG_UP;
+    ((gameData_t*)pArg)->move.where = UP;
   }
 }
 
@@ -68,7 +68,7 @@ void frog_up(void *pArg)
   if(pData->move.flag == false)
   {    
     pData->move.flag = true;
-    pData->move.where = FROG_UP;
+    pData->move.where = UP;
   }  
 }
 
@@ -78,7 +78,7 @@ void frog_down(void *pArg)
   if(pData->move.flag == false)
   {    
     pData->move.flag = true;
-    pData->move.where = FROG_DOWN;
+    pData->move.where = DOWN;
   }  
 }
 
@@ -88,7 +88,7 @@ void frog_left(void *pArg)
   if(pData->move.flag == false)
   {    
     pData->move.flag = true;
-    pData->move.where = FROG_LEFT;
+    pData->move.where = LEFT;
   }  
 }
 
@@ -98,7 +98,7 @@ void frog_right(void *pArg)
   if(pData->move.flag == false)
   {
     pData->move.flag = true;
-    pData->move.where = FROG_RIGHT;
+    pData->move.where = RIGHT;
   } 
 }
 

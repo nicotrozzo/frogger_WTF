@@ -47,7 +47,7 @@
 #define WAIT_NAME_BLINK 10
 #define MAXSCORE 999999
 
-enum movefrog { FROG_UP, FROG_DOWN, FROG_RIGHT, FROG_LEFT };
+enum movefrog { UP, DOWN, RIGHT, LEFT };
 
 void* input_thread (void* event);
 void* output_thread(void* p2gameData);
