@@ -834,6 +834,7 @@ void* output_thread(void* pointer)
                     firstTime = false;
                     toggle = true;
                 }    
+                while(get_event(pGameData->pEventQueue));
                 sem_post(&collisionSem);
                 pGameData->move.flag = false; //no interesa si quisieron mover la rana mientras se mostraba el mensaje, se tira ese evento
             }
@@ -844,7 +845,6 @@ void* output_thread(void* pointer)
                 {
                     printf("Couldn't emit event\n");
                 }
-                //ALLEGRO TIENE QUE TENER ESTE MISMO SEMAFORO
                 sem_wait(&levelUpSem);  //espera que el nucleo del juego se fije si subio de nivel
                 if(pGameData->level.up)
                 {
