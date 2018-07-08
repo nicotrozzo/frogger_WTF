@@ -1268,7 +1268,7 @@ void cars_routine(bool carsBoard[][DISSIZE],frog_t *frogCoords)
 {
     static int dividersMax[DISSIZE]; // Cuando se suba de nivel, estos máximos se decrementarán para hacer que el ciclo de avance de carril sea más rápido.
     static int dividers[DISSIZE];  // Ante un evento de timer, se decrementa el divider de cada carril, logrando así que cada carril tenga su ciclo de timer, cuando el divider llega a 0.
-    bool ways[DISSIZE] = {0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0};
+    bool ways[DISSIZE] = {0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0};
     int row = 0;
 
 
@@ -1366,15 +1366,15 @@ void init_dividers(int divMax[],int div[])
     divMax[3] = 8;
     divMax[4] = 15;
     divMax[5] = 20;
-    divMax[6] = 8;
-    divMax[7] = 15;
+    divMax[6] = 15;
+    divMax[7] = 8;
     divMax[8] = 0;
-    divMax[9] = 15;
-    divMax[10] = 5;
-    divMax[11] = 15;
-    divMax[12] = 10;
-    divMax[13] = 20;
-    divMax[14] = 10;
+    divMax[9] = 12;
+    divMax[10] = 7;
+    divMax[11] = 13;
+    divMax[12] = 8;
+    divMax[13] = 19;
+    divMax[14] = 9;
     divMax[15] = 0;
     for( i=0 ; i < DISSIZE ; i++)
     {    
