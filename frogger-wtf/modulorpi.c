@@ -744,7 +744,8 @@ void* output_thread(void* pointer)
                         }
                         else // si la posicion actual es 0
                         {
-                            if( (pGameData->position = getTotalScores(pGameData->scoreFile)-1) > 999)
+                            pGameData->position = getTotalScores(pGameData->scoreFile)-1;
+                            if( pGameData->position > 999)  //va a la posicion 999 del archivo, si hay mas de 999 puntajes
                             {
                                 pGameData->position = 999;      
                                 for( i=0 ; i < 999 ; i++)
@@ -764,13 +765,7 @@ void* output_thread(void* pointer)
                             else   
                             {
                                 rewind(pGameData->scoreFile);    
-                            }
-                            
-                            /*while((charedPosition = fgetc(pGameData->scoreFile)) != '5' ) // busco el numero 5
-                            {
-                                while( fgetc(pGameData->scoreFile) != '\n' );   //avanza hasta la siguiente linea
-                            }
-                            fseek(pGameData->scoreFile, -1, SEEK_CUR);//como tome el caracter que queria el cursor avanzo, asi lo hago retroceder una posicion*/
+                            }                           
                         }
                     }
                     else if ( pGameData->move.where == DOWN)
